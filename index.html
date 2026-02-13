@@ -15,33 +15,28 @@
         .nav { text-align: center; margin-bottom: 30px; }
         .nav button { background: none; border: 1px solid var(--timu-dark); color: var(--timu-dark); padding: 10px 25px; cursor: pointer; margin: 0 5px; letter-spacing: 2px; }
         .nav button.active-btn { background: var(--timu-dark); color: white; }
-        h2 { font-weight: 300; text-align: center; letter-spacing: 4px; color: var(--timu-gold); }
-        .tab { display: none; }
-        .active { display: block; }
+        
+        .date-container { display: flex; align-items: flex-end; gap: 10px; }
+        .expected-hint { font-size: 0.8rem; color: #c5a35d; margin-bottom: 12px; font-weight: bold; border-left: 3px solid #c5a35d; padding-left: 8px; }
         
         .section-header { font-size: 1.1rem; font-weight: 600; margin: 35px 0 15px 0; border-bottom: 2px solid var(--timu-dark); padding-bottom: 5px; }
         label { display: block; font-size: 0.85rem; margin-top: 15px; color: #888; }
         input, select { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #eee; box-sizing: border-box; }
         .btn-submit { background: var(--timu-dark); color: white; border: none; padding: 15px; width: 100%; margin-top: 30px; cursor: pointer; letter-spacing: 2px; }
 
-        /* 進度管理樣式 */
         .order-item { border-bottom: 1px solid #f0f0f0; padding: 20px 0; }
         .order-header { display: flex; justify-content: space-between; align-items: flex-start; }
-        .order-info { flex: 1; }
-        
-        /* 狀態標籤樣式 */
         .status-tag { padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; color: white; margin-left: 10px; white-space: nowrap; }
         .status-備料中 { background-color: #95a5a6; }
         .status-車縫中 { background-color: #3498db; }
         .status-細節修飾 { background-color: #f39c12; }
         .status-品檢完工 { background-color: #27ae60; }
 
-        /* 交期時間顏色標籤 */
         .deadline-box { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem; margin-top: 5px; font-weight: bold; }
-        .time-safe { background-color: #e8f5e9; color: #2e7d32; border: 1px solid #2e7d32; } /* 剛接單 >4w */
-        .time-normal { background-color: #e3f2fd; color: #1565c0; border: 1px solid #1565c0; } /* 製作中 2-4w */
-        .time-warning { background-color: #fff3e0; color: #ef6c00; border: 1px solid #ef6c00; } /* 接近期限 1-2w */
-        .time-urgent { background-color: #ffebee; color: #c62828; border: 1px solid #c62828; } /* 當週/逾期 <1w */
+        .time-safe { background-color: #e8f5e9; color: #2e7d32; border: 1px solid #2e7d32; }
+        .time-normal { background-color: #e3f2fd; color: #1565c0; border: 1px solid #1565c0; }
+        .time-warning { background-color: #fff3e0; color: #ef6c00; border: 1px solid #ef6c00; }
+        .time-urgent { background-color: #ffebee; color: #c62828; border: 1px solid #c62828; }
 
         .search-box { width:100%; margin-bottom: 20px; border: 1px solid var(--timu-gold); padding: 12px; box-sizing: border-box; }
     </style>
@@ -55,16 +50,24 @@
 
 <div id="formTab" class="tab active card">
     <h2>NEW ORDER</h2>
-    <label>訂單編號</label><input type="text" id="orderId">
-    <label>預計交期</label><input type="date" id="deadline">
+    <label>訂單編號</label><input type="text" id="orderId" placeholder="輸入編號...">
+    
+    <label>訂製日期 (自動核對 6 週後日期)</label>
+    <div class="date-container">
+        <input type="date" id="orderDate" onchange="calculateExpectedDate(this.value)">
+        <div id="expectedHint" class="expected-hint"></div>
+    </div>
+    
     <div class="section-header">Pre-order:1</div>
     <label>款式 1</label><select id="style1"></select>
     <label>顏色 1</label><select id="color1"></select>
     <label>尺寸 1</label><select id="size1"></select>
+
     <div class="section-header">Pre-order:2</div>
     <label>款式 2 (選填)</label><select id="style2"></select>
     <label>顏色 2</label><select id="color2"></select>
     <label>尺寸 2</label><select id="size2"></select>
+    
     <button class="btn-submit" onclick="submitOrder()">送出訂製需求</button>
 </div>
 
@@ -75,9 +78,18 @@
 </div>
 
 <script>
+    // 更新後的網址
     const scriptUrl = "https://script.google.com/macros/s/AKfycbyi0WHv5eEFxL5XVKiPsr_iU6Ipoa0OxJJQvTjmjzicQTrNRK16fTUqD2_qeskcoXVcZg/exec";
     let allOrders = [];
     const sizeList = ["XS", "S", "M", "L", "XL"];
+
+    function calculateExpectedDate(val) {
+        if(!val) return;
+        const d = new Date(val);
+        d.setDate(d.getDate() + 42); // 6週 = 42天
+        const formatted = d.toISOString().split('T')[0];
+        document.getElementById('expectedHint').innerText = `6週後交期: ${formatted}`;
+    }
 
     function showTab(type) {
         document.getElementById('formTab').classList.toggle('active', type === 'form');
@@ -95,6 +107,8 @@
             setupSelect('color1', colors, "搜尋色號..."); setupSelect('color2', colors, "搜尋色號...");
             setupSelect('size1', sizeList, "選擇尺寸..."); setupSelect('size2', sizeList, "選擇尺寸...");
         });
+        document.getElementById('orderDate').valueAsDate = new Date();
+        calculateExpectedDate(document.getElementById('orderDate').value);
     };
 
     function setupSelect(id, list, placeholder) {
@@ -104,17 +118,19 @@
         new Choices(`#${id}`, { searchEnabled: true, itemSelectText: '', shouldSort: false });
     }
 
-    // 計算交期顏色
-    function getDeadlineStyle(dateStr) {
-        if (!dateStr) return { text: '未定', class: 'time-safe' };
-        const deadline = new Date(dateStr);
+    function getProductionStage(orderDateStr) {
+        if (!orderDateStr) return { text: '未知', class: 'time-safe' };
+        const orderDate = new Date(orderDateStr);
+        const deadline = new Date(orderDate);
+        deadline.setDate(deadline.getDate() + 42);
         const today = new Date();
         const diffDays = Math.ceil((deadline - today) / (1000 * 60 * 60 * 24));
+        const deadlineStr = deadline.toISOString().split('T')[0];
         
-        if (diffDays > 28) return { text: `交期：${dateStr} (剛接單)`, class: 'time-safe' };
-        if (diffDays > 14) return { text: `交期：${dateStr} (製作中)`, class: 'time-normal' };
-        if (diffDays > 7) return { text: `交期：${dateStr} (急單/接近)`, class: 'time-warning' };
-        return { text: `交期：${dateStr} (當週/逾期!)`, class: 'time-urgent' };
+        if (diffDays > 28) return { text: `交期：${deadlineStr} (剛接單)`, class: 'time-safe' };
+        if (diffDays > 14) return { text: `交期：${deadlineStr} (製作中)`, class: 'time-normal' };
+        if (diffDays > 7) return { text: `交期：${deadlineStr} (急單/接近)`, class: 'time-warning' };
+        return { text: `交期：${deadlineStr} (當週/逾期!)`, class: 'time-urgent' };
     }
 
     function renderOrders(orders) {
@@ -123,23 +139,20 @@
         orders.forEach(row => {
             const status = row[9] || "備料中";
             const statusClass = `status-${status.trim()}`;
-            const deadlineInfo = getDeadlineStyle(row[2] ? row[2].split('T')[0] : '');
+            const stage = getProductionStage(row[2] ? row[2].split('T')[0] : '');
             
-            // 嚴格判斷款式 2 是否有填寫 (row[6] 為款式 2)
+            // 強化過濾款式 2 (排除空格與 undefined)
             const hasStyle2 = row[6] && row[6].toString().replace(/\s/g, '').length > 0;
 
             html += `<div class="order-item">
                 <div class="order-header">
                     <div class="order-info">
                         <strong>${row[0]}</strong> <br>
-                        <div class="${deadlineInfo.class} deadline-box">${deadlineInfo.text}</div>
+                        <div class="${stage.class} deadline-box">${stage.text}</div>
                         <div style="font-size:0.85rem; color:#888; margin-top:8px;">
                             ${row[3]} (${row[4]}/${row[5]})
                         </div>
-                        ${hasStyle2 ? `
-                        <div style="font-size:0.85rem; color:#888;">
-                            ${row[6]} (${row[7]}/${row[8]})
-                        </div>` : ''}
+                        ${hasStyle2 ? `<div style="font-size:0.85rem; color:#888;">${row[6]} (${row[7]}/${row[8]})</div>` : ''}
                     </div>
                     <span class="status-tag ${statusClass}">${status}</span>
                 </div>
@@ -174,7 +187,7 @@
         const id = document.getElementById('orderId').value;
         if(!id) { alert("請輸入編號"); return; }
         const data = {
-            id: id, deadline: document.getElementById('deadline').value,
+            id: id, deadline: document.getElementById('orderDate').value,
             s1: document.getElementById('style1').value, c1: document.getElementById('color1').value, z1: document.getElementById('size1').value,
             s2: document.getElementById('style2').value, c2: document.getElementById('color2').value, z2: document.getElementById('size2').value
         };
@@ -186,7 +199,7 @@
     function updateStatus(id, status) {
         if(!status) return;
         fetch(scriptUrl, { method: "POST", mode: "no-cors", body: JSON.stringify({action: 'updateStatus', id: id, status: status}) })
-        .then(() => { alert(`訂單 ${id} 已更新`); loadOrders(); });
+        .then(() => { alert(`狀態更新成功`); loadOrders(); });
     }
 </script>
 </body>
