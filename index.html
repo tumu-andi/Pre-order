@@ -79,19 +79,23 @@
         document.getElementById('btnAdmin').classList.toggle('active-btn', type === 'admin');
     }
 
-    window.onload = function() {
-        fetch(`${scriptUrl}?action=getStyles`)
-        .then(res => res.json())
-        .then(data => {
-            const styles = [...new Set(data.map(item => item[0]))].filter(String);
-            const colors = [...new Set(data.map(item => item[1]))].filter(String);
+window.onload = function() {
+    fetch(`${scriptUrl}?action=getStyles`)
+    .then(res => res.json())
+    .then(data => {
+        // 【關鍵修正】：使用 .slice(1) 跳過第一列標題
+        const actualData = data.slice(1); 
 
-            setupSelect('style1', styles, "搜尋款式...");
-            setupSelect('style2', styles, "搜尋款式...");
-            setupSelect('color1', colors, "搜尋色號...");
-            setupSelect('color2', colors, "搜尋色號...");
-            setupSelect('size1', sizeList, "選擇尺寸...");
-            setupSelect('size2', sizeList, "選擇尺寸...");
+        // 提取不重複的款式與色號
+        const styles = [...new Set(actualData.map(item => item[0]))].filter(String);
+        const colors = [...new Set(actualData.map(item => item[1]))].filter(String);
+
+        setupSelect('style1', styles, "搜尋款式...");
+        setupSelect('style2', styles, "搜尋款式...");
+        setupSelect('color1', colors, "搜尋色號...");
+        setupSelect('color2', colors, "搜尋色號...");
+        setupSelect('size1', sizeList, "選擇尺寸...");
+        setupSelect('size2', sizeList, "選擇尺寸...");
         });
     };
 
