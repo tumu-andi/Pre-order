@@ -11,59 +11,57 @@
     
     <style>
         :root { 
-            --timu-beige: #f9f8f6; 
-            --timu-dark: #333333; 
-            --timu-gold: #c5a35d; 
-            --timu-light-gold: #e5d5b5;
-            --text-light: #888888;
+            --timu-beige: #f9f8f6; --timu-dark: #333333; --timu-gold: #c5a35d; 
+            --timu-light-gold: #e5d5b5; --text-light: #888888;
         }
 
-        body { 
-            font-family: "Helvetica Neue", "PingFang TC", sans-serif; 
-            background: var(--timu-beige); color: var(--timu-dark); 
-            padding: 20px; margin: 0; line-height: 1.6;
-        }
+        body { font-family: "Helvetica Neue", "PingFang TC", sans-serif; background: var(--timu-beige); color: var(--timu-dark); padding: 20px; margin: 0; line-height: 1.6; }
 
         /* 導覽列 */
         .nav { text-align: center; margin: 10px 0 40px 0; position: sticky; top: 0; z-index: 1000; background: var(--timu-beige); padding: 15px 0; }
-        .nav button { 
-            background: transparent; border: none; color: var(--text-light); padding: 10px 15px; 
-            cursor: pointer; margin: 0 5px; letter-spacing: 2px; transition: 0.4s; font-size: 0.8rem; font-weight: 500;
-        }
+        .nav button { background: transparent; border: none; color: var(--text-light); padding: 10px 15px; cursor: pointer; margin: 0 5px; letter-spacing: 2px; transition: 0.4s; font-size: 0.8rem; font-weight: 500; }
         .nav button.active-btn { color: var(--timu-dark); border-bottom: 2px solid var(--timu-gold); }
 
+        /* 容器與標題 */
         .page-container { display: none; background: white; margin: 0 auto 50px auto; padding: 40px; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.03); border: 1px solid rgba(0,0,0,0.02); }
         #formTab { max-width: 500px; }
         #adminTab, #calendarTab, #statsTab { max-width: 900px; }
         .active { display: block; }
-
         h2 { font-weight: 300; text-align: center; letter-spacing: 6px; margin-bottom: 40px; color: var(--timu-gold); font-size: 1.4rem; }
 
-        /* 統計表格樣式 */
-        .stats-table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 0.9rem; }
-        .stats-table th { background: var(--timu-beige); color: var(--timu-gold); font-weight: 600; text-align: left; padding: 15px; letter-spacing: 1px; }
-        .stats-table td { padding: 15px; border-bottom: 1px solid #f2f2f2; }
-        .stats-count { font-weight: bold; color: var(--timu-dark); font-size: 1.1rem; }
-        .stats-tag-mini { font-size: 0.7rem; background: #eee; padding: 2px 6px; border-radius: 3px; color: #777; margin-left: 5px; }
+        /* 表單樣式 */
+        label { display: block; font-size: 0.7rem; margin-top: 20px; color: var(--text-light); letter-spacing: 1px; }
+        input, select { padding: 12px 0; margin: 5px 0; border: none; border-bottom: 1px solid #eee; font-size: 0.95rem; width: 100%; background: transparent; }
+        input:focus { outline: none; border-bottom-color: var(--timu-gold); }
+        #orderId::placeholder { font-size: 0.7rem; color: #ccc; }
+        .section-header { font-size: 0.85rem; font-weight: 600; margin: 40px 0 10px 0; color: var(--timu-dark); letter-spacing: 2px; }
+        .btn-submit { background: var(--timu-dark); color: white; border: none; padding: 18px; width: 100%; margin-top: 40px; cursor: pointer; letter-spacing: 4px; font-size: 0.9rem; border-radius: 4px; width: 100%; }
 
-        /* 列表樣式 (延用妳之前的設定) */
+        /* 進度管理與統計 */
         .order-item { border-bottom: 1px solid #f9f9f9; padding: 25px 0; }
         .order-header { display: flex; justify-content: space-between; align-items: flex-start; }
-        .item-detail { font-size: 0.85rem; color: #666; margin-top: 15px; line-height: 2; border-left: 1px solid var(--timu-gold); padding-left: 15px; }
+        .item-detail { font-size: 0.85rem; color: #666; margin-top: 15px; border-left: 1px solid var(--timu-gold); padding-left: 15px; }
         .deadline-box { display: inline-block; padding: 4px 10px; border-radius: 4px; font-size: 0.75rem; margin: 10px 0; font-weight: 600; }
         .time-safe { background-color: #f0f4f0; color: #4a7c44; }
         .time-normal { background-color: #f0f4f8; color: #4a6c8c; }
         .time-urgent { background-color: #fdf2f2; color: #a44a4a; }
-        
-        /* 彈窗 */
+        .status-tag { padding: 5px 15px; border-radius: 50px; font-size: 0.7rem; color: white; font-weight: 500; }
+        .status-新訂單 { background-color: #555; }
+        .status-備料中 { background-color: #aaa; }
+        .status-車縫中 { background-color: #8da9c4; }
+        .status-已寄回 { background-color: #a69cac; }
+        .status-出貨完畢 { background-color: #84a59d; }
+
+        /* 統計表格 */
+        .stats-table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 0.9rem; }
+        .stats-table th { background: var(--timu-beige); color: var(--timu-gold); text-align: left; padding: 15px; }
+        .stats-table td { padding: 15px; border-bottom: 1px solid #f2f2f2; }
+        .stats-count { font-weight: bold; font-size: 1.1rem; }
+
+        /* 詳情彈窗 */
         .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); }
         .modal-content { background: white; margin: 15% auto; padding: 30px; border-radius: 8px; width: 80%; max-width: 400px; position: relative; }
         .close-modal { position: absolute; right: 20px; top: 15px; font-size: 24px; cursor: pointer; color: #ccc; }
-
-        /* 其他原有樣式... */
-        label { display: block; font-size: 0.7rem; margin-top: 20px; color: var(--text-light); letter-spacing: 1px; }
-        input, select { padding: 12px 0; margin: 5px 0; border: none; border-bottom: 1px solid #eee; font-size: 0.95rem; width: 100%; background: transparent; }
-        .btn-submit { background: var(--timu-dark); color: white; border: none; padding: 18px; width: 100%; margin-top: 40px; cursor: pointer; letter-spacing: 4px; font-size: 0.9rem; border-radius: 4px; }
     </style>
 </head>
 <body>
@@ -77,10 +75,37 @@
 
 <div id="formTab" class="page-container active">
     <h2>NEW ORDER</h2>
+    <label>Order ID</label><input type="text" id="orderId" placeholder="輸入SHOPLINE訂單編號">
+    <label>Order Date</label>
+    <div style="display:flex; align-items:center; gap:10px;">
+        <input type="date" id="orderDate" onchange="calculateExpectedDate(this.value)">
+        <div id="expectedHint" style="font-size:0.8rem; color:var(--timu-gold); font-weight:bold;"></div>
     </div>
+    <label class="checkbox-row" style="margin:20px 0; display:flex; align-items:center; gap:8px; font-size:0.85rem;"><input type="checkbox" id="hasStock"> 訂單內含其他現貨商品</label>
+    <div class="section-header">ITEM 1</div>
+    <label>Style</label><select id="style1"></select>
+    <label>Color</label><select id="color1"></select>
+    <label>Size</label><select id="size1"></select>
+    <div class="section-header">ITEM 2 (Optional)</div>
+    <label>Style</label><select id="style2"></select>
+    <label>Color</label><select id="color2"></select>
+    <label>Size</label><select id="size2"></select>
+    <button id="submitBtn" class="btn-submit" onclick="submitOrder()">CREATE ORDER</button>
+</div>
 
 <div id="adminTab" class="page-container">
     <h2>PRODUCTION STATUS</h2>
+    <div style="display:flex; gap:10px; margin-bottom:20px;">
+        <input type="text" id="adminSearch" placeholder="🔍 搜尋訂單或款式..." onkeyup="filterOrders()" style="flex:2; padding:10px; border:1px solid #eee; border-radius:4px;">
+        <select id="statusFilter" onchange="filterOrders()" style="flex:1; padding:10px; border:1px solid #eee; border-radius:4px;">
+            <option value="">所有進度</option>
+            <option value="新訂單">新訂單</option>
+            <option value="備料中">備料中</option>
+            <option value="車縫中">車縫中</option>
+            <option value="已寄回">已寄回</option>
+            <option value="出貨完畢">出貨完畢</option>
+        </select>
+    </div>
     <div id="orderList">載入中...</div>
 </div>
 
@@ -91,99 +116,209 @@
 
 <div id="statsTab" class="page-container">
     <h2>PRODUCTION STATISTICS</h2>
-    <p style="text-align:center; font-size: 0.8rem; color: #aaa; margin-top: -20px;">統計範圍：新訂單、備料中、車縫中</p>
     <div id="statsContent">
         <table class="stats-table">
-            <thead>
-                <tr>
-                    <th>款式名稱 / 顏色 / 尺寸</th>
-                    <th style="text-align:right;">待製作總數</th>
-                </tr>
-            </thead>
-            <tbody id="statsTableBody">
-                </tbody>
+            <thead><tr><th>款式名稱 / 顏色 / 尺寸</th><th style="text-align:right;">待製作總數</th></tr></thead>
+            <tbody id="statsTableBody"></tbody>
         </table>
     </div>
 </div>
 
-<div id="orderModal" class="modal">
-    <div class="modal-content">
-        <span class="close-modal" onclick="closeModal()">&times;</span>
-        <div id="modalTitle" class="modal-title" style="font-weight:bold; border-bottom:1px solid #eee; padding-bottom:10px;"></div>
-        <div id="modalBody" style="margin-top:15px;"></div>
-    </div>
-</div>
+<div id="orderModal" class="modal"><div class="modal-content"><span class="close-modal" onclick="closeModal()">&times;</span><div id="modalTitle" style="font-weight:bold; border-bottom:1px solid #eee; padding-bottom:10px;"></div><div id="modalBody" style="margin-top:15px;"></div></div></div>
 
 <script>
-    const scriptUrl = "你的APPS_SCRIPT網址";
+    // ⚠️ 這裡請務必更換成妳的 Google 網址
+    const scriptUrl = "https://script.google.com/macros/s/AKfycbyi0WHv5eEFxL5XVKiPsr_iU6Ipoa0OxJJQvTjmjzicQTrNRK16fTUqD2_qeskcoXVcZg/exec";
     let allOrders = [];
     let calendar;
 
+    // 核心切換邏輯
     function showTab(type) {
         document.querySelectorAll('.page-container').forEach(el => el.classList.remove('active'));
         document.querySelectorAll('.nav button').forEach(el => el.classList.remove('active-btn'));
         document.getElementById(type + 'Tab').classList.add('active');
         document.getElementById('btn' + type.charAt(0).toUpperCase() + type.slice(1)).classList.add('active-btn');
         
-        if (allOrders.length === 0) loadOrders();
-        
-        if (type === 'calendar') setTimeout(renderCalendar, 100);
-        if (type === 'stats') renderStatistics();
+        // 切換時如果沒資料就載入，有資料就更新對應畫面
+        if (allOrders.length === 0) {
+            loadOrders();
+        } else {
+            if (type === 'admin') renderOrders(allOrders.slice().reverse());
+            if (type === 'calendar') setTimeout(renderCalendar, 100);
+            if (type === 'stats') renderStatistics();
+        }
     }
 
-    // [新增] 款式統計邏輯
+    // 載入資料
+    function loadOrders() {
+        const listDiv = document.getElementById('orderList');
+        if (listDiv) listDiv.innerHTML = "<p style='text-align:center; color:#ccc;'>Loading...</p>";
+        
+        fetch(`${scriptUrl}?action=getOrders`)
+            .then(res => res.json())
+            .then(data => {
+                allOrders = data.slice(1); // 移除表頭
+                const currentTab = document.querySelector('.page-container.active').id;
+                
+                // 根據當前所在頁面決定渲染哪個功能
+                renderOrders(allOrders.slice().reverse());
+                if (currentTab === 'calendarTab') renderCalendar();
+                if (currentTab === 'statsTab') renderStatistics();
+            })
+            .catch(err => {
+                console.error(err);
+                if (listDiv) listDiv.innerHTML = "資料讀取失敗，請檢查網址或權限。";
+            });
+    }
+
+    // 渲染進度列表
+    function renderOrders(orders) {
+        const listDiv = document.getElementById('orderList');
+        if (!listDiv) return;
+        let html = '';
+        orders.forEach(row => {
+            const status = (row[9] || "新訂單").trim();
+            const expDate = row[2] ? row[2].toString().split('T')[0] : '無';
+            const diffDays = Math.ceil((new Date(expDate) - new Date()) / (1000 * 60 * 60 * 24));
+            let tClass = diffDays > 14 ? 'time-safe' : (diffDays > 7 ? 'time-normal' : 'time-urgent');
+
+            html += `<div class="order-item">
+                <div class="order-header">
+                    <div>
+                        <strong>#${row[0]}</strong> ${row[10] === "是" ? '<span class="stock-tag">含現貨商品</span>' : ''}
+                        <div class="order-date-info">Date: ${row[1].toString().split('T')[0]} ⮕ Deadline: ${expDate}</div>
+                        <div class="${tClass} deadline-box">剩餘 ${diffDays} DAYS</div>
+                        <div class="item-detail">
+                            <b>①</b> ${row[3]} / ${row[4]} / ${row[5]}
+                            ${row[6] ? '<br><b>②</b> '+row[6]+' / '+row[7]+' / '+row[8] : ''}
+                        </div>
+                        <div class="note-container">
+                            <input type="text" class="note-input" id="note-${row[0]}" value="${row[11] || ''}" placeholder="備註...">
+                            <button onclick="updateNote('${row[0]}')" style="font-size:0.65rem; color:var(--timu-gold); background:none; border:none; cursor:pointer;">SAVE</button>
+                        </div>
+                    </div>
+                    <div style="text-align:right;">
+                        <span class="status-tag status-${status}">${status}</span>
+                        <div style="margin-top:15px;">
+                            <select class="status-select" onchange="updateStatus('${row[0]}', this.value)">
+                                <option value="">UPDATE...</option>
+                                <option value="新訂單">新訂單</option><option value="備料中">備料中</option>
+                                <option value="車縫中">車縫中</option><option value="已寄回">已寄回</option>
+                                <option value="出貨完畢">出貨完畢</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+        });
+        listDiv.innerHTML = html || "No orders found.";
+    }
+
+    // 渲染統計頁面
     function renderStatistics() {
         const tbody = document.getElementById('statsTableBody');
         const statsMap = {};
-
-        // 只統計尚未完成的訂單 (新訂單、備料中、車縫中)
         const activeOrders = allOrders.filter(row => {
             const s = (row[9] || "新訂單").trim();
-            return s === "新訂單" || s === "備料中" || s === "車縫中";
+            return s !== "已寄回" && s !== "出貨完畢";
         });
 
         activeOrders.forEach(row => {
-            // 處理第一個商品
-            if (row[3]) { 
-                const key1 = `${row[3]} / ${row[4]} / ${row[5]}`;
-                statsMap[key1] = (statsMap[key1] || 0) + 1;
-            }
-            // 處理第二個商品 (如果有)
-            if (row[6]) {
-                const key2 = `${row[6]} / ${row[7]} / ${row[8]}`;
-                statsMap[key2] = (statsMap[key2] || 0) + 1;
-            }
+            if (row[3]) { const k1 = `${row[3]} / ${row[4]} / ${row[5]}`; statsMap[k1] = (statsMap[k1] || 0) + 1; }
+            if (row[6]) { const k2 = `${row[6]} / ${row[7]} / ${row[8]}`; statsMap[k2] = (statsMap[k2] || 0) + 1; }
         });
 
         let html = '';
-        const sortedKeys = Object.keys(statsMap).sort();
-        
-        if (sortedKeys.length === 0) {
-            html = '<tr><td colspan="2" style="text-align:center; color:#ccc; padding:40px;">目前無待製作商品</td></tr>';
-        } else {
-            sortedKeys.forEach(key => {
-                html += `<tr>
-                    <td>${key}</td>
-                    <td style="text-align:right;"><span class="stats-count">${statsMap[key]}</span> <span style="font-size:0.7rem; color:#aaa;">PCS</span></td>
-                </tr>`;
-            });
-        }
-        tbody.innerHTML = html;
-    }
-
-    // 其他原有 function (loadOrders, renderOrders, renderCalendar, etc.) 保持不變，
-    // 唯獨在 loadOrders 結束後增加 renderStatistics() 的呼叫即可。
-
-    function loadOrders() {
-        fetch(`${scriptUrl}?action=getOrders`).then(res => res.json()).then(data => {
-            allOrders = data.slice(1);
-            renderOrders(allOrders.slice().reverse());
-            if (document.getElementById('calendarTab').classList.contains('active')) renderCalendar();
-            if (document.getElementById('statsTab').classList.contains('active')) renderStatistics();
+        Object.keys(statsMap).sort().forEach(key => {
+            html += `<tr><td>${key}</td><td style="text-align:right;"><span class="stats-count">${statsMap[key]}</span> <span style="font-size:0.7rem; color:#aaa;">PCS</span></td></tr>`;
         });
+        tbody.innerHTML = html || '<tr><td colspan="2" style="text-align:center; padding:40px; color:#ccc;">無待製作項目</td></tr>';
     }
 
-    // ...其餘代碼 (submitOrder, updateStatus, closeModal 等) 與上一版本完全相同...
+    // 渲染日曆
+    function renderCalendar() {
+        const calendarEl = document.getElementById('calendar');
+        const events = allOrders.map(row => {
+            const status = (row[9] || "新訂單").trim();
+            const deadline = row[2] ? row[2].toString().split('T')[0].replace(/\//g, '-') : '';
+            if(!deadline) return null;
+            let color = '#555'; if(status === '備料中') color = '#aaa'; if(status === '車縫中') color = '#8da9c4'; if(status === '已寄回') color = '#a69cac'; if(status === '出貨完畢') color = '#84a59d';
+
+            return {
+                title: `${row[0]} | ${row[3]}`, start: deadline,
+                extendedProps: { id: row[0], s1: row[3], c1: row[4], z1: row[5], s2: row[6], c2: row[7], z2: row[8], status: status, deadline: deadline },
+                backgroundColor: color, borderColor: color
+            };
+        }).filter(e => e !== null);
+
+        if (calendar) calendar.destroy();
+        calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth', locale: 'zh-tw', events: events,
+            headerToolbar: { left: 'prev,next', center: 'title', right: 'today' }, height: 'auto',
+            eventClick: function(info) {
+                const p = info.event.extendedProps;
+                document.getElementById('modalTitle').innerText = `Order #${p.id}`;
+                document.getElementById('modalBody').innerHTML = `
+                    <div style="font-size:0.85rem;">進度：${p.status}<br>交期：${p.deadline}</div>
+                    <div style="margin-top:10px; padding-top:10px; border-top:1px dashed #eee;">
+                        <b>①</b> ${p.s1} / ${p.c1} / ${p.z1}
+                        ${p.s2 ? '<br><b>②</b> '+p.s2+' / '+p.c2+' / '+p.z2 : ''}
+                    </div>`;
+                document.getElementById('orderModal').style.display = 'block';
+            }
+        });
+        calendar.render();
+    }
+
+    // 初始化下拉選單
+    window.onload = function() {
+        fetch(`${scriptUrl}?action=getStyles`).then(res => res.json()).then(data => {
+            const actualData = data.slice(1);
+            const styles = [...new Set(actualData.map(item => item[0]))].filter(String);
+            const colors = [...new Set(actualData.map(item => item[1]))].filter(String);
+            ['style1','style2'].forEach(id => setupSelect(id, styles, "Style..."));
+            ['color1','color2'].forEach(id => setupSelect(id, colors, "Color..."));
+            ['size1','size2'].forEach(id => setupSelect(id, ["XS", "S", "M", "L", "XL"], "Size..."));
+        });
+        const now = new Date();
+        const localISO = (new Date(now - now.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
+        document.getElementById('orderDate').value = localISO;
+        calculateExpectedDate(localISO);
+        loadOrders(); // 初始載入
+    };
+
+    // 其餘輔助 Function 保持不變...
+    function setupSelect(id, list, placeholder) {
+        const s = document.getElementById(id);
+        let opt = document.createElement('option'); opt.text = placeholder; opt.value = ""; s.appendChild(opt);
+        list.forEach(item => { let o = document.createElement('option'); o.value = item; o.text = item; s.appendChild(o); });
+        new Choices(`#${id}`, { searchEnabled: true, itemSelectText: '', shouldSort: false });
+    }
+    function calculateExpectedDate(val) {
+        if(!val) return ""; const d = new Date(val); d.setDate(d.getDate() + 42); 
+        const res = `${d.getFullYear()}/${String(d.getMonth() + 1).padStart(2, '0')}/${String(d.getDate()).padStart(2, '0')}`;
+        document.getElementById('expectedHint').innerText = `⮕ 預計交期: ${res}`; return res;
+    }
+    function closeModal() { document.getElementById('orderModal').style.display = 'none'; }
+    function updateStatus(id, s) { if(!s) return; fetch(scriptUrl, { method: "POST", mode: "no-cors", body: JSON.stringify({action:'updateStatus', id:id, status:s}) }).then(() => loadOrders()); }
+    function updateNote(id) { const n = document.getElementById(`note-${id}`).value; fetch(scriptUrl, { method: "POST", mode: "no-cors", body: JSON.stringify({action:'updateNote', id:id, note:n}) }).then(() => alert('Saved')); }
+    function filterOrders() {
+        const k = document.getElementById('adminSearch').value.toLowerCase();
+        const s = document.getElementById('statusFilter').value;
+        const f = allOrders.slice().reverse().filter(r => {
+            const mk = r[0].toString().toLowerCase().includes(k) || r[3].toString().toLowerCase().includes(k);
+            const ms = s === "" || (r[9] || "新訂單").trim() === s; return mk && ms;
+        });
+        renderOrders(f);
+    }
+    function submitOrder() {
+        const id = document.getElementById('orderId').value;
+        if(!id) return alert("Enter ID");
+        const btn = document.getElementById('submitBtn'); btn.innerText = "WAIT..."; btn.disabled = true;
+        const d = document.getElementById('orderDate').value;
+        const data = { id: id, deadline: d.replace(/-/g, '/'), expectedDate: calculateExpectedDate(d), hasStock: document.getElementById('hasStock').checked, s1: document.getElementById('style1').value, c1: document.getElementById('color1').value, z1: document.getElementById('size1').value, s2: document.getElementById('style2').value, c2: document.getElementById('color2').value, z2: document.getElementById('size2').value };
+        fetch(scriptUrl, { method: "POST", mode: "no-cors", body: JSON.stringify({action:'addOrder', data:data}) }).then(() => { btn.innerText = "DONE"; setTimeout(() => location.reload(), 1000); });
+    }
 </script>
 </body>
 </html>
