@@ -10,45 +10,50 @@
     
     <style>
         :root { --timu-beige: #f9f8f6; --timu-dark: #333333; --timu-gold: #c5a35d; }
-        body { font-family: "PingFang TC", sans-serif; background: var(--timu-beige); color: var(--timu-dark); padding: 20px; line-height: 1.6; }
+        body { font-family: "PingFang TC", "Microsoft JhengHei", sans-serif; background: var(--timu-beige); color: var(--timu-dark); padding: 20px; line-height: 1.6; }
+        
+        /* 容器卡片 */
         .card { background: white; max-width: 600px; margin: 20px auto; padding: 30px; border-radius: 2px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        
+        /* 導覽按鈕 */
         .nav { text-align: center; margin-bottom: 30px; }
-        .nav button { background: none; border: 1px solid var(--timu-dark); color: var(--timu-dark); padding: 10px 25px; cursor: pointer; margin: 0 5px; letter-spacing: 2px; transition: 0.3s; }
+        .nav button { background: none; border: 1px solid var(--timu-dark); color: var(--timu-dark); padding: 10px 25px; cursor: pointer; margin: 0 5px; letter-spacing: 2px; transition: 0.3s; font-size: 0.9rem; }
         .nav button.active-btn { background: var(--timu-dark); color: white; }
+        
         h2 { font-weight: 300; text-align: center; letter-spacing: 4px; margin-bottom: 30px; color: var(--timu-gold); }
         .tab { display: none; }
         .active { display: block; }
         
         /* 表單樣式 */
-        .section-header { font-size: 1.1rem; font-weight: 600; margin: 35px 0 15px 0; padding-bottom: 10px; border-bottom: 2px solid var(--timu-dark); }
-        label { display: block; font-size: 0.85rem; margin-top: 15px; color: #888; }
+        .section-header { font-size: 1.1rem; font-weight: 600; margin: 35px 0 15px 0; padding-bottom: 10px; border-bottom: 2px solid var(--timu-dark); color: var(--timu-dark); }
+        label { display: block; font-size: 0.85rem; margin-top: 15px; color: #888; text-transform: uppercase; }
         input, select { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #eee; box-sizing: border-box; font-size: 1rem; }
-        .btn-submit { background: var(--timu-dark); color: white; border: none; padding: 15px; width: 100%; margin-top: 40px; cursor: pointer; letter-spacing: 2px; }
+        .btn-submit { background: var(--timu-dark); color: white; border: none; padding: 15px; width: 100%; margin-top: 40px; cursor: pointer; letter-spacing: 2px; font-size: 1rem; transition: 0.3s; }
+        .btn-submit:hover { opacity: 0.8; }
 
-        /* 進度管理項目樣式 */
+        /* 進度管理清單樣式 */
         .order-item { border-bottom: 1px solid #f0f0f0; padding: 20px 0; }
-        .order-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+        .order-header { display: flex; justify-content: space-between; align-items: flex-start; }
         .order-info { flex: 1; }
         
-        /* 狀態標籤基礎樣式 */
+        /* 狀態標籤彩色膠囊 */
         .status-tag { 
-            padding: 4px 12px; 
+            padding: 4px 14px; 
             border-radius: 20px; 
             font-size: 0.75rem; 
             font-weight: 600; 
             color: white; 
             white-space: nowrap;
-            margin-left: 10px;
+            margin-left: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
-        
-        /* 狀態顏色定義 */
         .status-備料中 { background-color: #95a5a6; } /* 灰色 */
         .status-車縫中 { background-color: #3498db; } /* 藍色 */
         .status-細節修飾 { background-color: #f39c12; } /* 橘色 */
         .status-品檢完工 { background-color: #27ae60; } /* 綠色 */
         .status-default { background-color: #bdc3c7; }
 
-        .search-box { width:100%; margin-bottom: 20px; border: 1px solid var(--timu-gold); padding: 12px; box-sizing: border-box; }
+        .search-box { width:100%; margin-bottom: 20px; border: 1px solid var(--timu-gold); padding: 12px; box-sizing: border-box; outline: none; }
         .choices__inner { background-color: #fff; border: 1px solid #eee; border-radius: 0; min-height: 45px; }
     </style>
 </head>
@@ -61,8 +66,10 @@
 
 <div id="formTab" class="tab active card">
     <h2>NEW ORDER</h2>
+    
     <label>訂單編號</label>
     <input type="text" id="orderId" placeholder="例如：#2026021401">
+    
     <label>預計交期</label>
     <input type="date" id="deadline">
     
@@ -81,12 +88,13 @@
 
 <div id="adminTab" class="tab card">
     <h2>PRODUCTION STATUS</h2>
-    <input type="text" id="adminSearch" class="search-box" placeholder="🔍 搜尋訂單編號、款式或顏色..." onkeyup="filterOrders()">
+    <input type="text" id="adminSearch" class="search-box" placeholder="🔍 搜尋訂單編號或款式名稱..." onkeyup="filterOrders()">
     <div id="orderList">載入中...</div>
 </div>
 
 <script>
-    const scriptUrl = "https://script.google.com/macros/s/AKfycbwh-1fS08fb7rsrEs7_BgMVhQoGpE_wc_GUfG6R-C3D3Ds0ytj0GhH5x_MvgYvfQzejFA/exec"; 
+    // 妳的 GAS 部署網址
+    const scriptUrl = "https://script.google.com/macros/s/AKfycbyi0WHv5eEFxL5XVKiPsr_iU6Ipoa0OxJJQvTjmjzicQTrNRK16fTUqD2_qeskcoXVcZg/exec"; 
     let allOrders = []; 
     const sizeList = ["XS", "S", "M", "L", "XL"];
 
@@ -97,16 +105,21 @@
         document.getElementById('btnAdmin').classList.toggle('active-btn', type === 'admin');
     }
 
+    // 初始化讀取選單
     window.onload = function() {
         fetch(`${scriptUrl}?action=getStyles`)
         .then(res => res.json())
         .then(data => {
-            const actualData = data.slice(1); 
+            const actualData = data.slice(1); // 跳過標題列
             const styles = [...new Set(actualData.map(item => item[0]))].filter(String);
             const colors = [...new Set(actualData.map(item => item[1]))].filter(String);
-            setupSelect('style1', styles, "搜尋款式..."); setupSelect('style2', styles, "搜尋款式...");
-            setupSelect('color1', colors, "搜尋色號..."); setupSelect('color2', colors, "搜尋色號...");
-            setupSelect('size1', sizeList, "選擇尺寸..."); setupSelect('size2', sizeList, "選擇尺寸...");
+
+            setupSelect('style1', styles, "搜尋款式...");
+            setupSelect('style2', styles, "搜尋款式...");
+            setupSelect('color1', colors, "搜尋色號...");
+            setupSelect('color2', colors, "搜尋色號...");
+            setupSelect('size1', sizeList, "選擇尺寸...");
+            setupSelect('size2', sizeList, "選擇尺寸...");
         });
     };
 
@@ -115,48 +128,74 @@
         let defaultOpt = document.createElement('option');
         defaultOpt.text = placeholder; defaultOpt.value = "";
         s.appendChild(defaultOpt);
-        list.forEach(item => { let opt = document.createElement('option'); opt.value = item; opt.text = item; s.appendChild(opt); });
+        list.forEach(item => {
+            let opt = document.createElement('option');
+            opt.value = item; opt.text = item;
+            s.appendChild(opt);
+        });
         new Choices(`#${id}`, { searchEnabled: true, itemSelectText: '', placeholder: true, shouldSort: false });
     }
 
+    // 送出訂單
     function submitOrder() {
         const id = document.getElementById('orderId').value;
         if(!id) { alert("請輸入訂單編號"); return; }
+        
         const data = {
             id: id, deadline: document.getElementById('deadline').value,
             s1: document.getElementById('style1').value, c1: document.getElementById('color1').value, z1: document.getElementById('size1').value,
             s2: document.getElementById('style2').value, c2: document.getElementById('color2').value, z2: document.getElementById('size2').value
         };
+
+        const btn = document.querySelector('.btn-submit');
+        btn.innerText = "處理中..."; btn.disabled = true;
+
         fetch(scriptUrl, { method: "POST", mode: "no-cors", body: JSON.stringify({action: 'addOrder', data: data}) })
-        .then(() => { alert('訂單已成功送出！'); location.reload(); });
+        .then(() => { 
+            alert('訂單已成功送出！'); 
+            location.reload(); 
+        }).catch(err => {
+            alert('送出失敗，請再試一次');
+            btn.innerText = "送出訂製需求"; btn.disabled = false;
+        });
     }
 
+    // 讀取訂單清單
     function loadOrders() {
         const listDiv = document.getElementById('orderList');
+        listDiv.innerHTML = "讀取中...";
         fetch(`${scriptUrl}?action=getOrders`).then(res => res.json()).then(data => {
-            allOrders = data.slice(1).reverse(); // 倒序排，最新在上面
+            allOrders = data.slice(1).reverse(); // 最新訂單排在最前
             renderOrders(allOrders);
         });
     }
 
+    // 渲染進度頁面
     function renderOrders(orders) {
         const listDiv = document.getElementById('orderList');
         let html = '';
         orders.forEach(row => {
             const status = row[9] || "備料中";
-            // 根據狀態名稱選擇 CSS 類名
-            const statusClass = `status-${status}` || 'status-default';
+            const statusClass = `status-${status.trim()}`;
             
+            // 檢查品項 2 是否有填寫內容
+            const hasStyle2 = row[6] && row[6].toString().trim() !== "";
+
             html += `<div class="order-item">
                 <div class="order-header">
                     <div class="order-info">
                         <strong>${row[0]}</strong>
-                        <div style="font-size:0.85rem; color:#888;">${row[3]} (${row[4]}/${row[5]})</div>
-                        ${row[6] ? `<div style="font-size:0.85rem; color:#888;">${row[6]} (${row[7]}/${row[8]})</div>` : ''}
+                        <div style="font-size:0.85rem; color:#888; margin-top:5px;">
+                            ${row[3]} (${row[4]}/${row[5]})
+                        </div>
+                        ${hasStyle2 ? `
+                        <div style="font-size:0.85rem; color:#888;">
+                            ${row[6]} (${row[7]}/${row[8]})
+                        </div>` : ''}
                     </div>
                     <span class="status-tag ${statusClass}">${status}</span>
                 </div>
-                <select onchange="updateStatus('${row[0]}', this.value)" style="margin-top:10px; height: 35px; padding: 5px;">
+                <select onchange="updateStatus('${row[0]}', this.value)" style="margin-top:10px; height: 35px; padding: 5px; width: auto; min-width: 130px;">
                     <option value="">更改狀態...</option>
                     <option value="備料中">備料中</option>
                     <option value="車縫中">車縫中</option>
@@ -165,9 +204,10 @@
                 </select>
             </div>`;
         });
-        listDiv.innerHTML = html || "目前尚無訂單";
+        listDiv.innerHTML = html || "目前尚無訂單資料";
     }
 
+    // 搜尋功能
     function filterOrders() {
         const keyword = document.getElementById('adminSearch').value.toLowerCase();
         const filtered = allOrders.filter(row => 
@@ -177,10 +217,14 @@
         renderOrders(filtered);
     }
 
+    // 更新狀態
     function updateStatus(id, status) {
         if(!status) return;
         fetch(scriptUrl, { method: "POST", mode: "no-cors", body: JSON.stringify({action: 'updateStatus', id: id, status: status}) })
-        .then(() => { alert(`訂單 ${id} 已更新`); loadOrders(); });
+        .then(() => { 
+            alert(`訂單 ${id} 狀態已更新為 ${status}`); 
+            loadOrders(); 
+        });
     }
 </script>
 </body>
