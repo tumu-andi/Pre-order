@@ -188,15 +188,61 @@
     }
     function renderStatistics() {
         const tbody = document.getElementById('statsTableBody');
-        const fCat = document.getElementById('filterCat').value, fStyle = document.getElementById('filterStyle').value, fColor = document.getElementById('filterColor').value;
+        const fCat = document.getElementById('filterCat').value;
+        const fStyle = document.getElementById('filterStyle').value;
+        const fColor = document.getElementById('filterColor').value;
+        
         const statsMap = {};
-        allOrders.filter(row => !["已寄回", "出貨完畢"].includes((row[9]||"").trim())).forEach(row => {
-            [[row[3],row[4],row[5]], [row[6],row[7],row[8]]].forEach(it => {
-                if(!it[0]) return;
-                let cat = it[0].includes("上衣")||it[0].includes("BRA")?"TOP":(it[0].includes("褲")||it[0].includes("LEGGING")?"BOTTOM":"ONEPIECE");
-                if((fCat===""||cat===fCat)&&(fStyle===""||it[0]===fStyle)&&(fColor===""||it[1]===fColor)) {
-                    const key = `${it[0]} / ${it[1]} / ${it[2]}`;
+        const activeStyles = new Set();
+        const activeColors = new Set();
+
+        // 1. 先抓取所有「非完工」的訂單資料
+        const activeOrders = allOrders.filter(row => !["已寄回", "出貨完畢"].includes((row[9]||"").trim()));
+
+        activeOrders.forEach(row => {
+            // 處理兩個 Item
+            [[row[3], row[4], row[5]], [row[6], row[7], row[8]]].forEach(it => {
+                if (!it[0]) return; // 如果沒資料就跳過
+
+                const styleName = it[0];
+                const colorName = it[1];
+                const sizeName = it[2];
+
+                // 更新下拉選單的選項庫
+                activeStyles.add(styleName);
+                activeColors.add(colorName);
+
+                // 分類邏輯判定
+                let cat = "ONEPIECE";
+                const sUpper = styleName.toUpperCase();
+                if (sUpper.includes("TOP") || sUpper.includes("BRA") || styleName.includes("上衣")) cat = "TOP";
+                else if (sUpper.includes("BOTTOM") || sUpper.includes("LEGGING") || styleName.includes("褲")) cat = "BOTTOM";
+
+                // 2. 執行篩選
+                if ((fCat === "" || cat === fCat) &&
+                    (fStyle === "" || styleName === fStyle) &&
+                    (fColor === "" || colorName === fColor)) {
+                    const key = `${styleName} / ${colorName} / ${sizeName}`;
                     statsMap[key] = (statsMap[key] || 0) + 1;
+                }
+            });
+        });
+
+        // 3. 動態更新下拉選單（僅在選單是空的時候初始化，避免重複刷掉妳選好的項目）
+        const fs = document.getElementById('filterStyle');
+        const fc = document.getElementById('filterColor');
+        if (fs.options.length <= 1) {
+            [...activeStyles].sort().forEach(s => fs.add(new Option(s, s)));
+            [...activeColors].sort().forEach(c => fc.add(new Option(c, c)));
+        }
+
+        // 4. 渲染表格
+        let html = '';
+        Object.keys(statsMap).sort().forEach(key => {
+            html += `<tr><td style="padding:15px 0; border-bottom:1px solid #eee; font-size:0.95rem;">${key}</td><td style="text-align:right; border-bottom:1px solid #eee;"><b>${statsMap[key]}</b> <small style="color:#bbb; margin-left:5px;">PCS</small></td></tr>`;
+        });
+        tbody.innerHTML = html || '<tr><td colspan="2" style="text-align:center; padding:50px; color:#ccc;">無匹配的生產品項</td></tr>';
+    }
                 }
             });
         });
