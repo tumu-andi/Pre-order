@@ -9,80 +9,21 @@
     <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
     
     <style>
-        :root {
-            --timu-beige: #f9f8f6;
-            --timu-dark: #333333;
-            --timu-gold: #c5a35d;
-        }
-        body { 
-            font-family: "PingFang TC", "Microsoft JhengHei", sans-serif; 
-            background: var(--timu-beige); 
-            color: var(--timu-dark); 
-            padding: 20px;
-            line-height: 1.6;
-        }
-        .card { 
-            background: white; 
-            max-width: 600px; 
-            margin: 20px auto; 
-            padding: 30px; 
-            border-radius: 2px; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05); 
-        }
+        :root { --timu-beige: #f9f8f6; --timu-dark: #333333; --timu-gold: #c5a35d; }
+        body { font-family: "PingFang TC", sans-serif; background: var(--timu-beige); color: var(--timu-dark); padding: 20px; line-height: 1.6; }
+        .card { background: white; max-width: 600px; margin: 20px auto; padding: 30px; border-radius: 2px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
         .nav { text-align: center; margin-bottom: 30px; }
-        .nav button { 
-            background: none; 
-            border: 1px solid var(--timu-dark); 
-            color: var(--timu-dark); 
-            padding: 10px 25px; 
-            cursor: pointer; 
-            margin: 0 5px; 
-            letter-spacing: 2px;
-            transition: 0.3s;
-        }
-        .nav button.active-btn {
-            background: var(--timu-dark);
-            color: white;
-        }
-        h2 { 
-            font-weight: 300; 
-            text-align: center; 
-            letter-spacing: 4px; 
-            margin-bottom: 30px;
-            color: var(--timu-gold);
-        }
+        .nav button { background: none; border: 1px solid var(--timu-dark); color: var(--timu-dark); padding: 10px 25px; cursor: pointer; margin: 0 5px; letter-spacing: 2px; transition: 0.3s; }
+        .nav button.active-btn { background: var(--timu-dark); color: white; }
+        h2 { font-weight: 300; text-align: center; letter-spacing: 4px; margin-bottom: 30px; color: var(--timu-gold); }
         .tab { display: none; }
         .active { display: block; }
-        
         label { display: block; font-size: 0.85rem; margin-top: 15px; color: #666; }
-        input, select { 
-            width: 100%; 
-            padding: 12px; 
-            margin: 8px 0; 
-            border: 1px solid #eee; 
-            box-sizing: border-box;
-            font-size: 1rem;
-        }
-        .btn-submit { 
-            background: var(--timu-dark); 
-            color: white; 
-            border: none; 
-            padding: 15px; 
-            width: 100%; 
-            margin-top: 30px; 
-            cursor: pointer; 
-            letter-spacing: 2px;
-        }
-        .order-item { 
-            border-bottom: 1px solid #f0f0f0; 
-            padding: 15px 0; 
-        }
-        .order-header { display: flex; justify-content: space-between; align-items: center; }
-        .status-tag { font-size: 0.8rem; padding: 2px 8px; border: 1px solid #ccc; }
-
-        /* Choices.js 客製化樣式 */
+        input, select { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #eee; box-sizing: border-box; font-size: 1rem; }
+        .btn-submit { background: var(--timu-dark); color: white; border: none; padding: 15px; width: 100%; margin-top: 30px; cursor: pointer; letter-spacing: 2px; }
+        .order-item { border-bottom: 1px solid #f0f0f0; padding: 15px 0; }
+        .search-box { margin-bottom: 20px; border: 1px solid var(--timu-gold); padding: 10px; border-radius: 4px; }
         .choices__inner { background-color: #fff; border: 1px solid #eee; border-radius: 0; min-height: 45px; }
-        .choices__list--dropdown { border-radius: 0; }
     </style>
 </head>
 <body>
@@ -96,21 +37,22 @@
     <h2>NEW ORDER</h2>
     <label>訂單編號</label>
     <input type="text" id="orderId" placeholder="例如：#2026021401">
-    
     <label>預計交期</label>
     <input type="date" id="deadline">
     
     <div style="margin-top:20px; border-top: 1px solid #eee; padding-top:10px;">
         <label>款式 1</label>
-        <select id="style1" class="style-select"></select>
-        <input type="text" id="color1" placeholder="顏色 (例如：焙茶綠)">
+        <select id="style1"></select>
+        <label>顏色 1</label>
+        <select id="color1"></select>
         <input type="text" id="size1" placeholder="尺寸 (例如：S)">
     </div>
 
     <div style="margin-top:20px; border-top: 1px solid #eee; padding-top:10px;">
         <label>款式 2 (選填)</label>
-        <select id="style2" class="style-select"></select>
-        <input type="text" id="color2" placeholder="顏色">
+        <select id="style2"></select>
+        <label>顏色 2</label>
+        <select id="color2"></select>
         <input type="text" id="size2" placeholder="尺寸">
     </div>
     
@@ -119,15 +61,14 @@
 
 <div id="adminTab" class="tab card">
     <h2>PRODUCTION STATUS</h2>
+    <input type="text" id="adminSearch" class="search-box" placeholder="🔍 搜尋訂單編號、款式或顏色..." onkeyup="filterOrders()">
     <div id="orderList">載入中...</div>
 </div>
 
 <script>
-    // 這裡已經填入妳提供的最新 GAS 網址
     const scriptUrl = "https://script.google.com/macros/s/AKfycbwh-1fS08fb7rsrEs7_BgMVhQoGpE_wc_GUfG6R-C3D3Ds0ytj0GhH5x_MvgYvfQzejFA/exec"; 
-    let choice1, choice2;
+    let allOrders = []; // 儲存原始資料供搜尋使用
 
-    // 切換分頁邏輯
     function showTab(type) {
         document.getElementById('formTab').classList.toggle('active', type === 'form');
         document.getElementById('adminTab').classList.toggle('active', type === 'admin');
@@ -135,115 +76,85 @@
         document.getElementById('btnAdmin').classList.toggle('active-btn', type === 'admin');
     }
 
-    // 初始化：從試算表讀取款式清單並啟用搜尋功能
     window.onload = function() {
         fetch(`${scriptUrl}?action=getStyles`)
         .then(res => res.json())
-        .then(styles => {
-            const selects = [document.getElementById('style1'), document.getElementById('style2')];
-            selects.forEach(s => {
-                let defaultOpt = document.createElement('option');
-                defaultOpt.text = "請選擇或搜尋款式...";
-                defaultOpt.value = "";
-                s.appendChild(defaultOpt);
+        .then(data => {
+            // data 格式：[[款式1, 顏色1], [款式2, 顏色2]...]
+            const styles = [...new Set(data.map(item => item[0]))].filter(String);
+            const colors = [...new Set(data.map(item => item[1]))].filter(String);
 
-                styles.forEach(item => {
-                    let opt = document.createElement('option');
-                    opt.value = item[0]; 
-                    opt.text = item[0];
-                    s.appendChild(opt);
-                });
-            });
-
-            // 啟用 Choices.js 搜尋功能
-            choice1 = new Choices('#style1', { searchEnabled: true, itemSelectText: '', placeholder: true });
-            choice2 = new Choices('#style2', { searchEnabled: true, itemSelectText: '', placeholder: true });
-        })
-        .catch(err => console.error("無法讀取款式：", err));
+            setupSelect('style1', styles, "請搜尋款式...");
+            setupSelect('style2', styles, "請搜尋款式...");
+            setupSelect('color1', colors, "請搜尋色號...");
+            setupSelect('color2', colors, "請搜尋色號...");
+        });
     };
 
-    // 建立新訂單
+    function setupSelect(id, list, placeholder) {
+        const s = document.getElementById(id);
+        let defaultOpt = document.createElement('option');
+        defaultOpt.text = placeholder; defaultOpt.value = "";
+        s.appendChild(defaultOpt);
+        list.forEach(item => {
+            let opt = document.createElement('option');
+            opt.value = item; opt.text = item;
+            s.appendChild(opt);
+        });
+        new Choices(`#${id}`, { searchEnabled: true, itemSelectText: '', placeholder: true });
+    }
+
     function submitOrder() {
         const id = document.getElementById('orderId').value;
         if(!id) { alert("請輸入訂單編號"); return; }
-
         const data = {
-            id: id,
-            deadline: document.getElementById('deadline').value,
-            s1: document.getElementById('style1').value,
-            c1: document.getElementById('color1').value,
-            z1: document.getElementById('size1').value,
-            s2: document.getElementById('style2').value,
-            c2: document.getElementById('color2').value,
-            z2: document.getElementById('size2').value
+            id: id, deadline: document.getElementById('deadline').value,
+            s1: document.getElementById('style1').value, c1: document.getElementById('color1').value, z1: document.getElementById('size1').value,
+            s2: document.getElementById('style2').value, c2: document.getElementById('color2').value, z2: document.getElementById('size2').value
         };
-
-        const btn = document.querySelector('.btn-submit');
-        btn.innerText = "處理中...";
-        btn.disabled = true;
-        
-        fetch(scriptUrl, {
-            method: "POST",
-            mode: "no-cors", // 跨網域傳輸設定
-            body: JSON.stringify({action: 'addOrder', data: data})
-        }).then(() => {
-            alert('訂單已成功送出至後台試算表！');
-            location.reload(); // 成功後重整
-        }).catch(err => {
-            alert('送出失敗，請檢查網路連接');
-            btn.innerText = "送出訂製需求";
-            btn.disabled = false;
-        });
+        fetch(scriptUrl, { method: "POST", mode: "no-cors", body: JSON.stringify({action: 'addOrder', data: data}) })
+        .then(() => { alert('訂單已成功送出！'); location.reload(); });
     }
 
-    // 讀取進度清單
     function loadOrders() {
         const listDiv = document.getElementById('orderList');
-        listDiv.innerHTML = "讀取中...";
-
-        fetch(`${scriptUrl}?action=getOrders`)
-        .then(res => res.json())
-        .then(data => {
-            let html = '';
-            // 試算表第一列是標題，所以從 i=1 開始
-            for(let i=1; i<data.length; i++) {
-                const currentStatus = data[i][9] || "備料中";
-                html += `
-                <div class="order-item">
-                    <div class="order-header">
-                        <strong>${data[i][0]}</strong>
-                        <span class="status-tag">${currentStatus}</span>
-                    </div>
-                    <div style="font-size:0.85rem; color:#888; margin-bottom:10px;">
-                        款式：${data[i][3]} ${data[i][4]} / 交期：${data[i][2] ? data[i][2].split('T')[0] : '未定'}
-                    </div>
-                    <select onchange="updateStatus('${data[i][0]}', this.value)">
-                        <option value="">更改製作狀態...</option>
-                        <option value="備料中">備料中</option>
-                        <option value="車縫中">車縫中</option>
-                        <option value="細節修飾">細節修飾</option>
-                        <option value="品檢完工">品檢完工</option>
-                    </select>
-                </div>`;
-            }
-            listDiv.innerHTML = html || "目前尚無訂單資料";
+        fetch(`${scriptUrl}?action=getOrders`).then(res => res.json()).then(data => {
+            allOrders = data.slice(1); // 跳過標題列
+            renderOrders(allOrders);
         });
     }
 
-    // 更新進度回傳試算表
+    function renderOrders(orders) {
+        const listDiv = document.getElementById('orderList');
+        let html = '';
+        orders.forEach(row => {
+            html += `<div class="order-item">
+                <div class="order-header"><strong>${row[0]}</strong> <span class="status-tag">${row[9] || "備料中"}</span></div>
+                <div style="font-size:0.85rem; color:#888;">${row[3]} / ${row[4]} / ${row[5]}</div>
+                <select onchange="updateStatus('${row[0]}', this.value)">
+                    <option value="">更改製作狀態...</option>
+                    <option value="備料中">備料中</option><option value="車縫中">車縫中</option><option value="品檢完工">品檢完工</option>
+                </select>
+            </div>`;
+        });
+        listDiv.innerHTML = html || "查無訂單資料";
+    }
+
+    function filterOrders() {
+        const keyword = document.getElementById('adminSearch').value.toLowerCase();
+        const filtered = allOrders.filter(row => 
+            row[0].toString().toLowerCase().includes(keyword) || 
+            row[3].toString().toLowerCase().includes(keyword) ||
+            row[4].toString().toLowerCase().includes(keyword)
+        );
+        renderOrders(filtered);
+    }
+
     function updateStatus(id, status) {
         if(!status) return;
-        
-        fetch(scriptUrl, {
-            method: "POST",
-            mode: "no-cors",
-            body: JSON.stringify({action: 'updateStatus', id: id, status: status})
-        }).then(() => {
-            alert(`訂單 ${id} 進度已更新為：${status}`);
-            loadOrders(); // 刷新清單
-        });
+        fetch(scriptUrl, { method: "POST", mode: "no-cors", body: JSON.stringify({action: 'updateStatus', id: id, status: status}) })
+        .then(() => { alert(`訂單 ${id} 進度已更新`); loadOrders(); });
     }
 </script>
-
 </body>
 </html>
