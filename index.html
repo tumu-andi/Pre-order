@@ -170,3 +170,18 @@
 
     function filterOrders() {
         const keyword = document.getElementById('adminSearch').value.toLowerCase();
+        const filtered = allOrders.filter(row => 
+            row[0].toString().toLowerCase().includes(keyword) || 
+            row[3].toString().toLowerCase().includes(keyword)
+        );
+        renderOrders(filtered);
+    }
+
+    function updateStatus(id, status) {
+        if(!status) return;
+        fetch(scriptUrl, { method: "POST", mode: "no-cors", body: JSON.stringify({action: 'updateStatus', id: id, status: status}) })
+        .then(() => { alert(`訂單 ${id} 已更新`); loadOrders(); });
+    }
+</script>
+</body>
+</html>
