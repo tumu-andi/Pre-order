@@ -1,130 +1,249 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TIMU | 生產管理系統</title>
+    
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
     
     <style>
-        body { font-family: sans-serif; background: #f9f8f6; color: #333; padding: 20px; }
-        .card { background: white; max-width: 600px; margin: auto; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-        .nav { text-align: center; margin-bottom: 20px; }
-        button { background: #333; color: white; border: none; padding: 10px 20px; cursor: pointer; margin: 5px; }
-        input, select { width: 100%; padding: 8px; margin: 10px 0; border: 1px solid #ddd; }
-        /* 讓搜尋選單看起來更符合 TIMU 的極簡感 */
-        .choices__inner { background-color: #fff; border: 1px solid #ddd; border-radius: 0; }
+        :root {
+            --timu-beige: #f9f8f6;
+            --timu-dark: #333333;
+            --timu-gold: #c5a35d;
+        }
+        body { 
+            font-family: "PingFang TC", "Microsoft JhengHei", sans-serif; 
+            background: var(--timu-beige); 
+            color: var(--timu-dark); 
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .card { 
+            background: white; 
+            max-width: 600px; 
+            margin: 20px auto; 
+            padding: 30px; 
+            border-radius: 2px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05); 
+        }
+        .nav { text-align: center; margin-bottom: 30px; }
+        .nav button { 
+            background: none; 
+            border: 1px solid var(--timu-dark); 
+            color: var(--timu-dark); 
+            padding: 10px 25px; 
+            cursor: pointer; 
+            margin: 0 5px; 
+            letter-spacing: 2px;
+            transition: 0.3s;
+        }
+        .nav button.active-btn {
+            background: var(--timu-dark);
+            color: white;
+        }
+        h2 { 
+            font-weight: 300; 
+            text-align: center; 
+            letter-spacing: 4px; 
+            margin-bottom: 30px;
+            color: var(--timu-gold);
+        }
+        .tab { display: none; }
+        .active { display: block; }
+        
+        label { display: block; font-size: 0.85rem; margin-top: 15px; color: #666; }
+        input, select { 
+            width: 100%; 
+            padding: 12px; 
+            margin: 8px 0; 
+            border: 1px solid #eee; 
+            box-sizing: border-box;
+            font-size: 1rem;
+        }
+        .btn-submit { 
+            background: var(--timu-dark); 
+            color: white; 
+            border: none; 
+            padding: 15px; 
+            width: 100%; 
+            margin-top: 30px; 
+            cursor: pointer; 
+            letter-spacing: 2px;
+        }
+        .order-item { 
+            border-bottom: 1px solid #f0f0f0; 
+            padding: 15px 0; 
+        }
+        .order-header { display: flex; justify-content: space-between; align-items: center; }
+        .status-tag { font-size: 0.8rem; padding: 2px 8px; border: 1px solid #ccc; }
+
+        /* Choices.js 客製化樣式 */
+        .choices__inner { background-color: #fff; border: 1px solid #eee; border-radius: 0; min-height: 45px; }
         .choices__list--dropdown { border-radius: 0; }
     </style>
 </head>
 <body>
 
 <div class="nav">
-    <button onclick="showTab('form')">填寫新單</button>
-    <button onclick="showTab('admin'); loadOrders();">進度管理</button>
+    <button id="btnForm" class="active-btn" onclick="showTab('form')">建立新單</button>
+    <button id="btnAdmin" onclick="showTab('admin'); loadOrders();">進度管理</button>
 </div>
 
 <div id="formTab" class="tab active card">
-    <h2>建立新訂單</h2>
-    <input type="text" id="orderId" placeholder="訂單編號">
-    <input type="date" id="deadline" placeholder="預計交期">
+    <h2>NEW ORDER</h2>
+    <label>訂單編號</label>
+    <input type="text" id="orderId" placeholder="例如：#2026021401">
     
-    <p>款式 1</p>
-    <select id="style1" class="style-select"></select>
-    <input type="text" id="color1" placeholder="顏色">
-    <input type="text" id="size1" placeholder="尺寸">
+    <label>預計交期</label>
+    <input type="date" id="deadline">
+    
+    <div style="margin-top:20px; border-top: 1px solid #eee; padding-top:10px;">
+        <label>款式 1</label>
+        <select id="style1" class="style-select"></select>
+        <input type="text" id="color1" placeholder="顏色 (例如：焙茶綠)">
+        <input type="text" id="size1" placeholder="尺寸 (例如：S)">
+    </div>
 
-    <p>款式 2</p>
-    <select id="style2" class="style-select"></select>
-    <input type="text" id="color2" placeholder="顏色">
-    <input type="text" id="size2" placeholder="尺寸">
+    <div style="margin-top:20px; border-top: 1px solid #eee; padding-top:10px;">
+        <label>款式 2 (選填)</label>
+        <select id="style2" class="style-select"></select>
+        <input type="text" id="color2" placeholder="顏色">
+        <input type="text" id="size2" placeholder="尺寸">
+    </div>
     
-    <button onclick="submitOrder()" style="width:100%; margin-top: 20px;">送出資料</button>
+    <button class="btn-submit" onclick="submitOrder()">送出訂製需求</button>
 </div>
 
-<div id="adminTab" class="tab card" style="display:none;">
-    <h2>進度追蹤與修改</h2>
+<div id="adminTab" class="tab card">
+    <h2>PRODUCTION STATUS</h2>
     <div id="orderList">載入中...</div>
 </div>
 
 <script>
+    // 這裡已經填入妳提供的最新 GAS 網址
     const scriptUrl = "https://script.google.com/macros/s/AKfycbwh-1fS08fb7rsrEs7_BgMVhQoGpE_wc_GUfG6R-C3D3Ds0ytj0GhH5x_MvgYvfQzejFA/exec"; 
-    let choice1, choice2; // 儲存搜尋物件
+    let choice1, choice2;
 
+    // 切換分頁邏輯
+    function showTab(type) {
+        document.getElementById('formTab').classList.toggle('active', type === 'form');
+        document.getElementById('adminTab').classList.toggle('active', type === 'admin');
+        document.getElementById('btnForm').classList.toggle('active-btn', type === 'form');
+        document.getElementById('btnAdmin').classList.toggle('active-btn', type === 'admin');
+    }
+
+    // 初始化：從試算表讀取款式清單並啟用搜尋功能
     window.onload = function() {
         fetch(`${scriptUrl}?action=getStyles`)
         .then(res => res.json())
         .then(styles => {
             const selects = [document.getElementById('style1'), document.getElementById('style2')];
             selects.forEach(s => {
-                // 加入一個預設選項
                 let defaultOpt = document.createElement('option');
-                defaultOpt.text = "輸入關鍵字搜尋款式...";
+                defaultOpt.text = "請選擇或搜尋款式...";
+                defaultOpt.value = "";
                 s.appendChild(defaultOpt);
 
                 styles.forEach(item => {
                     let opt = document.createElement('option');
-                    opt.value = item[0]; opt.text = item[0];
+                    opt.value = item[0]; 
+                    opt.text = item[0];
                     s.appendChild(opt);
                 });
             });
 
-            // 啟動搜尋功能
-            choice1 = new Choices('#style1', { searchEnabled: true, itemSelectText: '' });
-            choice2 = new Choices('#style2', { searchEnabled: true, itemSelectText: '' });
+            // 啟用 Choices.js 搜尋功能
+            choice1 = new Choices('#style1', { searchEnabled: true, itemSelectText: '', placeholder: true });
+            choice2 = new Choices('#style2', { searchEnabled: true, itemSelectText: '', placeholder: true });
+        })
+        .catch(err => console.error("無法讀取款式：", err));
+    };
+
+    // 建立新訂單
+    function submitOrder() {
+        const id = document.getElementById('orderId').value;
+        if(!id) { alert("請輸入訂單編號"); return; }
+
+        const data = {
+            id: id,
+            deadline: document.getElementById('deadline').value,
+            s1: document.getElementById('style1').value,
+            c1: document.getElementById('color1').value,
+            z1: document.getElementById('size1').value,
+            s2: document.getElementById('style2').value,
+            c2: document.getElementById('color2').value,
+            z2: document.getElementById('size2').value
+        };
+
+        const btn = document.querySelector('.btn-submit');
+        btn.innerText = "處理中...";
+        btn.disabled = true;
+        
+        fetch(scriptUrl, {
+            method: "POST",
+            mode: "no-cors", // 跨網域傳輸設定
+            body: JSON.stringify({action: 'addOrder', data: data})
+        }).then(() => {
+            alert('訂單已成功送出至後台試算表！');
+            location.reload(); // 成功後重整
+        }).catch(err => {
+            alert('送出失敗，請檢查網路連接');
+            btn.innerText = "送出訂製需求";
+            btn.disabled = false;
         });
-    };
+    }
 
-    // ... 其餘 submitOrder, loadOrders, updateStatus 函數維持不變 ...
-    // ... 記得把上一個回答的 JS 邏輯貼在下面 ...
+    // 讀取進度清單
+    function loadOrders() {
+        const listDiv = document.getElementById('orderList');
+        listDiv.innerHTML = "讀取中...";
+
+        fetch(`${scriptUrl}?action=getOrders`)
+        .then(res => res.json())
+        .then(data => {
+            let html = '';
+            // 試算表第一列是標題，所以從 i=1 開始
+            for(let i=1; i<data.length; i++) {
+                const currentStatus = data[i][9] || "備料中";
+                html += `
+                <div class="order-item">
+                    <div class="order-header">
+                        <strong>${data[i][0]}</strong>
+                        <span class="status-tag">${currentStatus}</span>
+                    </div>
+                    <div style="font-size:0.85rem; color:#888; margin-bottom:10px;">
+                        款式：${data[i][3]} ${data[i][4]} / 交期：${data[i][2] ? data[i][2].split('T')[0] : '未定'}
+                    </div>
+                    <select onchange="updateStatus('${data[i][0]}', this.value)">
+                        <option value="">更改製作狀態...</option>
+                        <option value="備料中">備料中</option>
+                        <option value="車縫中">車縫中</option>
+                        <option value="細節修飾">細節修飾</option>
+                        <option value="品檢完工">品檢完工</option>
+                    </select>
+                </div>`;
+            }
+            listDiv.innerHTML = html || "目前尚無訂單資料";
+        });
+    }
+
+    // 更新進度回傳試算表
+    function updateStatus(id, status) {
+        if(!status) return;
+        
+        fetch(scriptUrl, {
+            method: "POST",
+            mode: "no-cors",
+            body: JSON.stringify({action: 'updateStatus', id: id, status: status})
+        }).then(() => {
+            alert(`訂單 ${id} 進度已更新為：${status}`);
+            loadOrders(); // 刷新清單
+        });
+    }
 </script>
-</body>
-</html>
-function submitOrder() {
-    const data = {
-        id: document.getElementById('orderId').value,
-        deadline: document.getElementById('deadline').value,
-        s1: document.getElementById('style1').value,
-        c1: document.getElementById('color1').value,
-        z1: document.getElementById('size1').value,
-        s2: document.getElementById('style2').value,
-        c2: document.getElementById('color2').value,
-        z2: document.getElementById('size2').value
-    };
-    
-    fetch(scriptUrl, {
-        method: "POST",
-        body: JSON.stringify({action: 'addOrder', data: data})
-    }).then(() => alert('訂單已送出！'));
-}
 
-function loadOrders() {
-    fetch(`${scriptUrl}?action=getOrders`)
-    .then(res => res.json())
-    .then(data => {
-        let html = '';
-        for(let i=1; i<data.length; i++) {
-            html += `<div class="order-item">
-                <b>${data[i][0]}</b> - ${data[i][3]} (${data[i][9]})<br>
-                <select onchange="updateStatus('${data[i][0]}', this.value)">
-                    <option>更改進度</option>
-                    <option value="備料中">備料中</option>
-                    <option value="車縫中">車縫中</option>
-                    <option value="品檢中">品檢中</option>
-                    <option value="已完工">已完工</option>
-                </select>
-            </div>`;
-        }
-        document.getElementById('orderList').innerHTML = html;
-    });
-}
-
-function updateStatus(id, status) {
-    fetch(scriptUrl, {
-        method: "POST",
-        body: JSON.stringify({action: 'updateStatus', id: id, status: status})
-    }).then(() => alert('進度已同步回試算表！'));
-}
-</script>
 </body>
 </html>
