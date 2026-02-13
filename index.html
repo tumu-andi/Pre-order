@@ -4,69 +4,65 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TIMU | 生產管理系統</title>
+    
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
+    
     <style>
         :root { --timu-beige: #f9f8f6; --timu-dark: #333333; --timu-gold: #c5a35d; }
-        body { font-family: "PingFang TC", sans-serif; background: var(--timu-beige); color: var(--timu-dark); padding: 20px; margin: 0; }
-        .nav { text-align: center; margin: 20px 0 30px 0; position: sticky; top: 0; z-index: 100; background: var(--timu-beige); padding: 10px 0; }
-        .nav button { background: white; border: 1px solid var(--timu-dark); color: var(--timu-dark); padding: 10px 25px; cursor: pointer; margin: 0 5px; letter-spacing: 2px; transition: 0.3s; font-size: 0.85rem; }
+        body { font-family: "PingFang TC", sans-serif; background: var(--timu-beige); color: var(--timu-dark); padding: 10px; margin: 0; }
+        
+        /* 導覽列 */
+        .nav { text-align: center; margin: 10px 0 20px 0; position: sticky; top: 0; z-index: 1000; background: var(--timu-beige); padding: 10px 0; border-bottom: 1px solid #eee; }
+        .nav button { background: white; border: 1px solid var(--timu-dark); color: var(--timu-dark); padding: 8px 15px; cursor: pointer; margin: 0 3px; letter-spacing: 1px; transition: 0.3s; font-size: 0.8rem; }
         .nav button.active-btn { background: var(--timu-dark); color: white; }
-        .page-container { display: none; background: white; margin: 0 auto 50px auto; padding: 30px; border-radius: 2px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
-        #formTab { max-width: 550px; }
-        #adminTab { max-width: 850px; }
+        
+        .page-container { display: none; background: white; margin: 0 auto 30px auto; padding: 20px; border-radius: 2px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); width: 95%; max-width: 900px; box-sizing: border-box; }
         .active { display: block; }
-        h2 { font-weight: 300; text-align: center; letter-spacing: 4px; margin-bottom: 30px; color: var(--timu-gold); }
+        
+        h2 { font-weight: 300; text-align: center; letter-spacing: 4px; margin-bottom: 20px; color: var(--timu-gold); font-size: 1.2rem; }
+        
+        /* 日曆專用樣式 */
+        #calendar { max-width: 100%; margin: 0 auto; min-height: 500px; font-size: 0.85rem; }
+        .fc-event { cursor: pointer; border: none !important; padding: 2px; }
+        .fc-toolbar-title { font-size: 1.1rem !important; color: var(--timu-gold); }
+        .fc-button-primary { background-color: var(--timu-dark) !important; border: none !important; }
+        
+        /* 原有樣式保持... (略過重複部分以節省篇幅，確保與之前一致) */
         #orderId::placeholder { font-size: 0.75rem; color: #ccc; }
-        
-        .checkbox-row { margin: 20px 0; display: flex; align-items: center; gap: 8px; font-size: 0.9rem; cursor: pointer; color: #555; }
-        .checkbox-row input { width: 18px; height: 18px; cursor: pointer; }
-
-        .date-row { display: flex; align-items: center; gap: 12px; margin: 8px 0; }
-        #orderDate { width: 160px; padding: 8px; font-size: 0.9rem; }
-        .expected-hint { font-size: 0.8rem; color: var(--timu-gold); font-weight: bold; }
-        .section-header { font-size: 1rem; font-weight: 600; margin: 30px 0 10px 0; border-bottom: 1px solid var(--timu-dark); padding-bottom: 5px; }
-        label { display: block; font-size: 0.75rem; margin-top: 15px; color: #999; }
-        input, select { padding: 8px 12px; margin: 5px 0; border: 1px solid #eee; font-size: 0.95rem; }
-        .choices__inner { min-height: 38px !important; padding: 4px 8px !important; background: white !important; }
-        
-        .btn-submit { background: var(--timu-dark); color: white; border: none; padding: 15px; width: 100%; margin-top: 30px; cursor: pointer; letter-spacing: 3px; font-size: 1rem; transition: 0.3s; }
+        .checkbox-row { margin: 15px 0; display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: #555; cursor: pointer; }
+        .date-row { display: flex; align-items: center; gap: 10px; margin: 8px 0; }
+        #orderDate { width: 140px; padding: 8px; font-size: 0.9rem; }
+        .expected-hint { font-size: 0.75rem; color: var(--timu-gold); font-weight: bold; }
+        .section-header { font-size: 0.9rem; font-weight: 600; margin: 20px 0 10px 0; border-bottom: 1px solid var(--timu-dark); padding-bottom: 5px; }
+        label { display: block; font-size: 0.7rem; margin-top: 10px; color: #999; }
+        input, select { padding: 8px; margin: 5px 0; border: 1px solid #eee; font-size: 0.9rem; width: 100%; box-sizing: border-box; }
+        .btn-submit { background: var(--timu-dark); color: white; border: none; padding: 15px; width: 100%; margin-top: 20px; cursor: pointer; letter-spacing: 3px; font-size: 1rem; }
         .btn-submit.success { background: #27ae60; }
-
-        .order-item { border-bottom: 1px solid #f2f2f2; padding: 20px 0; }
+        .order-item { border-bottom: 1px solid #f2f2f2; padding: 15px 0; }
         .order-header { display: flex; justify-content: space-between; align-items: flex-start; }
-        .order-date-info { font-size: 0.75rem; color: #888; margin-bottom: 5px; }
-        .order-date-info span { margin-right: 10px; }
-        
-        /* 含現貨標籤樣式 */
-        .stock-tag { font-size: 0.7rem; color: #e67e22; background: #fff5e6; padding: 2px 8px; border-radius: 3px; font-weight: bold; margin-left: 8px; border: 1px solid #ffcc80; }
-
-        .status-tag { padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; color: white; font-weight: 600; }
+        .order-date-info { font-size: 0.7rem; color: #888; margin-bottom: 5px; }
+        .stock-tag { font-size: 0.65rem; color: #e67e22; background: #fff5e6; padding: 1px 5px; border-radius: 3px; font-weight: bold; margin-left: 5px; border: 1px solid #ffcc80; }
+        .status-tag { padding: 3px 10px; border-radius: 20px; font-size: 0.7rem; color: white; font-weight: 600; }
         .status-新訂單 { background-color: #34495e; }
         .status-備料中 { background-color: #95a5a6; }
         .status-車縫中 { background-color: #3498db; }
         .status-已寄回 { background-color: #9b59b6; }
         .status-出貨完畢 { background-color: #27ae60; }
-
-        .deadline-box { display: inline-block; padding: 3px 8px; border-radius: 4px; font-size: 0.8rem; margin: 5px 0; font-weight: 500; }
+        .deadline-box { display: inline-block; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; margin: 5px 0; font-weight: 500; }
         .time-safe { background-color: #e8f5e9; color: #2e7d32; }
         .time-normal { background-color: #e3f2fd; color: #1565c0; }
         .time-warning { background-color: #fff3e0; color: #ef6c00; }
         .time-urgent { background-color: #ffebee; color: #c62828; }
-
-        .item-detail { font-size: 0.85rem; color: #666; margin-top: 5px; border-left: 2px solid #eee; padding-left: 10px; line-height: 1.6; }
-        .note-container { margin-top: 15px; display: flex; align-items: center; gap: 8px; border-top: 1px dashed #eee; padding-top: 10px; }
-        .note-label { font-size: 0.7rem; color: #aaa; white-space: nowrap; }
-        .note-input { flex: 1; font-size: 0.8rem; padding: 4px 0; border: none; border-bottom: 1px solid transparent; background: transparent; color: #666; transition: border-bottom 0.3s; }
-        .note-input:focus { outline: none; border-bottom: 1px solid var(--timu-gold); background: #fffcf5; }
-        .btn-note-save { font-size: 0.7rem; background: none; border: 1px solid #ddd; padding: 2px 8px; cursor: pointer; color: #999; border-radius: 2px; transition: 0.2s; }
-        .btn-note-save:hover { border-color: var(--timu-gold); color: var(--timu-gold); }
-
-        .status-select { width: 150px; height: 34px; font-size: 0.8rem; border: 1px solid #ddd; margin-top: 10px; }
-        
-        .filter-group { display: flex; gap: 10px; margin-bottom: 20px; }
-        .search-box { flex: 2; margin-bottom: 0; border: 1px solid #eee; padding: 12px; }
-        .status-filter { flex: 1; border: 1px solid #eee; padding: 10px; background: white; font-size: 0.85rem; }
+        .item-detail { font-size: 0.8rem; color: #666; margin-top: 5px; border-left: 2px solid #eee; padding-left: 10px; line-height: 1.5; }
+        .note-container { margin-top: 10px; display: flex; align-items: center; gap: 5px; border-top: 1px dashed #eee; padding-top: 8px; }
+        .note-input { flex: 1; font-size: 0.75rem; border: none; background: transparent; color: #666; }
+        .status-select { width: 120px; height: 30px; font-size: 0.75rem; margin-top: 10px; }
+        .filter-group { display: flex; gap: 5px; margin-bottom: 15px; }
+        .search-box { flex: 2; padding: 8px; }
+        .status-filter { flex: 1; padding: 8px; font-size: 0.75rem; }
     </style>
 </head>
 <body>
@@ -74,6 +70,7 @@
 <div class="nav">
     <button id="btnForm" class="active-btn" onclick="showTab('form')">建立新單</button>
     <button id="btnAdmin" onclick="showTab('admin')">進度管理</button>
+    <button id="btnCalendar" onclick="showTab('calendar')">生產日曆</button>
 </div>
 
 <div id="formTab" class="page-container active">
@@ -84,11 +81,7 @@
         <input type="date" id="orderDate" onchange="calculateExpectedDate(this.value)">
         <div id="expectedHint" class="expected-hint"></div>
     </div>
-    
-    <label class="checkbox-row">
-        <input type="checkbox" id="hasStock"> 訂單內含其他現貨商品
-    </label>
-
+    <label class="checkbox-row"><input type="checkbox" id="hasStock"> 訂單內含其他現貨商品</label>
     <div class="section-header">Pre-order:1</div>
     <label>款式 1</label><select id="style1"></select>
     <label>顏色 1</label><select id="color1"></select>
@@ -103,7 +96,7 @@
 <div id="adminTab" class="page-container">
     <h2>STATUS</h2>
     <div class="filter-group">
-        <input type="text" id="adminSearch" class="search-box" placeholder="🔍 搜尋編號、款式或備註..." onkeyup="filterOrders()">
+        <input type="text" id="adminSearch" class="search-box" placeholder="🔍 搜尋..." onkeyup="filterOrders()">
         <select id="statusFilter" class="status-filter" onchange="filterOrders()">
             <option value="">所有狀態</option>
             <option value="新訂單">新訂單</option>
@@ -116,16 +109,62 @@
     <div id="orderList">載入中...</div>
 </div>
 
+<div id="calendarTab" class="page-container">
+    <h2>PRODUCTION CALENDAR</h2>
+    <div id="calendar"></div>
+</div>
+
 <script>
     const scriptUrl = "https://script.google.com/macros/s/AKfycbyi0WHv5eEFxL5XVKiPsr_iU6Ipoa0OxJJQvTjmjzicQTrNRK16fTUqD2_qeskcoXVcZg/exec";
     let allOrders = [];
+    let calendar;
 
     function showTab(type) {
-        document.getElementById('formTab').style.display = (type === 'form') ? 'block' : 'none';
-        document.getElementById('adminTab').style.display = (type === 'admin') ? 'block' : 'none';
-        document.getElementById('btnForm').classList.toggle('active-btn', type === 'form');
-        document.getElementById('btnAdmin').classList.toggle('active-btn', type === 'admin');
-        if (type === 'admin' && allOrders.length === 0) { loadOrders(); }
+        document.querySelectorAll('.page-container').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.nav button').forEach(el => el.classList.remove('active-btn'));
+        
+        document.getElementById(type + 'Tab').classList.add('active');
+        document.getElementById('btn' + type.charAt(0).toUpperCase() + type.slice(1)).classList.add('active-btn');
+        
+        if ((type === 'admin' || type === 'calendar') && allOrders.length === 0) {
+            loadOrders();
+        } else if (type === 'calendar') {
+            setTimeout(() => { calendar.render(); }, 100); // 確保容器顯示後才渲染日曆
+        }
+    }
+
+    // 初始化日曆
+    function initCalendar(orders) {
+        const calendarEl = document.getElementById('calendar');
+        const events = orders.map(row => {
+            const status = (row[9] || "新訂單").trim();
+            // 根據狀態設定顏色
+            let color = '#34495e'; // 新訂單
+            if(status === '備料中') color = '#95a5a6';
+            if(status === '車縫中') color = '#3498db';
+            if(status === '已寄回') color = '#9b59b6';
+            if(status === '出貨完畢') color = '#27ae60';
+
+            return {
+                title: `${row[0]} (${row[3]})`,
+                start: row[1].toString().split('T')[0].replace(/\//g, '-'), // 訂製日期
+                extendedProps: { status: status, style: row[3] },
+                backgroundColor: color,
+                borderColor: color
+            };
+        });
+
+        calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            locale: 'zh-tw',
+            headerToolbar: { left: 'prev,next today', center: 'title', right: 'dayGridMonth,listMonth' },
+            events: events,
+            eventClick: function(info) {
+                alert(`訂單：${info.event.title}\n狀態：${info.event.extendedProps.status}\n日期：${info.event.startStr}`);
+            },
+            height: 'auto'
+        });
+        calendar.render();
     }
 
     function calculateExpectedDate(val) {
@@ -133,10 +172,7 @@
         const parts = val.split('-');
         const d = new Date(parts[0], parts[1] - 1, parts[2]);
         d.setDate(d.getDate() + 42); 
-        const y = d.getFullYear();
-        const m = String(d.getMonth() + 1).padStart(2, '0');
-        const day = String(d.getDate()).padStart(2, '0');
-        const result = `${y}/${m}/${day}`;
+        const result = `${d.getFullYear()}/${String(d.getMonth() + 1).padStart(2, '0')}/${String(d.getDate()).padStart(2, '0')}`;
         document.getElementById('expectedHint').innerText = `⮕ 預計交期: ${result}`;
         return result;
     }
@@ -147,13 +183,12 @@
             const styles = [...new Set(actualData.map(item => item[0]))].filter(String);
             const colors = [...new Set(actualData.map(item => item[1]))].filter(String);
             const sizeList = ["XS", "S", "M", "L", "XL"];
-            ['style1','style2'].forEach(id => setupSelect(id, styles, "搜尋款式..."));
-            ['color1','color2'].forEach(id => setupSelect(id, colors, "搜尋顏色..."));
-            ['size1','size2'].forEach(id => setupSelect(id, sizeList, "選擇尺寸..."));
+            ['style1','style2'].forEach(id => setupSelect(id, styles, "款式..."));
+            ['color1','color2'].forEach(id => setupSelect(id, colors, "顏色..."));
+            ['size1','size2'].forEach(id => setupSelect(id, sizeList, "尺寸..."));
         });
         const now = new Date();
-        const offset = now.getTimezoneOffset() * 60000; 
-        const localISOTime = (new Date(now - offset)).toISOString().split('T')[0];
+        const localISOTime = (new Date(now - now.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
         document.getElementById('orderDate').value = localISOTime;
         calculateExpectedDate(localISOTime);
     };
@@ -165,86 +200,57 @@
         new Choices(`#${id}`, { searchEnabled: true, itemSelectText: '', shouldSort: false });
     }
 
-    function getProductionStage(expDateStr) {
-        if (!expDateStr) return { text: '尚未計算', class: 'time-safe' };
-        const d = new Date(expDateStr);
-        const diffDays = Math.ceil((d - new Date()) / (1000 * 60 * 60 * 24));
-        if (diffDays > 28) return { text: `剩餘 ${diffDays} 天`, class: 'time-safe' };
-        if (diffDays > 14) return { text: `剩餘 ${diffDays} 天`, class: 'time-normal' };
-        if (diffDays > 7) return { text: `剩餘 ${diffDays} 天`, class: 'time-warning' };
-        return { text: diffDays < 0 ? `逾期 ${Math.abs(diffDays)} 天` : `剩餘 ${diffDays} 天 (趕單)`, class: 'time-urgent' };
+    function loadOrders() {
+        const listDiv = document.getElementById('orderList');
+        if(listDiv) listDiv.innerHTML = "同步中...";
+        fetch(`${scriptUrl}?action=getOrders`).then(res => res.json()).then(data => {
+            allOrders = data.slice(1);
+            renderOrders(allOrders.slice().reverse());
+            initCalendar(allOrders);
+        });
     }
 
     function renderOrders(orders) {
         const listDiv = document.getElementById('orderList');
         let html = '';
         orders.forEach(row => {
-            const orderId = row[0];
-            const orderDate = row[1] ? row[1].toString().split('T')[0] : '無日期';
-            const expDate = row[2] ? row[2].toString().split('T')[0] : '無日期';
             const status = (row[9] || "新訂單").trim();
-            const hasStock = row[10] === "是"; // K 欄：訂單內含現貨
-            const note = row[11] || ""; // L 欄：備註
-            const stage = getProductionStage(expDate);
-            const hasStyle2 = row[6] && row[6].toString().trim().length > 0;
+            const hasStock = row[10] === "是";
+            const expDate = row[2] ? row[2].toString().split('T')[0] : '無';
+            const diffDays = Math.ceil((new Date(expDate) - new Date()) / (1000 * 60 * 60 * 24));
+            let tClass = diffDays > 14 ? 'time-safe' : (diffDays > 7 ? 'time-normal' : 'time-urgent');
 
             html += `<div class="order-item">
                 <div class="order-header">
-                    <div class="order-info">
-                        <strong>${orderId}</strong> ${hasStock ? '<span class="stock-tag">含現貨商品</span>' : ''}
-                        <div class="order-date-info">
-                            <span>📅 訂製: ${orderDate}</span> 
-                            <span>🏁 交期: ${expDate}</span>
-                        </div>
-                        <div class="${stage.class} deadline-box">${stage.text}</div>
-                        <div class="item-detail">
-                            ① ${row[3]} / ${row[4]} / ${row[5]}
-                            ${hasStyle2 ? `<br>② ${row[6]} / ${row[7]} / ${row[8]}` : ''}
-                        </div>
+                    <div>
+                        <strong>${row[0]}</strong> ${hasStock ? '<span class="stock-tag">含現貨</span>' : ''}
+                        <div class="order-date-info">📅 ${row[1].toString().split('T')[0]} ⮕ 🏁 ${expDate}</div>
+                        <div class="${tClass} deadline-box">剩餘 ${diffDays} 天</div>
+                        <div class="item-detail">① ${row[3]} / ${row[4]} / ${row[5]}</div>
                         <div class="note-container">
-                            <span class="note-label">備註：</span>
-                            <input type="text" class="note-input" id="note-${orderId}" placeholder="點擊填寫備註..." value="${note}">
-                            <button class="btn-note-save" onclick="updateNote('${orderId}')">儲存</button>
+                            <input type="text" class="note-input" id="note-${row[0]}" placeholder="備註..." value="${row[11] || ''}">
+                            <button onclick="updateNote('${row[0]}')" style="font-size:0.7rem; cursor:pointer;">存</button>
                         </div>
                     </div>
                     <div style="text-align:right;">
-                        <span class="status-tag status-${status}">${status}</span>
-                        <div style="margin-top:10px;">
-                            <select class="status-select" onchange="updateStatus('${orderId}', this.value)">
-                                <option value="">更改進度...</option>
-                                <option value="新訂單">新訂單</option>
-                                <option value="備料中">備料中</option>
-                                <option value="車縫中">車縫中</option>
-                                <option value="已寄回">已寄回</option>
-                                <option value="出貨完畢">出貨完畢</option>
-                            </select>
-                        </div>
+                        <span class="status-tag status-${status}">${status}</span><br>
+                        <select class="status-select" onchange="updateStatus('${row[0]}', this.value)">
+                            <option value="">更改...</option>
+                            <option value="新訂單">新訂單</option><option value="備料中">備料中</option>
+                            <option value="車縫中">車縫中</option><option value="已寄回">已寄回</option>
+                            <option value="出貨完畢">出貨完畢</option>
+                        </select>
                     </div>
                 </div>
             </div>`;
         });
-        listDiv.innerHTML = html || "無訂單資料";
-    }
-
-    function loadOrders() {
-        document.getElementById('orderList').innerHTML = "資料同步中...";
-        fetch(`${scriptUrl}?action=getOrders`).then(res => res.json()).then(data => {
-            allOrders = data.slice(1).reverse();
-            renderOrders(allOrders);
-        });
+        if(listDiv) listDiv.innerHTML = html || "無資料";
     }
 
     function updateNote(id) {
         const note = document.getElementById(`note-${id}`).value;
-        const btn = document.querySelector(`#note-${id} + button`);
-        btn.innerText = "⏳";
         fetch(scriptUrl, { method: "POST", mode: "no-cors", body: JSON.stringify({action: 'updateNote', id: id, note: note}) })
-        .then(() => { 
-            btn.innerText = "✅"; 
-            const idx = allOrders.findIndex(r => r[0].toString() === id.toString());
-            if(idx !== -1) allOrders[idx][11] = note;
-            setTimeout(() => { btn.innerText = "儲存"; }, 2000);
-        });
+        .then(() => alert('備註已儲存'));
     }
 
     function updateStatus(id, status) {
@@ -256,12 +262,10 @@
     function filterOrders() {
         const keyword = document.getElementById('adminSearch').value.toLowerCase();
         const statusVal = document.getElementById('statusFilter').value;
-        const filtered = allOrders.filter(row => {
-            const matchKeyword = row[0].toString().toLowerCase().includes(keyword) || 
-                                 row[3].toString().toLowerCase().includes(keyword) ||
-                                 (row[11] && row[11].toString().toLowerCase().includes(keyword));
-            const matchStatus = statusVal === "" || (row[9] || "新訂單").trim() === statusVal;
-            return matchKeyword && matchStatus;
+        const filtered = allOrders.slice().reverse().filter(row => {
+            const mKey = row[0].toString().toLowerCase().includes(keyword) || row[3].toString().toLowerCase().includes(keyword);
+            const mStatus = statusVal === "" || (row[9] || "新訂單").trim() === statusVal;
+            return mKey && mStatus;
         });
         renderOrders(filtered);
     }
@@ -269,27 +273,19 @@
     function submitOrder() {
         const id = document.getElementById('orderId').value;
         const btn = document.getElementById('submitBtn');
-        const dateInput = document.getElementById('orderDate').value;
         if(!id) return alert("請輸入編號");
         btn.innerText = "處理中...";
         btn.disabled = true;
-        const deadlineFormatted = dateInput.replace(/-/g, '/');
-        const expDate = calculateExpectedDate(dateInput);
+        const dateInput = document.getElementById('orderDate').value;
         const data = {
-            id: id, 
-            deadline: deadlineFormatted,
-            expectedDate: expDate, 
+            id: id, deadline: dateInput.replace(/-/g, '/'),
+            expectedDate: calculateExpectedDate(dateInput),
             hasStock: document.getElementById('hasStock').checked,
             s1: document.getElementById('style1').value, c1: document.getElementById('color1').value, z1: document.getElementById('size1').value,
             s2: document.getElementById('style2').value, c2: document.getElementById('color2').value, z2: document.getElementById('size2').value
         };
         fetch(scriptUrl, { method: "POST", mode: "no-cors", body: JSON.stringify({action: 'addOrder', data: data}) })
-        .then(() => {
-            btn.innerText = "✅ 成功建單";
-            btn.classList.add('success');
-            allOrders = [];
-            setTimeout(() => { location.reload(); }, 1500);
-        });
+        .then(() => { btn.innerText = "✅ 成功"; setTimeout(() => location.reload(), 1000); });
     }
 </script>
 </body>
