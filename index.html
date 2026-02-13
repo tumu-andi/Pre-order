@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TIMU | Custom Order Management</title>
+    <style>
+        :root {
+            --timu-beige: #f9f8f6;
+            --timu-dark: #333333;
+            --timu-gold: #c5a35d;
+        }
+        body {
+            font-family: "PingFang TC", "Hiragino Sans GB", serif;
+            background-color: var(--timu-beige);
+            color: var(--timu-dark);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            background: #fff;
+            max-width: 500px;
+            width: 100%;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            border-radius: 2px;
+        }
+        h1 {
+            font-weight: 300;
+            letter-spacing: 4px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 20px;
+            font-size: 1.5rem;
+        }
+        .section-title {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--timu-gold);
+            margin-top: 30px;
+            border-left: 2px solid var(--timu-gold);
+            padding-left: 10px;
+        }
+        .input-group {
+            margin: 15px 0;
+        }
+        label {
+            display: block;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #e0e0e0;
+            outline: none;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+        input:focus { border-color: var(--timu-gold); }
+        
+        .status-check {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+            cursor: pointer;
+        }
+        .status-check input { width: auto; margin-right: 15px; }
+
+        .btn-copy {
+            background: var(--timu-dark);
+            color: #fff;
+            width: 100%;
+            padding: 15px;
+            border: none;
+            margin-top: 30px;
+            cursor: pointer;
+            letter-spacing: 2px;
+            transition: 0.3s;
+        }
+        .btn-copy:hover { opacity: 0.8; }
+        
+        footer {
+            text-align: center;
+            font-size: 0.7rem;
+            margin-top: 40px;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>TIMU CUSTOM</h1>
+    
+    <div class="section-title">Order Info</div>
+    <div class="input-group">
+        <label>客戶姓名</label>
+        <input type="text" id="custName" placeholder="例如：林曉小姐">
+    </div>
+    <div class="input-group">
+        <label>訂製款式 / 色號</label>
+        <input type="text" id="style" placeholder="例如：Summer V / 焙茶綠">
+    </div>
+
+    <div class="section-title">Production Status</div>
+    <div class="status-check">
+        <input type="checkbox" id="step1"> <label for="step1">1. 備料與剪裁 (完成)</label>
+    </div>
+    <div class="status-check">
+        <input type="checkbox" id="step2"> <label for="step2">2. 初步車縫 (完成)</label>
+    </div>
+    <div class="status-check">
+        <input type="checkbox" id="step3"> <label for="step3">3. 細節修飾 (完成)</label>
+    </div>
+    <div class="status-check">
+        <input type="checkbox" id="step4"> <label for="step4">4. 最終品檢 (完成)</label>
+    </div>
+
+    <button class="btn-copy" onclick="copyProgress()">複製進度摘要</button>
+
+    <footer>
+        慢慢來的質感，是我們對美的堅持。
+    </footer>
+</div>
+
+<script>
+    function copyProgress() {
+        const name = document.getElementById('custName').value;
+        const style = document.getElementById('style').value;
+        const s1 = document.getElementById('step1').checked ? "✓" : "○";
+        const s2 = document.getElementById('step2').checked ? "✓" : "○";
+        const s3 = document.getElementById('step3').checked ? "✓" : "○";
+        const s4 = document.getElementById('step4').checked ? "✓" : "○";
+
+        const text = `【TIMU 製作進度回報】\n客戶：${name}\n款式：${style}\n---\n${s1} 剪裁 | ${s2} 車縫 | ${s3} 細節 | ${s4} 品檢\n---\n期待與妳見面。`;
+        
+        navigator.clipboard.writeText(text);
+        alert("進度摘要已複製，可直接貼給師傅或客戶！");
+    }
+</script>
+
+</body>
+</html>
