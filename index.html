@@ -52,7 +52,6 @@
 
         .item-detail { font-size: 0.85rem; color: #666; margin-top: 5px; border-left: 2px solid #eee; padding-left: 10px; line-height: 1.6; }
 
-        /* --- 備註欄新樣式：去框、更像訂單資訊 --- */
         .note-container { 
             margin-top: 15px; 
             display: flex; 
@@ -72,23 +71,9 @@
             color: #666;
             transition: border-bottom 0.3s;
         }
-        .note-input:focus { 
-            outline: none; 
-            border-bottom: 1px solid var(--timu-gold); 
-            background: #fffcf5;
-        }
-        .btn-note-save { 
-            font-size: 0.7rem; 
-            background: none; 
-            border: 1px solid #ddd; 
-            padding: 2px 8px; 
-            cursor: pointer; 
-            color: #999;
-            border-radius: 2px;
-            transition: 0.2s;
-        }
+        .note-input:focus { outline: none; border-bottom: 1px solid var(--timu-gold); background: #fffcf5; }
+        .btn-note-save { font-size: 0.7rem; background: none; border: 1px solid #ddd; padding: 2px 8px; cursor: pointer; color: #999; border-radius: 2px; transition: 0.2s; }
         .btn-note-save:hover { border-color: var(--timu-gold); color: var(--timu-gold); }
-        /* ---------------------------------- */
 
         .status-select { width: 150px; height: 34px; font-size: 0.8rem; border: 1px solid #ddd; margin-top: 10px; }
         .search-box { width: 100%; margin-bottom: 20px; border: 1px solid #eee; padding: 12px; box-sizing: border-box; }
@@ -135,10 +120,7 @@
         document.getElementById('adminTab').style.display = (type === 'admin') ? 'block' : 'none';
         document.getElementById('btnForm').classList.toggle('active-btn', type === 'form');
         document.getElementById('btnAdmin').classList.toggle('active-btn', type === 'admin');
-        
-        if (type === 'admin' && allOrders.length === 0) {
-            loadOrders();
-        }
+        if (type === 'admin' && allOrders.length === 0) { loadOrders(); }
     }
 
     function calculateExpectedDate(val) {
@@ -148,6 +130,7 @@
     }
 
     window.onload = function() {
+        // 抓取設定資料
         fetch(`${scriptUrl}?action=getStyles`).then(res => res.json()).then(data => {
             const actualData = data.slice(1);
             const styles = [...new Set(actualData.map(item => item[0]))].filter(String);
@@ -157,8 +140,13 @@
             ['color1','color2'].forEach(id => setupSelect(id, colors, "搜尋顏色..."));
             ['size1','size2'].forEach(id => setupSelect(id, sizeList, "選擇尺寸..."));
         });
-        document.getElementById('orderDate').valueAsDate = new Date();
-        calculateExpectedDate(document.getElementById('orderDate').value);
+
+        // --- 修正為台灣本地時間 ---
+        const now = new Date();
+        const offset = now.getTimezoneOffset() * 60000; 
+        const localISOTime = (new Date(now - offset)).toISOString().split('T')[0];
+        document.getElementById('orderDate').value = localISOTime;
+        calculateExpectedDate(localISOTime);
     };
 
     function setupSelect(id, list, placeholder) {
