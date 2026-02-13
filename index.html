@@ -97,12 +97,21 @@
     }
 
     function calculateExpectedDate(val) {
-        if(!val) return "";
-        const d = new Date(val); d.setDate(d.getDate() + 42); 
-        const result = d.toISOString().split('T')[0];
-        document.getElementById('expectedHint').innerText = `⮕ 預計交期: ${result}`;
-        return result;
-    }
+    if(!val) return "";
+    // 修正：手動計算日期，避免時區偏移
+    const parts = val.split('-');
+    const d = new Date(parts[0], parts[1] - 1, parts[2]);
+    d.setDate(d.getDate() + 42); 
+    
+    // 格式化為 YYYY/MM/DD (試算表最相容格式)
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    const result = `${y}/${m}/${day}`;
+    
+    document.getElementById('expectedHint').innerText = `⮕ 預計交期: ${result}`;
+    return result;
+}
 
     window.onload = function() {
         fetch(`${scriptUrl}?action=getStyles`).then(res => res.json()).then(data => {
@@ -223,27 +232,34 @@
     }
 
     function submitOrder() {
-        const id = document.getElementById('orderId').value;
-        const btn = document.getElementById('submitBtn');
-        if(!id) return alert("請輸入編號");
-        btn.innerText = "處理中...";
-        btn.disabled = true;
-        const expDate = calculateExpectedDate(document.getElementById('orderDate').value);
-        const data = {
-            id: id, 
-            deadline: document.getElementById('orderDate').value,
-            expectedDate: expDate, 
-            s1: document.getElementById('style1').value, c1: document.getElementById('color1').value, z1: document.getElementById('size1').value,
-            s2: document.getElementById('style2').value, c2: document.getElementById('color2').value, z2: document.getElementById('size2').value
-        };
-        fetch(scriptUrl, { method: "POST", mode: "no-cors", body: JSON.stringify({action: 'addOrder', data: data}) })
-        .then(() => {
-            btn.innerText = "✅ 成功建單";
-            btn.classList.add('success');
-            allOrders = [];
-            setTimeout(() => { location.reload(); }, 1500);
-        });
-    }
+    const id = document.getElementById('orderId').value;
+    const btn = document.getElementById('submitBtn');
+    const dateInput = document.getElementById('orderDate').value; // YYYY-MM-DD
+    
+    if(!id) return alert("請輸入編號");
+    btn.innerText = "處理中...";
+    btn.disabled = true;
+
+    // 將訂製日期也轉為 YYYY/MM/DD
+    const deadlineFormatted = dateInput.replace(/-/g, '/');
+    const expDate = calculateExpectedDate(dateInput);
+
+    const data = {
+        id: id, 
+        deadline: deadlineFormatted,
+        expectedDate: expDate, 
+        s1: document.getElementById('style1').value, c1: document.getElementById('color1').value, z1: document.getElementById('size1').value,
+        s2: document.getElementById('style2').value, c2: document.getElementById('color2').value, z2: document.getElementById('size2').value
+    };
+
+    fetch(scriptUrl, { method: "POST", mode: "no-cors", body: JSON.stringify({action: 'addOrder', data: data}) })
+    .then(() => {
+        btn.innerText = "✅ 成功建單";
+        btn.classList.add('success');
+        allOrders = [];
+        setTimeout(() => { location.reload(); }, 1500);
+    });
+}
 </script>
 </body>
 </html>
