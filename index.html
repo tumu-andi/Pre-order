@@ -18,6 +18,10 @@
         .active { display: block; }
         h2 { font-weight: 300; text-align: center; letter-spacing: 4px; margin-bottom: 30px; color: var(--timu-gold); }
         #orderId::placeholder { font-size: 0.75rem; color: #ccc; }
+        
+        .checkbox-row { margin: 20px 0; display: flex; align-items: center; gap: 8px; font-size: 0.9rem; cursor: pointer; color: #555; }
+        .checkbox-row input { width: 18px; height: 18px; cursor: pointer; }
+
         .date-row { display: flex; align-items: center; gap: 12px; margin: 8px 0; }
         #orderDate { width: 160px; padding: 8px; font-size: 0.9rem; }
         .expected-hint { font-size: 0.8rem; color: var(--timu-gold); font-weight: bold; }
@@ -25,22 +29,31 @@
         label { display: block; font-size: 0.75rem; margin-top: 15px; color: #999; }
         input, select { padding: 8px 12px; margin: 5px 0; border: 1px solid #eee; font-size: 0.95rem; }
         .choices__inner { min-height: 38px !important; padding: 4px 8px !important; background: white !important; }
+        
         .btn-submit { background: var(--timu-dark); color: white; border: none; padding: 15px; width: 100%; margin-top: 30px; cursor: pointer; letter-spacing: 3px; font-size: 1rem; transition: 0.3s; }
         .btn-submit.success { background: #27ae60; }
+
         .order-item { border-bottom: 1px solid #f2f2f2; padding: 20px 0; }
         .order-header { display: flex; justify-content: space-between; align-items: flex-start; }
         .order-date-info { font-size: 0.75rem; color: #888; margin-bottom: 5px; }
         .order-date-info span { margin-right: 10px; }
+        
+        /* 含現貨標籤樣式 */
+        .stock-tag { font-size: 0.7rem; color: #e67e22; background: #fff5e6; padding: 2px 8px; border-radius: 3px; font-weight: bold; margin-left: 8px; border: 1px solid #ffcc80; }
+
         .status-tag { padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; color: white; font-weight: 600; }
+        .status-新訂單 { background-color: #34495e; }
         .status-備料中 { background-color: #95a5a6; }
         .status-車縫中 { background-color: #3498db; }
-        .status-細節修飾 { background-color: #f39c12; }
-        .status-品檢完工 { background-color: #27ae60; }
+        .status-已寄回 { background-color: #9b59b6; }
+        .status-出貨完畢 { background-color: #27ae60; }
+
         .deadline-box { display: inline-block; padding: 3px 8px; border-radius: 4px; font-size: 0.8rem; margin: 5px 0; font-weight: 500; }
         .time-safe { background-color: #e8f5e9; color: #2e7d32; }
         .time-normal { background-color: #e3f2fd; color: #1565c0; }
         .time-warning { background-color: #fff3e0; color: #ef6c00; }
         .time-urgent { background-color: #ffebee; color: #c62828; }
+
         .item-detail { font-size: 0.85rem; color: #666; margin-top: 5px; border-left: 2px solid #eee; padding-left: 10px; line-height: 1.6; }
         .note-container { margin-top: 15px; display: flex; align-items: center; gap: 8px; border-top: 1px dashed #eee; padding-top: 10px; }
         .note-label { font-size: 0.7rem; color: #aaa; white-space: nowrap; }
@@ -48,8 +61,12 @@
         .note-input:focus { outline: none; border-bottom: 1px solid var(--timu-gold); background: #fffcf5; }
         .btn-note-save { font-size: 0.7rem; background: none; border: 1px solid #ddd; padding: 2px 8px; cursor: pointer; color: #999; border-radius: 2px; transition: 0.2s; }
         .btn-note-save:hover { border-color: var(--timu-gold); color: var(--timu-gold); }
+
         .status-select { width: 150px; height: 34px; font-size: 0.8rem; border: 1px solid #ddd; margin-top: 10px; }
-        .search-box { width: 100%; margin-bottom: 20px; border: 1px solid #eee; padding: 12px; box-sizing: border-box; }
+        
+        .filter-group { display: flex; gap: 10px; margin-bottom: 20px; }
+        .search-box { flex: 2; margin-bottom: 0; border: 1px solid #eee; padding: 12px; }
+        .status-filter { flex: 1; border: 1px solid #eee; padding: 10px; background: white; font-size: 0.85rem; }
     </style>
 </head>
 <body>
@@ -67,6 +84,11 @@
         <input type="date" id="orderDate" onchange="calculateExpectedDate(this.value)">
         <div id="expectedHint" class="expected-hint"></div>
     </div>
+    
+    <label class="checkbox-row">
+        <input type="checkbox" id="hasStock"> 訂單內含其他現貨商品
+    </label>
+
     <div class="section-header">Pre-order:1</div>
     <label>款式 1</label><select id="style1"></select>
     <label>顏色 1</label><select id="color1"></select>
@@ -80,7 +102,17 @@
 
 <div id="adminTab" class="page-container">
     <h2>STATUS</h2>
-    <input type="text" id="adminSearch" class="search-box" placeholder="🔍 搜尋編號、款式或備註..." onkeyup="filterOrders()">
+    <div class="filter-group">
+        <input type="text" id="adminSearch" class="search-box" placeholder="🔍 搜尋編號、款式或備註..." onkeyup="filterOrders()">
+        <select id="statusFilter" class="status-filter" onchange="filterOrders()">
+            <option value="">所有狀態</option>
+            <option value="新訂單">新訂單</option>
+            <option value="備料中">備料中</option>
+            <option value="車縫中">車縫中</option>
+            <option value="已寄回">已寄回</option>
+            <option value="出貨完畢">出貨完畢</option>
+        </select>
+    </div>
     <div id="orderList">載入中...</div>
 </div>
 
@@ -97,21 +129,17 @@
     }
 
     function calculateExpectedDate(val) {
-    if(!val) return "";
-    // 修正：手動計算日期，避免時區偏移
-    const parts = val.split('-');
-    const d = new Date(parts[0], parts[1] - 1, parts[2]);
-    d.setDate(d.getDate() + 42); 
-    
-    // 格式化為 YYYY/MM/DD (試算表最相容格式)
-    const y = d.getFullYear();
-    const m = String(d.getMonth() + 1).padStart(2, '0');
-    const day = String(d.getDate()).padStart(2, '0');
-    const result = `${y}/${m}/${day}`;
-    
-    document.getElementById('expectedHint').innerText = `⮕ 預計交期: ${result}`;
-    return result;
-}
+        if(!val) return "";
+        const parts = val.split('-');
+        const d = new Date(parts[0], parts[1] - 1, parts[2]);
+        d.setDate(d.getDate() + 42); 
+        const y = d.getFullYear();
+        const m = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        const result = `${y}/${m}/${day}`;
+        document.getElementById('expectedHint').innerText = `⮕ 預計交期: ${result}`;
+        return result;
+    }
 
     window.onload = function() {
         fetch(`${scriptUrl}?action=getStyles`).then(res => res.json()).then(data => {
@@ -152,17 +180,18 @@
         let html = '';
         orders.forEach(row => {
             const orderId = row[0];
-            const orderDate = row[1] ? row[1].split('T')[0] : '無日期'; // 新後端：B欄是訂製日
-            const expDate = row[2] ? row[2].split('T')[0] : '無日期';   // 新後端：C欄是交期
-            const status = (row[9] || "備料中").trim();
-            const note = row[10] || ""; 
+            const orderDate = row[1] ? row[1].toString().split('T')[0] : '無日期';
+            const expDate = row[2] ? row[2].toString().split('T')[0] : '無日期';
+            const status = (row[9] || "新訂單").trim();
+            const hasStock = row[10] === "是"; // K 欄：訂單內含現貨
+            const note = row[11] || ""; // L 欄：備註
             const stage = getProductionStage(expDate);
             const hasStyle2 = row[6] && row[6].toString().trim().length > 0;
 
             html += `<div class="order-item">
                 <div class="order-header">
                     <div class="order-info">
-                        <strong>${orderId}</strong>
+                        <strong>${orderId}</strong> ${hasStock ? '<span class="stock-tag">含現貨商品</span>' : ''}
                         <div class="order-date-info">
                             <span>📅 訂製: ${orderDate}</span> 
                             <span>🏁 交期: ${expDate}</span>
@@ -183,8 +212,11 @@
                         <div style="margin-top:10px;">
                             <select class="status-select" onchange="updateStatus('${orderId}', this.value)">
                                 <option value="">更改進度...</option>
-                                <option value="備料中">備料中</option><option value="車縫中">車縫中</option>
-                                <option value="細節修飾">細節修飾</option><option value="品檢完工">品檢完工</option>
+                                <option value="新訂單">新訂單</option>
+                                <option value="備料中">備料中</option>
+                                <option value="車縫中">車縫中</option>
+                                <option value="已寄回">已寄回</option>
+                                <option value="出貨完畢">出貨完畢</option>
                             </select>
                         </div>
                     </div>
@@ -210,7 +242,7 @@
         .then(() => { 
             btn.innerText = "✅"; 
             const idx = allOrders.findIndex(r => r[0].toString() === id.toString());
-            if(idx !== -1) allOrders[idx][10] = note;
+            if(idx !== -1) allOrders[idx][11] = note;
             setTimeout(() => { btn.innerText = "儲存"; }, 2000);
         });
     }
@@ -223,43 +255,42 @@
 
     function filterOrders() {
         const keyword = document.getElementById('adminSearch').value.toLowerCase();
-        const filtered = allOrders.filter(row => 
-            row[0].toString().toLowerCase().includes(keyword) || 
-            row[3].toString().toLowerCase().includes(keyword) ||
-            (row[10] && row[10].toString().toLowerCase().includes(keyword))
-        );
+        const statusVal = document.getElementById('statusFilter').value;
+        const filtered = allOrders.filter(row => {
+            const matchKeyword = row[0].toString().toLowerCase().includes(keyword) || 
+                                 row[3].toString().toLowerCase().includes(keyword) ||
+                                 (row[11] && row[11].toString().toLowerCase().includes(keyword));
+            const matchStatus = statusVal === "" || (row[9] || "新訂單").trim() === statusVal;
+            return matchKeyword && matchStatus;
+        });
         renderOrders(filtered);
     }
 
     function submitOrder() {
-    const id = document.getElementById('orderId').value;
-    const btn = document.getElementById('submitBtn');
-    const dateInput = document.getElementById('orderDate').value; // YYYY-MM-DD
-    
-    if(!id) return alert("請輸入編號");
-    btn.innerText = "處理中...";
-    btn.disabled = true;
-
-    // 將訂製日期也轉為 YYYY/MM/DD
-    const deadlineFormatted = dateInput.replace(/-/g, '/');
-    const expDate = calculateExpectedDate(dateInput);
-
-    const data = {
-        id: id, 
-        deadline: deadlineFormatted,
-        expectedDate: expDate, 
-        s1: document.getElementById('style1').value, c1: document.getElementById('color1').value, z1: document.getElementById('size1').value,
-        s2: document.getElementById('style2').value, c2: document.getElementById('color2').value, z2: document.getElementById('size2').value
-    };
-
-    fetch(scriptUrl, { method: "POST", mode: "no-cors", body: JSON.stringify({action: 'addOrder', data: data}) })
-    .then(() => {
-        btn.innerText = "✅ 成功建單";
-        btn.classList.add('success');
-        allOrders = [];
-        setTimeout(() => { location.reload(); }, 1500);
-    });
-}
+        const id = document.getElementById('orderId').value;
+        const btn = document.getElementById('submitBtn');
+        const dateInput = document.getElementById('orderDate').value;
+        if(!id) return alert("請輸入編號");
+        btn.innerText = "處理中...";
+        btn.disabled = true;
+        const deadlineFormatted = dateInput.replace(/-/g, '/');
+        const expDate = calculateExpectedDate(dateInput);
+        const data = {
+            id: id, 
+            deadline: deadlineFormatted,
+            expectedDate: expDate, 
+            hasStock: document.getElementById('hasStock').checked,
+            s1: document.getElementById('style1').value, c1: document.getElementById('color1').value, z1: document.getElementById('size1').value,
+            s2: document.getElementById('style2').value, c2: document.getElementById('color2').value, z2: document.getElementById('size2').value
+        };
+        fetch(scriptUrl, { method: "POST", mode: "no-cors", body: JSON.stringify({action: 'addOrder', data: data}) })
+        .then(() => {
+            btn.innerText = "✅ 成功建單";
+            btn.classList.add('success');
+            allOrders = [];
+            setTimeout(() => { location.reload(); }, 1500);
+        });
+    }
 </script>
 </body>
 </html>
