@@ -19,12 +19,10 @@
         }
 
         body { 
-            font-family: "Helvetica Neue", "PingFang TC", "Microsoft JhengHei", sans-serif; 
+            font-family: "Helvetica Neue", "PingFang TC", sans-serif; 
             background: var(--timu-beige); 
             color: var(--timu-dark); 
-            padding: 20px; 
-            margin: 0; 
-            line-height: 1.5;
+            padding: 20px; margin: 0; line-height: 1.6;
         }
 
         /* 導覽列 */
@@ -45,11 +43,9 @@
 
         /* 表單元素 */
         label { display: block; font-size: 0.7rem; margin-top: 20px; color: var(--text-light); letter-spacing: 1px; text-transform: uppercase; }
-        input, select { padding: 12px 0; margin: 5px 0; border: none; border-bottom: 1px solid #eee; font-size: 0.95rem; width: 100%; transition: 0.3s; }
+        input, select { padding: 12px 0; margin: 5px 0; border: none; border-bottom: 1px solid #eee; font-size: 0.95rem; width: 100%; transition: 0.3s; background: transparent; }
         input:focus { outline: none; border-bottom-color: var(--timu-gold); }
-        
-        /* 縮小編號 Placeholder */
-        #orderId::placeholder { font-size: 0.7rem; color: #ccc; letter-spacing: 0px; }
+        #orderId::placeholder { font-size: 0.7rem; color: #ccc; }
         
         .checkbox-row { margin: 25px 0; display: flex; align-items: center; gap: 10px; font-size: 0.85rem; cursor: pointer; color: var(--timu-dark); }
         .checkbox-row input { width: 16px; height: 16px; margin: 0; cursor: pointer; accent-color: var(--timu-gold); }
@@ -58,11 +54,11 @@
         .btn-submit { background: var(--timu-dark); color: white; border: none; padding: 18px; width: 100%; margin-top: 40px; cursor: pointer; letter-spacing: 4px; font-size: 0.9rem; border-radius: 4px; transition: 0.3s; }
         .btn-submit:hover { background: #000; }
 
-        /* 進度管理列表 */
+        /* STATUS 列表 */
         .order-item { border-bottom: 1px solid #f9f9f9; padding: 25px 0; }
         .order-header { display: flex; justify-content: space-between; align-items: flex-start; }
         .order-info strong { font-size: 1.1rem; letter-spacing: 1px; }
-        .order-date-info { font-size: 0.75rem; color: var(--text-light); margin: 8px 0; letter-spacing: 0.5px; }
+        .order-date-info { font-size: 0.75rem; color: var(--text-light); margin: 8px 0; }
         
         .stock-tag { font-size: 0.65rem; color: var(--timu-gold); background: #fdfaf3; padding: 3px 10px; border-radius: 2px; font-weight: 600; margin-left: 10px; border: 1px solid var(--timu-light-gold); }
         
@@ -73,27 +69,29 @@
         .status-已寄回 { background-color: #a69cac; }
         .status-出貨完畢 { background-color: #84a59d; }
 
-        .deadline-box { display: inline-block; padding: 4px 10px; border-radius: 4px; font-size: 0.75rem; margin: 10px 0; font-weight: 500; }
+        .deadline-box { display: inline-block; padding: 4px 10px; border-radius: 4px; font-size: 0.75rem; margin: 10px 0; font-weight: 600; }
         .time-safe { background-color: #f0f4f0; color: #4a7c44; }
         .time-normal { background-color: #f0f4f8; color: #4a6c8c; }
         .time-urgent { background-color: #fdf2f2; color: #a44a4a; }
 
-        .item-detail { font-size: 0.85rem; color: #666; margin-top: 12px; line-height: 1.8; border-left: 1px solid var(--timu-gold); padding-left: 15px; }
+        .item-detail { font-size: 0.85rem; color: #666; margin-top: 15px; line-height: 2; border-left: 1px solid var(--timu-gold); padding-left: 15px; }
         
         .note-container { margin-top: 20px; display: flex; align-items: center; gap: 10px; background: #fafafa; padding: 8px 12px; border-radius: 4px; }
         .note-input { flex: 1; font-size: 0.8rem; border: none; background: transparent; color: #777; padding: 0; }
         
-        .status-select { width: 140px; height: 36px; font-size: 0.75rem; border: 1px solid #eee; background: #fff; border-radius: 4px; padding: 0 10px; }
+        .status-select { width: 140px; height: 36px; font-size: 0.75rem; border: 1px solid #eee; background: #fff; border-radius: 4px; }
 
-        /* 日曆精緻化 */
-        #calendar { padding-top: 10px; }
-        .fc { --fc-border-color: #f0f0f0; --fc-today-bg-color: #fdfaf3; }
-        .fc-toolbar-title { font-size: 1.1rem !important; font-weight: 300 !important; letter-spacing: 2px; color: var(--timu-dark); }
-        .fc-button-primary { background-color: var(--timu-dark) !important; border: none !important; font-size: 0.8rem !important; text-transform: uppercase; padding: 8px 15px !important; }
-        .fc-daygrid-day-number { font-size: 0.8rem; color: #aaa; padding: 8px !important; }
-        .fc-col-header-cell-cushion { font-size: 0.75rem; font-weight: 400; color: #888; text-decoration: none !important; padding: 10px 0 !important; }
-        .fc-event { border: none !important; padding: 3px 6px !important; border-radius: 3px !important; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .fc-event-title { font-size: 0.7rem !important; font-weight: 500; }
+        /* CALENDAR 精緻化 */
+        .fc-toolbar-title { font-size: 1.1rem !important; font-weight: 300 !important; letter-spacing: 2px; }
+        .fc-event { cursor: pointer; border: none !important; padding: 3px 6px !important; border-radius: 4px !important; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .fc-event-title { font-size: 0.7rem !important; font-weight: 600; }
+
+        /* 彈窗樣式 (日曆詳情) */
+        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); }
+        .modal-content { background: white; margin: 15% auto; padding: 30px; border-radius: 8px; width: 80%; max-width: 400px; position: relative; }
+        .close-modal { position: absolute; right: 20px; top: 15px; font-size: 24px; cursor: pointer; color: #ccc; }
+        .modal-title { border-bottom: 1px solid var(--timu-gold); padding-bottom: 10px; margin-bottom: 20px; font-size: 1.1rem; letter-spacing: 1px; }
+        .modal-info-row { font-size: 0.85rem; margin-bottom: 10px; color: #555; }
     </style>
 </head>
 <body>
@@ -108,33 +106,28 @@
     <h2>NEW ORDER</h2>
     <label>Order ID</label>
     <input type="text" id="orderId" placeholder="輸入SHOPLINE訂單編號">
-    
     <label>Order Date</label>
     <div class="date-row">
         <input type="date" id="orderDate" onchange="calculateExpectedDate(this.value)">
         <div id="expectedHint" class="expected-hint"></div>
     </div>
-    
     <label class="checkbox-row"><input type="checkbox" id="hasStock"> 訂單內含其他現貨商品</label>
-    
     <div class="section-header">ITEM 1</div>
     <label>Style</label><select id="style1"></select>
     <label>Color</label><select id="color1"></select>
     <label>Size</label><select id="size1"></select>
-    
     <div class="section-header">ITEM 2 (Optional)</div>
     <label>Style</label><select id="style2"></select>
     <label>Color</label><select id="color2"></select>
     <label>Size</label><select id="size2"></select>
-    
     <button id="submitBtn" class="btn-submit" onclick="submitOrder()">CREATE ORDER</button>
 </div>
 
 <div id="adminTab" class="page-container">
     <h2>PRODUCTION STATUS</h2>
     <div class="filter-group">
-        <input type="text" id="adminSearch" class="search-box" placeholder="🔍 搜尋訂單或款式..." onkeyup="filterOrders()">
-        <select id="statusFilter" class="status-filter" onchange="filterOrders()">
+        <input type="text" id="adminSearch" class="search-box" placeholder="🔍 搜尋訂單或款式..." onkeyup="filterOrders()" style="width: 60%; padding: 10px; border: 1px solid #eee; border-radius: 4px;">
+        <select id="statusFilter" class="status-filter" onchange="filterOrders()" style="width: 35%; padding: 10px; border: 1px solid #eee; border-radius: 4px;">
             <option value="">所有進度</option>
             <option value="新訂單">新訂單</option>
             <option value="備料中">備料中</option>
@@ -151,6 +144,14 @@
     <div id="calendar"></div>
 </div>
 
+<div id="orderModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal" onclick="closeModal()">&times;</span>
+        <div id="modalTitle" class="modal-title"></div>
+        <div id="modalBody"></div>
+    </div>
+</div>
+
 <script>
     const scriptUrl = "https://script.google.com/macros/s/AKfycbyi0WHv5eEFxL5XVKiPsr_iU6Ipoa0OxJJQvTjmjzicQTrNRK16fTUqD2_qeskcoXVcZg/exec";
     let allOrders = [];
@@ -161,14 +162,10 @@
         document.querySelectorAll('.nav button').forEach(el => el.classList.remove('active-btn'));
         document.getElementById(type + 'Tab').classList.add('active');
         document.getElementById('btn' + type.charAt(0).toUpperCase() + type.slice(1)).classList.add('active-btn');
-        
         if (type === 'admin' && allOrders.length === 0) loadOrders();
         if (type === 'calendar') {
-            if (allOrders.length === 0) {
-                loadOrders(); 
-            } else {
-                setTimeout(renderCalendar, 100);
-            }
+            if (allOrders.length === 0) loadOrders();
+            else setTimeout(renderCalendar, 100);
         }
     }
 
@@ -176,6 +173,7 @@
         const calendarEl = document.getElementById('calendar');
         const events = allOrders.map(row => {
             const status = (row[9] || "新訂單").trim();
+            const deadline = row[2] ? row[2].toString().split('T')[0].replace(/\//g, '-') : '';
             let color = '#555'; 
             if(status === '備料中') color = '#aaa';
             if(status === '車縫中') color = '#8da9c4';
@@ -184,11 +182,16 @@
 
             return {
                 title: `${row[0]} | ${row[3]}`,
-                start: row[1].toString().split('T')[0].replace(/\//g, '-'), 
+                start: deadline, // 使用交期作為日曆顯示點
+                extendedProps: {
+                    id: row[0], style1: row[3], color1: row[4], size1: row[5],
+                    style2: row[6], color2: row[7], size2: row[8],
+                    status: status, deadline: deadline
+                },
                 backgroundColor: color,
                 borderColor: color
             };
-        });
+        }).filter(e => e.start !== '');
 
         if (calendar) calendar.destroy();
         calendar = new FullCalendar.Calendar(calendarEl, {
@@ -197,10 +200,27 @@
             events: events,
             headerToolbar: { left: 'prev,next', center: 'title', right: 'today' },
             height: 'auto',
-            fixedWeekCount: false
+            eventClick: function(info) {
+                openModal(info.event.extendedProps);
+            }
         });
         calendar.render();
     }
+
+    function openModal(props) {
+        document.getElementById('modalTitle').innerText = `Order #${props.id}`;
+        let html = `<div class="modal-info-row"><b>進度：</b>${props.status}</div>`;
+        html += `<div class="modal-info-row"><b>交期：</b>${props.deadline}</div>`;
+        html += `<div style="margin-top:15px; padding-top:10px; border-top:1px dashed #eee;">`;
+        html += `<div class="modal-info-row"><b>①</b> ${props.style1} / ${props.color1} / ${props.size1}</div>`;
+        if(props.style2) html += `<div class="modal-info-row"><b>②</b> ${props.style2} / ${props.color2} / ${props.size2}</div>`;
+        html += `</div>`;
+        document.getElementById('modalBody').innerHTML = html;
+        document.getElementById('orderModal').style.display = 'block';
+    }
+
+    function closeModal() { document.getElementById('orderModal').style.display = 'none'; }
+    window.onclick = function(event) { if (event.target == document.getElementById('orderModal')) closeModal(); }
 
     function calculateExpectedDate(val) {
         if(!val) return "";
@@ -257,10 +277,10 @@
                     <div class="order-info">
                         <strong>#${row[0]}</strong> ${row[10] === "是" ? '<span class="stock-tag">含現貨商品</span>' : ''}
                         <div class="order-date-info">Date: ${row[1].toString().split('T')[0]} ⮕ Deadline: ${expDate}</div>
-                        <div class="${tClass} deadline-box">REMAINING ${diffDays} DAYS</div>
+                        <div class="${tClass} deadline-box">剩餘 ${diffDays} DAYS</div>
                         <div class="item-detail">
-                            ITEM 1: ${row[3]} / ${row[4]} / ${row[5]}
-                            ${row[6] ? '<br>ITEM 2: '+row[6]+' / '+row[7]+' / '+row[8] : ''}
+                            <b>①</b> ${row[3]} / ${row[4]} / ${row[5]}
+                            ${row[6] ? '<br><b>②</b> '+row[6]+' / '+row[7]+' / '+row[8] : ''}
                         </div>
                         <div class="note-container">
                             <input type="text" class="note-input" id="note-${row[0]}" value="${row[11] || ''}" placeholder="點擊編輯備註...">
