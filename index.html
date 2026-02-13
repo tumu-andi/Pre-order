@@ -4,62 +4,50 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TIMU | 生產管理系統</title>
-    
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
-    
     <style>
         :root { --timu-beige: #f9f8f6; --timu-dark: #333333; --timu-gold: #c5a35d; }
         body { font-family: "PingFang TC", sans-serif; background: var(--timu-beige); color: var(--timu-dark); padding: 20px; margin: 0; }
-        
         .nav { text-align: center; margin: 20px 0 30px 0; position: sticky; top: 0; z-index: 100; background: var(--timu-beige); padding: 10px 0; }
         .nav button { background: white; border: 1px solid var(--timu-dark); color: var(--timu-dark); padding: 10px 25px; cursor: pointer; margin: 0 5px; letter-spacing: 2px; font-size: 0.85rem; }
         .nav button.active-btn { background: var(--timu-dark); color: white; }
-        
         .page-container { display: none; background: white; margin: 0 auto 50px auto; padding: 30px; border-radius: 2px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
         #formTab { max-width: 550px; }
-        #adminTab { max-width: 900px; } /* 加寬以容納備註欄 */
+        #adminTab { max-width: 900px; }
         .active { display: block; }
-        
-        h2 { font-weight: 300; text-align: center; letter-spacing: 4px; margin-bottom: 30px; color: var(--timu-gold); }
-        
+        h2 { font-weight: 300; text-align: center; letter-spacing: 4px; color: var(--timu-gold); }
         .date-row { display: flex; align-items: center; gap: 12px; margin: 8px 0; }
         #orderDate { width: 160px; padding: 8px; font-size: 0.9rem; }
         .expected-hint { font-size: 0.8rem; color: var(--timu-gold); font-weight: bold; }
-
         .section-header { font-size: 1rem; font-weight: 600; margin: 30px 0 10px 0; border-bottom: 1px solid var(--timu-dark); padding-bottom: 5px; }
-        label { display: block; font-size: 0.75rem; margin-top: 15px; color: #999; }
-        
         input, select { padding: 8px 12px; margin: 5px 0; border: 1px solid #eee; font-size: 0.95rem; }
         .choices__inner { min-height: 38px !important; padding: 4px 8px !important; }
-
         .btn-submit { background: var(--timu-dark); color: white; border: none; padding: 15px; width: 100%; margin-top: 30px; cursor: pointer; letter-spacing: 3px; }
-
-        /* 進度管理列表與備註欄 */
+        
+        /* 進度清單樣式 */
         .order-item { border-bottom: 1px solid #f2f2f2; padding: 20px 0; }
         .order-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; }
         .order-info { flex: 1.5; }
         .order-actions { flex: 1; text-align: right; }
-        
         .status-tag { padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; color: white; font-weight: 600; }
         .status-備料中 { background-color: #95a5a6; }
         .status-車縫中 { background-color: #3498db; }
         .status-細節修飾 { background-color: #f39c12; }
         .status-品檢完工 { background-color: #27ae60; }
-
         .deadline-box { display: inline-block; padding: 3px 8px; border-radius: 4px; font-size: 0.8rem; margin: 5px 0; }
         .time-safe { background-color: #e8f5e9; color: #2e7d32; }
         .time-normal { background-color: #e3f2fd; color: #1565c0; }
         .time-warning { background-color: #fff3e0; color: #ef6c00; }
         .time-urgent { background-color: #ffebee; color: #c62828; }
 
-        /* 備註欄樣式 */
-        .note-container { margin-top: 10px; display: flex; gap: 5px; }
-        .note-input { flex: 1; font-size: 0.8rem; padding: 6px; border: 1px solid #eee; border-radius: 2px; }
-        .btn-note-save { font-size: 0.7rem; background: #eee; border: none; padding: 0 10px; cursor: pointer; color: #666; }
+        /* 備註與品項標示 */
+        .item-detail { font-size: 0.85rem; color: #666; margin-top: 8px; border-left: 2px solid #eee; padding-left: 10px; line-height: 1.6; }
+        .note-container { margin-top: 12px; display: flex; gap: 5px; }
+        .note-input { flex: 1; font-size: 0.8rem; padding: 6px; border: 1px solid #eee; background: #fffcf5; }
+        .btn-note-save { font-size: 0.7rem; background: #eee; border: none; padding: 0 10px; cursor: pointer; transition: 0.2s; }
         .btn-note-save:hover { background: var(--timu-gold); color: white; }
-
-        .status-select { width: 150px; height: 34px; font-size: 0.8rem; padding: 2px 5px; border: 1px solid #ddd; }
+        .status-select { width: 150px; height: 34px; font-size: 0.8rem; border: 1px solid #ddd; margin-top: 10px; }
         .search-box { width: 100%; margin-bottom: 20px; border: 1px solid #eee; padding: 12px; box-sizing: border-box; }
     </style>
 </head>
@@ -74,10 +62,7 @@
     <h2>NEW ORDER</h2>
     <label>訂單編號</label><input type="text" id="orderId" placeholder="輸入編號">
     <label>訂製日期</label>
-    <div class="date-row">
-        <input type="date" id="orderDate" onchange="calculateExpectedDate(this.value)">
-        <div id="expectedHint" class="expected-hint"></div>
-    </div>
+    <div class="date-row"><input type="date" id="orderDate" onchange="calculateExpectedDate(this.value)"><div id="expectedHint" class="expected-hint"></div></div>
     <div class="section-header">Pre-order:1</div>
     <label>款式 1</label><select id="style1"></select>
     <label>顏色 1</label><select id="color1"></select>
@@ -91,14 +76,13 @@
 
 <div id="adminTab" class="page-container">
     <h2>STATUS</h2>
-    <input type="text" id="adminSearch" class="search-box" placeholder="🔍 搜尋訂單編號或款式..." onkeyup="filterOrders()">
+    <input type="text" id="adminSearch" class="search-box" placeholder="🔍 搜尋訂單編號、品項或備註..." onkeyup="filterOrders()">
     <div id="orderList">載入中...</div>
 </div>
 
 <script>
     const scriptUrl = "https://script.google.com/macros/s/AKfycbyi0WHv5eEFxL5XVKiPsr_iU6Ipoa0OxJJQvTjmjzicQTrNRK16fTUqD2_qeskcoXVcZg/exec";
     let allOrders = [];
-    const sizeList = ["XS", "S", "M", "L", "XL"];
 
     function showTab(type) {
         document.getElementById('formTab').style.display = (type === 'form') ? 'block' : 'none';
@@ -109,8 +93,7 @@
 
     function calculateExpectedDate(val) {
         if(!val) return;
-        const d = new Date(val);
-        d.setDate(d.getDate() + 42); 
+        const d = new Date(val); d.setDate(d.getDate() + 42); 
         document.getElementById('expectedHint').innerText = `⮕ 預計交期: ${d.toISOString().split('T')[0]}`;
     }
 
@@ -119,9 +102,10 @@
             const actualData = data.slice(1);
             const styles = [...new Set(actualData.map(item => item[0]))].filter(String);
             const colors = [...new Set(actualData.map(item => item[1]))].filter(String);
-            setupSelect('style1', styles, "搜尋款式..."); setupSelect('style2', styles, "搜尋款式...");
-            setupSelect('color1', colors, "搜尋色號..."); setupSelect('color2', colors, "搜尋色號...");
-            setupSelect('size1', sizeList, "選擇尺寸..."); setupSelect('size2', sizeList, "選擇尺寸...");
+            const sizeList = ["XS", "S", "M", "L", "XL"];
+            ['style1','style2'].forEach(id => setupSelect(id, styles, "搜尋款式..."));
+            ['color1','color2'].forEach(id => setupSelect(id, colors, "搜尋顏色..."));
+            ['size1','size2'].forEach(id => setupSelect(id, sizeList, "選擇尺寸..."));
         });
         document.getElementById('orderDate').valueAsDate = new Date();
         calculateExpectedDate(document.getElementById('orderDate').value);
@@ -136,14 +120,13 @@
 
     function getProductionStage(orderDateStr) {
         if (!orderDateStr) return { text: '未知', class: 'time-safe' };
-        const deadline = new Date(orderDateStr);
-        deadline.setDate(deadline.getDate() + 42);
-        const today = new Date();
-        const diffDays = Math.ceil((deadline - today) / (1000 * 60 * 60 * 24));
-        if (diffDays > 28) return { text: `交期：${deadline.toISOString().split('T')[0]} (安全)`, class: 'time-safe' };
-        if (diffDays > 14) return { text: `交期：${deadline.toISOString().split('T')[0]} (製作中)`, class: 'time-normal' };
-        if (diffDays > 7) return { text: `交期：${deadline.toISOString().split('T')[0]} (急單)`, class: 'time-warning' };
-        return { text: `交期：${deadline.toISOString().split('T')[0]} (逾期!)`, class: 'time-urgent' };
+        const d = new Date(orderDateStr); d.setDate(d.getDate() + 42);
+        const diffDays = Math.ceil((d - new Date()) / (1000 * 60 * 60 * 24));
+        const dateStr = d.toISOString().split('T')[0];
+        if (diffDays > 28) return { text: `交期：${dateStr} (剛接單)`, class: 'time-safe' };
+        if (diffDays > 14) return { text: `交期：${dateStr} (製作中)`, class: 'time-normal' };
+        if (diffDays > 7) return { text: `交期：${dateStr} (急單)`, class: 'time-warning' };
+        return { text: `交期：${dateStr} (逾期!)`, class: 'time-urgent' };
     }
 
     function renderOrders(orders) {
@@ -151,7 +134,7 @@
         let html = '';
         orders.forEach(row => {
             const status = (row[9] || "備料中").trim();
-            const note = row[10] || ""; // 假設備註在第 11 欄 (Index 10)
+            const note = row[10] || ""; // 從 K 欄抓備註
             const stage = getProductionStage(row[2] ? row[2].split('T')[0] : '');
             const hasStyle2 = row[6] && row[6].toString().trim().length > 0;
 
@@ -160,26 +143,22 @@
                     <div class="order-info">
                         <strong>${row[0]}</strong> <br>
                         <div class="${stage.class} deadline-box">${stage.text}</div>
-                        <div style="font-size:0.85rem; color:#666; margin-top:5px;">
-                            ${row[3]} / ${row[4]} / ${row[5]}
-                            ${hasStyle2 ? `<br>${row[6]} / ${row[7]} / ${row[8]}` : ''}
+                        <div class="item-detail">
+                            ① ${row[3]} / ${row[4]} / ${row[5]}
+                            ${hasStyle2 ? `<br>② ${row[6]} / ${row[7]} / ${row[8]}` : ''}
                         </div>
                         <div class="note-container">
-                            <input type="text" class="note-input" id="note-${row[0]}" placeholder="點擊填寫備註..." value="${note}">
+                            <input type="text" class="note-input" id="note-${row[0]}" placeholder="填寫備註..." value="${note}">
                             <button class="btn-note-save" onclick="updateNote('${row[0]}')">儲存</button>
                         </div>
                     </div>
                     <div class="order-actions">
                         <span class="status-tag status-${status}">${status}</span>
-                        <div style="margin-top:12px;">
-                            <select class="status-select" onchange="updateStatus('${row[0]}', this.value)">
-                                <option value="">更改進度...</option>
-                                <option value="備料中">備料中</option>
-                                <option value="車縫中">車縫中</option>
-                                <option value="細節修飾">細節修飾</option>
-                                <option value="品檢完工">品檢完工</option>
-                            </select>
-                        </div>
+                        <select class="status-select" onchange="updateStatus('${row[0]}', this.value)">
+                            <option value="">更改進度...</option>
+                            <option value="備料中">備料中</option><option value="車縫中">車縫中</option>
+                            <option value="細節修飾">細節修飾</option><option value="品檢完工">品檢完工</option>
+                        </select>
                     </div>
                 </div>
             </div>`;
@@ -188,7 +167,7 @@
     }
 
     function loadOrders() {
-        document.getElementById('orderList').innerHTML = "更新中...";
+        document.getElementById('orderList').innerHTML = "同步中...";
         fetch(`${scriptUrl}?action=getOrders`).then(res => res.json()).then(data => {
             allOrders = data.slice(1).reverse();
             renderOrders(allOrders);
@@ -198,11 +177,11 @@
     function updateNote(id) {
         const note = document.getElementById(`note-${id}`).value;
         const btn = document.querySelector(`#note-${id} + button`);
-        btn.innerText = "...";
+        btn.innerText = "⏳";
         fetch(scriptUrl, { method: "POST", mode: "no-cors", body: JSON.stringify({action: 'updateNote', id: id, note: note}) })
         .then(() => { 
-            btn.innerText = "OK";
-            setTimeout(() => btn.innerText = "儲存", 2000);
+            btn.innerText = "✅"; 
+            setTimeout(() => { btn.innerText = "儲存"; }, 2000);
         });
     }
 
@@ -214,7 +193,11 @@
 
     function filterOrders() {
         const keyword = document.getElementById('adminSearch').value.toLowerCase();
-        const filtered = allOrders.filter(row => row[0].toString().toLowerCase().includes(keyword) || row[3].toString().toLowerCase().includes(keyword));
+        const filtered = allOrders.filter(row => 
+            row[0].toString().toLowerCase().includes(keyword) || 
+            row[3].toString().toLowerCase().includes(keyword) ||
+            (row[10] && row[10].toString().toLowerCase().includes(keyword))
+        );
         renderOrders(filtered);
     }
 
