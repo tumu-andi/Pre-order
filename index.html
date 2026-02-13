@@ -3,16 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <title>TIMU | 生產管理系統</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+    
     <style>
-        /* 延續簡約設計 */
         body { font-family: sans-serif; background: #f9f8f6; color: #333; padding: 20px; }
         .card { background: white; max-width: 600px; margin: auto; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-        .tab { display: none; }
-        .active { display: block; }
         .nav { text-align: center; margin-bottom: 20px; }
         button { background: #333; color: white; border: none; padding: 10px 20px; cursor: pointer; margin: 5px; }
         input, select { width: 100%; padding: 8px; margin: 10px 0; border: 1px solid #ddd; }
-        .order-item { border-bottom: 1px solid #eee; padding: 10px 0; }
+        /* 讓搜尋選單看起來更符合 TIMU 的極簡感 */
+        .choices__inner { background-color: #fff; border: 1px solid #ddd; border-radius: 0; }
+        .choices__list--dropdown { border-radius: 0; }
     </style>
 </head>
 <body>
@@ -28,42 +30,56 @@
     <input type="date" id="deadline" placeholder="預計交期">
     
     <p>款式 1</p>
-    <select id="style1"></select>
+    <select id="style1" class="style-select"></select>
     <input type="text" id="color1" placeholder="顏色">
     <input type="text" id="size1" placeholder="尺寸">
 
     <p>款式 2</p>
-    <select id="style2"></select>
+    <select id="style2" class="style-select"></select>
     <input type="text" id="color2" placeholder="顏色">
     <input type="text" id="size2" placeholder="尺寸">
     
-    <button onclick="submitOrder()" style="width:100%">送出資料</button>
+    <button onclick="submitOrder()" style="width:100%; margin-top: 20px;">送出資料</button>
 </div>
 
-<div id="adminTab" class="tab card">
+<div id="adminTab" class="tab card" style="display:none;">
     <h2>進度追蹤與修改</h2>
     <div id="orderList">載入中...</div>
 </div>
 
 <script>
-    const scriptUrl = "https://script.google.com/macros/s/AKfycbwh-1fS08fb7rsrEs7_BgMVhQoGpE_wc_GUfG6R-C3D3Ds0ytj0GhH5x_MvgYvfQzejFA/exec"; // 
+    const scriptUrl = "https://script.google.com/macros/s/AKfycbwh-1fS08fb7rsrEs7_BgMVhQoGpE_wc_GUfG6R-C3D3Ds0ytj0GhH5x_MvgYvfQzejFA/exec"; 
+    let choice1, choice2; // 儲存搜尋物件
 
-// 初始化：讀取款式
-window.onload = function() {
-    fetch(`${scriptUrl}?action=getStyles`)
-    .then(res => res.json())
-    .then(styles => {
-        const selects = [document.getElementById('style1'), document.getElementById('style2')];
-        selects.forEach(s => {
-            styles.forEach(item => {
-                let opt = document.createElement('option');
-                opt.value = item[0]; opt.text = item[0];
-                s.appendChild(opt);
+    window.onload = function() {
+        fetch(`${scriptUrl}?action=getStyles`)
+        .then(res => res.json())
+        .then(styles => {
+            const selects = [document.getElementById('style1'), document.getElementById('style2')];
+            selects.forEach(s => {
+                // 加入一個預設選項
+                let defaultOpt = document.createElement('option');
+                defaultOpt.text = "輸入關鍵字搜尋款式...";
+                s.appendChild(defaultOpt);
+
+                styles.forEach(item => {
+                    let opt = document.createElement('option');
+                    opt.value = item[0]; opt.text = item[0];
+                    s.appendChild(opt);
+                });
             });
-        });
-    });
-};
 
+            // 啟動搜尋功能
+            choice1 = new Choices('#style1', { searchEnabled: true, itemSelectText: '' });
+            choice2 = new Choices('#style2', { searchEnabled: true, itemSelectText: '' });
+        });
+    };
+
+    // ... 其餘 submitOrder, loadOrders, updateStatus 函數維持不變 ...
+    // ... 記得把上一個回答的 JS 邏輯貼在下面 ...
+</script>
+</body>
+</html>
 function submitOrder() {
     const data = {
         id: document.getElementById('orderId').value,
