@@ -22,7 +22,7 @@
         input, select { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #eee; box-sizing: border-box; font-size: 1rem; }
         .btn-submit { background: var(--timu-dark); color: white; border: none; padding: 15px; width: 100%; margin-top: 30px; cursor: pointer; letter-spacing: 2px; }
         .order-item { border-bottom: 1px solid #f0f0f0; padding: 15px 0; }
-        .search-box { margin-bottom: 20px; border: 1px solid var(--timu-gold); padding: 10px; border-radius: 4px; }
+        .search-box { width:100%; margin-bottom: 20px; border: 1px solid var(--timu-gold); padding: 12px; border-radius: 4px; box-sizing: border-box; }
         .choices__inner { background-color: #fff; border: 1px solid #eee; border-radius: 0; min-height: 45px; }
     </style>
 </head>
@@ -45,7 +45,8 @@
         <select id="style1"></select>
         <label>顏色 1</label>
         <select id="color1"></select>
-        <input type="text" id="size1" placeholder="尺寸 (例如：S)">
+        <label>尺寸 1</label>
+        <select id="size1"></select>
     </div>
 
     <div style="margin-top:20px; border-top: 1px solid #eee; padding-top:10px;">
@@ -53,7 +54,8 @@
         <select id="style2"></select>
         <label>顏色 2</label>
         <select id="color2"></select>
-        <input type="text" id="size2" placeholder="尺寸">
+        <label>尺寸 2</label>
+        <select id="size2"></select>
     </div>
     
     <button class="btn-submit" onclick="submitOrder()">送出訂製需求</button>
@@ -66,8 +68,9 @@
 </div>
 
 <script>
-    const scriptUrl = "https://script.google.com/macros/s/AKfycbyi0WHv5eEFxL5XVKiPsr_iU6Ipoa0OxJJQvTjmjzicQTrNRK16fTUqD2_qeskcoXVcZg/exec"; 
-    let allOrders = []; // 儲存原始資料供搜尋使用
+    const scriptUrl = "https://script.google.com/macros/s/AKfycbwh-1fS08fb7rsrEs7_BgMVhQoGpE_wc_GUfG6R-C3D3Ds0ytj0GhH5x_MvgYvfQzejFA/exec"; 
+    let allOrders = []; 
+    const sizeList = ["XS", "S", "M", "L", "XL"]; // 固定的尺寸清單
 
     function showTab(type) {
         document.getElementById('formTab').classList.toggle('active', type === 'form');
@@ -80,14 +83,15 @@
         fetch(`${scriptUrl}?action=getStyles`)
         .then(res => res.json())
         .then(data => {
-            // data 格式：[[款式1, 顏色1], [款式2, 顏色2]...]
             const styles = [...new Set(data.map(item => item[0]))].filter(String);
             const colors = [...new Set(data.map(item => item[1]))].filter(String);
 
-            setupSelect('style1', styles, "請搜尋款式...");
-            setupSelect('style2', styles, "請搜尋款式...");
-            setupSelect('color1', colors, "請搜尋顏色...");
-            setupSelect('color2', colors, "請搜尋顏色...");
+            setupSelect('style1', styles, "搜尋款式...");
+            setupSelect('style2', styles, "搜尋款式...");
+            setupSelect('color1', colors, "搜尋色號...");
+            setupSelect('color2', colors, "搜尋色號...");
+            setupSelect('size1', sizeList, "選擇尺寸...");
+            setupSelect('size2', sizeList, "選擇尺寸...");
         });
     };
 
@@ -101,7 +105,7 @@
             opt.value = item; opt.text = item;
             s.appendChild(opt);
         });
-        new Choices(`#${id}`, { searchEnabled: true, itemSelectText: '', placeholder: true });
+        new Choices(`#${id}`, { searchEnabled: true, itemSelectText: '', placeholder: true, shouldSort: false });
     }
 
     function submitOrder() {
@@ -119,7 +123,7 @@
     function loadOrders() {
         const listDiv = document.getElementById('orderList');
         fetch(`${scriptUrl}?action=getOrders`).then(res => res.json()).then(data => {
-            allOrders = data.slice(1); // 跳過標題列
+            allOrders = data.slice(1); 
             renderOrders(allOrders);
         });
     }
@@ -130,7 +134,7 @@
         orders.forEach(row => {
             html += `<div class="order-item">
                 <div class="order-header"><strong>${row[0]}</strong> <span class="status-tag">${row[9] || "備料中"}</span></div>
-                <div style="font-size:0.85rem; color:#888;">${row[3]} / ${row[4]} / ${row[5]}</div>
+                <div style="font-size:0.85rem; color:#888;">${row[3]} (${row[4]}/${row[5]})</div>
                 <select onchange="updateStatus('${row[0]}', this.value)">
                     <option value="">更改製作狀態...</option>
                     <option value="備料中">備料中</option><option value="車縫中">車縫中</option><option value="品檢完工">品檢完工</option>
