@@ -11,18 +11,34 @@
     <style>
         :root { --timu-beige: #f9f8f6; --timu-dark: #333333; --timu-gold: #c5a35d; }
         body { font-family: "PingFang TC", sans-serif; background: var(--timu-beige); color: var(--timu-dark); padding: 20px; line-height: 1.6; }
+        
         .card { background: white; max-width: 600px; margin: 20px auto; padding: 30px; border-radius: 2px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
         .nav { text-align: center; margin-bottom: 30px; }
         .nav button { background: none; border: 1px solid var(--timu-dark); color: var(--timu-dark); padding: 10px 25px; cursor: pointer; margin: 0 5px; letter-spacing: 2px; transition: 0.3s; }
         .nav button.active-btn { background: var(--timu-dark); color: white; }
+        
         h2 { font-weight: 300; text-align: center; letter-spacing: 4px; margin-bottom: 30px; color: var(--timu-gold); }
         .tab { display: none; }
         .active { display: block; }
-        label { display: block; font-size: 0.85rem; margin-top: 15px; color: #666; }
+        
+        /* 區塊標題樣式 */
+        .section-header { 
+            font-size: 1.1rem; 
+            font-weight: 600; 
+            letter-spacing: 1px; 
+            margin: 35px 0 15px 0; 
+            padding-bottom: 10px; 
+            border-bottom: 2px solid var(--timu-dark); 
+            color: var(--timu-dark);
+        }
+        
+        label { display: block; font-size: 0.85rem; margin-top: 15px; color: #888; text-transform: uppercase; }
         input, select { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #eee; box-sizing: border-box; font-size: 1rem; }
-        .btn-submit { background: var(--timu-dark); color: white; border: none; padding: 15px; width: 100%; margin-top: 30px; cursor: pointer; letter-spacing: 2px; }
+        
+        .btn-submit { background: var(--timu-dark); color: white; border: none; padding: 15px; width: 100%; margin-top: 40px; cursor: pointer; letter-spacing: 2px; font-size: 1rem; }
         .order-item { border-bottom: 1px solid #f0f0f0; padding: 15px 0; }
         .search-box { width:100%; margin-bottom: 20px; border: 1px solid var(--timu-gold); padding: 12px; border-radius: 4px; box-sizing: border-box; }
+        
         .choices__inner { background-color: #fff; border: 1px solid #eee; border-radius: 0; min-height: 45px; }
     </style>
 </head>
@@ -35,28 +51,28 @@
 
 <div id="formTab" class="tab active card">
     <h2>NEW ORDER</h2>
+    
     <label>訂單編號</label>
     <input type="text" id="orderId" placeholder="例如：#2026021401">
+    
     <label>預計交期</label>
     <input type="date" id="deadline">
     
-    <div style="margin-top:20px; border-top: 1px solid #eee; padding-top:10px;">
-        <label>款式 1</label>
-        <select id="style1"></select>
-        <label>顏色 1</label>
-        <select id="color1"></select>
-        <label>尺寸 1</label>
-        <select id="size1"></select>
-    </div>
+    <div class="section-header">Pre-order:1</div>
+    <label>款式 1</label>
+    <select id="style1"></select>
+    <label>顏色 1</label>
+    <select id="color1"></select>
+    <label>尺寸 1</label>
+    <select id="size1"></select>
 
-    <div style="margin-top:20px; border-top: 1px solid #eee; padding-top:10px;">
-        <label>款式 2 (選填)</label>
-        <select id="style2"></select>
-        <label>顏色 2</label>
-        <select id="color2"></select>
-        <label>尺寸 2</label>
-        <select id="size2"></select>
-    </div>
+    <div class="section-header">Pre-order:2</div>
+    <label>款式 2 (選填)</label>
+    <select id="style2"></select>
+    <label>顏色 2</label>
+    <select id="color2"></select>
+    <label>尺寸 2</label>
+    <select id="size2"></select>
     
     <button class="btn-submit" onclick="submitOrder()">送出訂製需求</button>
 </div>
@@ -68,9 +84,10 @@
 </div>
 
 <script>
-    const scriptUrl = "https://script.google.com/macros/s/AKfycbyi0WHv5eEFxL5XVKiPsr_iU6Ipoa0OxJJQvTjmjzicQTrNRK16fTUqD2_qeskcoXVcZg/exec"; 
+    // 妳提供的 GAS 網址
+    const scriptUrl = "https://script.google.com/macros/s/AKfycbwh-1fS08fb7rsrEs7_BgMVhQoGpE_wc_GUfG6R-C3D3Ds0ytj0GhH5x_MvgYvfQzejFA/exec"; 
     let allOrders = []; 
-    const sizeList = ["XS", "S", "M", "L", "XL"]; // 固定的尺寸清單
+    const sizeList = ["XS", "S", "M", "L", "XL"];
 
     function showTab(type) {
         document.getElementById('formTab').classList.toggle('active', type === 'form');
@@ -79,23 +96,21 @@
         document.getElementById('btnAdmin').classList.toggle('active-btn', type === 'admin');
     }
 
-window.onload = function() {
-    fetch(`${scriptUrl}?action=getStyles`)
-    .then(res => res.json())
-    .then(data => {
-        // 【關鍵修正】：使用 .slice(1) 跳過第一列標題
-        const actualData = data.slice(1); 
+    window.onload = function() {
+        fetch(`${scriptUrl}?action=getStyles`)
+        .then(res => res.json())
+        .then(data => {
+            // 【修正關鍵】：使用 .slice(1) 跳過試算表第一行標題
+            const actualData = data.slice(1); 
+            const styles = [...new Set(actualData.map(item => item[0]))].filter(String);
+            const colors = [...new Set(actualData.map(item => item[1]))].filter(String);
 
-        // 提取不重複的款式與色號
-        const styles = [...new Set(actualData.map(item => item[0]))].filter(String);
-        const colors = [...new Set(actualData.map(item => item[1]))].filter(String);
-
-        setupSelect('style1', styles, "搜尋款式...");
-        setupSelect('style2', styles, "搜尋款式...");
-        setupSelect('color1', colors, "搜尋顏色...");
-        setupSelect('color2', colors, "搜尋顏色...");
-        setupSelect('size1', sizeList, "選擇尺寸...");
-        setupSelect('size2', sizeList, "選擇尺寸...");
+            setupSelect('style1', styles, "搜尋款式...");
+            setupSelect('style2', styles, "搜尋款式...");
+            setupSelect('color1', colors, "搜尋顏色...");
+            setupSelect('color2', colors, "搜尋顏色...");
+            setupSelect('size1', sizeList, "選擇尺寸...");
+            setupSelect('size2', sizeList, "選擇尺寸...");
         });
     };
 
@@ -141,7 +156,7 @@ window.onload = function() {
                 <div style="font-size:0.85rem; color:#888;">${row[3]} (${row[4]}/${row[5]})</div>
                 <select onchange="updateStatus('${row[0]}', this.value)">
                     <option value="">更改製作狀態...</option>
-                    <option value="備料中">備料中</option><option value="車縫中">車縫中</option><option value="品檢完工">品檢完工</option>
+                    <option value="備料中">備料中</option><option value="車縫中">車縫中</option><option value="細節修飾">細節修飾</option><option value="品檢完工">品檢完工</option>
                 </select>
             </div>`;
         });
