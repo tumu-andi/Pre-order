@@ -17,33 +17,32 @@
 
         body { font-family: "Helvetica Neue", "Segoe UI", "PingFang TC", sans-serif; background: var(--timu-beige); color: var(--timu-dark); padding: 20px; margin: 0; -webkit-font-smoothing: antialiased; }
 
-        /* 導覽列 - 統一全域設定 */
+        /* 導覽列 */
         .nav { text-align: center; margin: 10px 0 40px 0; position: sticky; top: 0; z-index: 1000; background: var(--timu-beige); padding: 15px 0; }
         .nav button { background: transparent; border: none; color: var(--text-light); padding: 12px 25px; cursor: pointer; margin: 0 5px; letter-spacing: 2px; font-size: 0.9rem; transition: 0.3s; }
         .nav button.active-btn { color: var(--timu-dark); border-bottom: 2px solid var(--timu-gold); font-weight: bold; }
 
-        /* 容器 - 統一外框風格 */
+        /* 頁面容器 */
         .page-container { display: none; background: white; margin: 0 auto 50px auto; padding: 45px; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.04); }
         #formTab { max-width: 600px; }
         #adminTab, #calendarTab, #statsTab { max-width: 950px; }
         .active { display: block; }
 
-        /* 標題與美感小標 - 統一全域大小 */
+        /* 標題設定 */
         .title-group { text-align: center; margin-bottom: 50px; }
         h2 { font-weight: 400; letter-spacing: 8px; margin: 0; color: var(--timu-gold); font-size: 1.6rem; text-transform: uppercase; }
         .sub-title { font-size: 0.85rem; color: #aaa; margin-top: 10px; letter-spacing: 2px; }
 
-        /* 表單元素風格 */
+        /* 表單元素 */
         .form-group { margin-bottom: 35px; }
         label { display: block; font-size: 0.7rem; color: #999; letter-spacing: 1px; margin-bottom: 8px; font-weight: 600; text-transform: uppercase; }
         input { padding: 14px 0; border: none; border-bottom: 1.2px solid #eee !important; font-size: 1rem; width: 100%; background: transparent !important; }
         .choices__inner { background-color: transparent !important; border: none !important; border-bottom: 1.2px solid #eee !important; padding: 10px 0 !important; border-radius: 0 !important; min-height: auto !important; }
-        .btn-submit { background: var(--timu-dark); color: white; border: none; padding: 22px; width: 100%; margin-top: 50px; cursor: pointer; letter-spacing: 5px; font-size: 1rem; border-radius: 6px; font-weight: bold; transition: 0.3s; }
-        .btn-submit:hover { opacity: 0.8; }
+        .btn-submit { background: var(--timu-dark); color: white; border: none; padding: 22px; width: 100%; margin-top: 50px; cursor: pointer; letter-spacing: 5px; font-size: 1rem; border-radius: 6px; font-weight: bold; }
 
-        /* STATUS 列表風格 */
+        /* STATUS 列表 */
         .order-item { border-bottom: 1px solid #f2f2f2; padding: 35px 0; }
-        .size-tag { background: #555; color: #fff; padding: 2px 10px; border-radius: 4px; font-weight: bold; font-size: 0.8rem; margin-left: 10px; }
+        .size-tag { background: #333; color: #fff; padding: 2px 10px; border-radius: 4px; font-weight: bold; font-size: 0.8rem; margin-left: 10px; }
         .item-row { margin-bottom: 12px; line-height: 1.8; color: #444; font-size: 0.95rem; }
         .deadline-box { display: inline-block; padding: 4px 12px; border-radius: 4px; font-size: 0.75rem; margin: 10px 0; font-weight: bold; }
         .time-safe { background-color: #f0f4f0; color: #4a7c44; }
@@ -58,21 +57,21 @@
         .status-已寄回 { background-color: #a69cac !important; }
         .status-出貨完畢 { background-color: #84a59d !important; }
 
-        /* 日曆細節統一 */
+        /* 日曆極簡化修正 */
         .fc { --fc-border-color: var(--grid-line); }
         .fc-toolbar-title { font-size: 1.2rem !important; font-weight: 300 !important; color: var(--timu-dark); }
-        .fc-col-header-cell-cushion { font-size: 0.75rem; color: #999; text-decoration: none !important; letter-spacing: 1px; }
+        .fc-col-header-cell-cushion { font-size: 0.75rem; color: #999; text-decoration: none !important; letter-spacing: 1px; padding: 10px 0 !important; }
         .fc-daygrid-day-number { font-size: 0.8rem !important; color: #ccc !important; text-decoration: none !important; padding: 8px !important; }
-        .fc-day-today { background: #fdfdfd !important; }
-        .fc-event { border: none !important; border-radius: 4px !important; padding: 2px 5px !important; cursor: pointer; }
+        .fc-event { border: none !important; border-radius: 4px !important; padding: 2px 5px !important; cursor: pointer; font-size: 0.75rem !important; }
+        .fc-day-sat, .fc-day-sun { background-color: #fafafa; }
 
-        /* STATISTICS 篩選列風格 */
+        /* STATISTICS 篩選列 */
         .filter-bar { display: flex; gap: 15px; margin-bottom: 30px; background: #fcfcfc; padding: 20px; border-radius: 8px; }
         .filter-bar select { flex: 1; border: none; border-bottom: 1px solid #ddd; padding: 8px; font-size: 0.85rem; background: transparent; cursor: pointer; }
 
-        /* Modal 統一風格 */
+        /* Modal */
         .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3); backdrop-filter: blur(8px); }
-        .modal-content { background: white; margin: 10% auto; padding: 40px; border-radius: 15px; width: 85%; max-width: 450px; position: relative; }
+        .modal-content { background: white; margin: 10% auto; padding: 40px; border-radius: 15px; width: 85%; max-width: 450px; position: relative; box-shadow: 0 20px 50px rgba(0,0,0,0.1); }
     </style>
 </head>
 <body>
@@ -119,10 +118,9 @@
     <table style="width:100%; border-collapse:collapse;"><tbody id="statsTableBody"></tbody></table>
 </div>
 
-<div id="orderModal" class="modal"><div class="modal-content"><span style="position:absolute; right:20px; top:15px; cursor:pointer;" onclick="closeModal()">&times;</span><div id="modalTitle" style="font-weight:bold; border-bottom:1px solid var(--timu-gold); padding-bottom:15px; margin-bottom:20px;"></div><div id="modalBody"></div></div></div>
+<div id="orderModal" class="modal"><div class="modal-content"><span style="position:absolute; right:20px; top:15px; cursor:pointer; color:#ccc;" onclick="closeModal()">&times;</span><div id="modalTitle" style="font-weight:bold; border-bottom:1px solid var(--timu-gold); padding-bottom:15px; margin-bottom:20px;"></div><div id="modalBody"></div></div></div>
 
 <script>
-    // [腳本邏輯部分完全保留妳之前的設定]
     const scriptUrl = "https://script.google.com/macros/s/AKfycbyi0WHv5eEFxL5XVKiPsr_iU6Ipoa0OxJJQvTjmjzicQTrNRK16fTUqD2_qeskcoXVcZg/exec";
     let allOrders = [];
     let calendar;
@@ -150,7 +148,23 @@
             const expDate = row[2] ? row[2].split('T')[0].replace(/-/g,'/') : '-';
             const diffDays = Math.ceil((new Date(expDate) - new Date()) / 86400000);
             let tClass = diffDays > 14 ? 'time-safe' : (diffDays > 7 ? 'time-normal' : 'time-urgent');
-            html += `<div class="order-item"><div style="display:flex; justify-content:space-between; align-items:flex-start;"><div style="flex:1;"><div style="font-weight:bold; font-size:1.1rem;">#${row[0]}</div><div style="font-size:0.75rem; color:#999; margin:5px 0;">DEADLINE: ${expDate}</div><div class="${tClass} deadline-box">剩餘 ${diffDays} DAYS</div><div style="border-left:2px solid var(--timu-gold); padding-left:15px; margin-top:15px;"><div class="item-row"><b>①</b> ${formatItemText(row[3], row[4], row[5])}</div>${row[6] ? `<div class="item-row"><b>②</b> ${formatItemText(row[6], row[7], row[8])}</div>` : ''}</div><div style="margin-top:15px; display:flex; gap:10px;"><input type="text" id="note-${row[0]}" value="${row[11]||''}" placeholder="Note..." style="font-size:0.8rem; flex:1;"><button onclick="updateNote('${row[0]}')" style="background:none; border:none; color:var(--timu-gold); font-weight:bold; cursor:pointer; font-size:0.75rem;">SAVE</button></div></div><div style="text-align:right;"><span class="status-tag status-${status}">${status}</span><div style="margin-top:15px;"><select onchange="updateStatus('${row[0]}', this.value)" style="font-size:0.75rem; padding:4px; border:1px solid #eee;"><option value="">變更</option><option value="新訂單">新訂單</option><option value="備料中">備料中</option><option value="車縫中">車縫中</option><option value="已寄回">已寄回</option><option value="出貨完畢">出貨完畢</option></select></div></div></div></div>`;
+            html += `<div class="order-item">
+                <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                    <div style="flex:1;">
+                        <div style="font-weight:bold; font-size:1.1rem;">#${row[0]}</div>
+                        <div style="font-size:0.75rem; color:#999; margin:5px 0;">DEADLINE: ${expDate}</div>
+                        <div class="${tClass} deadline-box">剩餘 ${diffDays} DAYS</div>
+                        <div style="border-left:2px solid var(--timu-gold); padding-left:15px; margin-top:15px;">
+                            <div class="item-row"><b>①</b> ${formatItemText(row[3], row[4], row[5])}</div>
+                            ${row[6] ? `<div class="item-row"><b>②</b> ${formatItemText(row[6], row[7], row[8])}</div>` : ''}
+                        </div>
+                    </div>
+                    <div style="text-align:right;">
+                        <span class="status-tag status-${status}">${status}</span>
+                        <div style="margin-top:15px;"><select onchange="updateStatus('${row[0]}', this.value)" style="font-size:0.75rem; padding:4px; border:1px solid #eee;"><option value="">變更</option><option value="新訂單">新訂單</option><option value="備料中">備料中</option><option value="車縫中">車縫中</option><option value="已寄回">已寄回</option><option value="出貨完畢">出貨完畢</option></select></div>
+                    </div>
+                </div>
+            </div>`;
         });
         listDiv.innerHTML = html || "暫無訂單資料";
     }
@@ -171,92 +185,60 @@
             events: events,
             eventClick: (info) => {
                 const r = info.event.extendedProps.row;
+                document.getElementById('orderModal').style.display = 'block';
                 document.getElementById('modalTitle').innerText = `Order #${r[0]}`;
                 document.getElementById('modalBody').innerHTML = `<div style="line-height:2.2;">進度：<b>${r[9]}</b><br>交期：<b>${r[2].split('T')[0]}</b><hr style="border:none; border-top:1px dashed #eee; margin:15px 0;"><b>①</b> ${formatItemText(r[3], r[4], r[5])}${r[6] ? '<br><b>②</b> ' + formatItemText(r[6], r[7], r[8]) : ''}</div>`;
-                document.getElementById('orderModal').style.display = 'block';
             }
         });
         calendar.render();
     }
 
-    // [其餘 API 調用邏輯不變]
+    function renderStatistics() {
+        const tbody = document.getElementById('statsTableBody');
+        const fCat = document.getElementById('filterCat').value;
+        const fStyle = document.getElementById('filterStyle').value;
+        const fColor = document.getElementById('filterColor').value;
+        const statsMap = {}, activeStyles = new Set(), activeColors = new Set();
+        const activeOrders = allOrders.filter(row => !["已寄回", "出貨完畢"].includes((row[9]||"").trim()));
+        activeOrders.forEach(row => {
+            [[row[3], row[4], row[5]], [row[6], row[7], row[8]]].forEach(it => {
+                if (!it[0]) return;
+                activeStyles.add(it[0]); activeColors.add(it[1]);
+                let cat = "ONEPIECE";
+                const sUpper = it[0].toUpperCase();
+                if (sUpper.includes("TOP") || sUpper.includes("BRA") || it[0].includes("上衣")) cat = "TOP";
+                else if (sUpper.includes("BOTTOM") || sUpper.includes("LEGGING") || it[0].includes("褲")) cat = "BOTTOM";
+                if ((fCat === "" || cat === fCat) && (fStyle === "" || it[0] === fStyle) && (fColor === "" || it[1] === fColor)) {
+                    const key = `${it[0]} / ${it[1]} / ${it[2]}`;
+                    statsMap[key] = (statsMap[key] || 0) + 1;
+                }
+            });
+        });
+        const fs = document.getElementById('filterStyle'), fc = document.getElementById('filterColor');
+        if (fs.options.length <= 1) {
+            [...activeStyles].sort().forEach(s => fs.add(new Option(s, s)));
+            [...activeColors].sort().forEach(c => fc.add(new Option(c, c)));
+        }
+        let html = '';
+        Object.keys(statsMap).sort().forEach(key => {
+            html += `<tr><td style="padding:15px 0; border-bottom:1px solid #eee; font-size:0.95rem;">${key}</td><td style="text-align:right; border-bottom:1px solid #eee;"><b>${statsMap[key]}</b> <small>PCS</small></td></tr>`;
+        });
+        tbody.innerHTML = html || '<tr><td colspan="2" style="text-align:center; padding:30px; color:#ccc;">無匹配資料</td></tr>';
+    }
+
     function loadOrders() {
         fetch(`${scriptUrl}?action=getOrders`).then(res => res.json()).then(data => {
             allOrders = data.slice(1);
             if(document.getElementById('adminTab').classList.contains('active')) renderOrders(allOrders.slice().reverse());
         });
     }
-    function renderStatistics() {
-        const tbody = document.getElementById('statsTableBody');
-        const fCat = document.getElementById('filterCat').value;
-        const fStyle = document.getElementById('filterStyle').value;
-        const fColor = document.getElementById('filterColor').value;
-        
-        const statsMap = {};
-        const activeStyles = new Set();
-        const activeColors = new Set();
 
-        // 1. 先抓取所有「非完工」的訂單資料
-        const activeOrders = allOrders.filter(row => !["已寄回", "出貨完畢"].includes((row[9]||"").trim()));
-
-        activeOrders.forEach(row => {
-            // 處理兩個 Item
-            [[row[3], row[4], row[5]], [row[6], row[7], row[8]]].forEach(it => {
-                if (!it[0]) return; // 如果沒資料就跳過
-
-                const styleName = it[0];
-                const colorName = it[1];
-                const sizeName = it[2];
-
-                // 更新下拉選單的選項庫
-                activeStyles.add(styleName);
-                activeColors.add(colorName);
-
-                // 分類邏輯判定
-                let cat = "ONEPIECE";
-                const sUpper = styleName.toUpperCase();
-                if (sUpper.includes("TOP") || sUpper.includes("BRA") || styleName.includes("上衣")) cat = "TOP";
-                else if (sUpper.includes("BOTTOM") || sUpper.includes("LEGGING") || styleName.includes("褲")) cat = "BOTTOM";
-
-                // 2. 執行篩選
-                if ((fCat === "" || cat === fCat) &&
-                    (fStyle === "" || styleName === fStyle) &&
-                    (fColor === "" || colorName === fColor)) {
-                    const key = `${styleName} / ${colorName} / ${sizeName}`;
-                    statsMap[key] = (statsMap[key] || 0) + 1;
-                }
-            });
-        });
-
-        // 3. 動態更新下拉選單（僅在選單是空的時候初始化，避免重複刷掉妳選好的項目）
-        const fs = document.getElementById('filterStyle');
-        const fc = document.getElementById('filterColor');
-        if (fs.options.length <= 1) {
-            [...activeStyles].sort().forEach(s => fs.add(new Option(s, s)));
-            [...activeColors].sort().forEach(c => fc.add(new Option(c, c)));
-        }
-
-        // 4. 渲染表格
-        let html = '';
-        Object.keys(statsMap).sort().forEach(key => {
-            html += `<tr><td style="padding:15px 0; border-bottom:1px solid #eee; font-size:0.95rem;">${key}</td><td style="text-align:right; border-bottom:1px solid #eee;"><b>${statsMap[key]}</b> <small style="color:#bbb; margin-left:5px;">PCS</small></td></tr>`;
-        });
-        tbody.innerHTML = html || '<tr><td colspan="2" style="text-align:center; padding:50px; color:#ccc;">無匹配的生產品項</td></tr>';
-    }
-                }
-            });
-        });
-        let html = '';
-        Object.keys(statsMap).sort().forEach(key => {
-            html += `<tr><td style="padding:15px 0; border-bottom:1px solid #eee; font-size:0.95rem;">${key}</td><td style="text-align:right; border-bottom:1px solid #eee;"><b>${statsMap[key]}</b> <small>PCS</small></td></tr>`;
-        });
-        tbody.innerHTML = html || '<tr><td colspan="2" style="text-align:center; padding:30px; color:#ccc;">無資料</td></tr>';
-    }
     function setupSelect(id, list, p) {
         const s = document.getElementById(id); s.innerHTML = `<option value="">${p}</option>`;
         list.forEach(i => s.add(new Option(i, i)));
         new Choices(s, { searchEnabled: true, itemSelectText: '', shouldSort: false, placeholder: true });
     }
+
     window.onload = function() {
         const now = new Date(); document.getElementById('orderDate').value = (new Date(now - now.getTimezoneOffset()*60000)).toISOString().split('T')[0];
         calculateExpectedDate(document.getElementById('orderDate').value);
@@ -268,6 +250,7 @@
             loadOrders();
         });
     };
+
     function calculateExpectedDate(v) {
         if(!v) return ""; const d = new Date(v); d.setDate(d.getDate()+42);
         const res = `${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')}`;
@@ -275,7 +258,6 @@
     }
     function closeModal() { document.getElementById('orderModal').style.display='none'; }
     function updateStatus(id, s) { if(!s) return; fetch(scriptUrl, { method: "POST", mode: "no-cors", body: JSON.stringify({action:'updateStatus', id:id, status:s}) }).then(() => loadOrders()); }
-    function updateNote(id) { const n = document.getElementById(`note-${id}`).value; fetch(scriptUrl, { method: "POST", mode: "no-cors", body: JSON.stringify({action:'updateNote', id:id, note:n}) }).then(() => alert('Saved')); }
     function submitOrder() {
         const id = document.getElementById('orderId').value; if(!id) return alert("請輸入 ID");
         const btn = document.getElementById('submitBtn'); btn.innerText = "Processing..."; btn.disabled = true;
