@@ -4,49 +4,58 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TIMU | 生產管理系統</title>
+    
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+    
     <style>
         :root { --timu-beige: #f9f8f6; --timu-dark: #333333; --timu-gold: #c5a35d; }
         body { font-family: "PingFang TC", sans-serif; background: var(--timu-beige); color: var(--timu-dark); padding: 20px; margin: 0; }
+        
         .nav { text-align: center; margin: 20px 0 30px 0; position: sticky; top: 0; z-index: 100; background: var(--timu-beige); padding: 10px 0; }
-        .nav button { background: white; border: 1px solid var(--timu-dark); color: var(--timu-dark); padding: 10px 25px; cursor: pointer; margin: 0 5px; letter-spacing: 2px; font-size: 0.85rem; }
+        .nav button { background: white; border: 1px solid var(--timu-dark); color: var(--timu-dark); padding: 10px 25px; cursor: pointer; margin: 0 5px; letter-spacing: 2px; transition: 0.3s; font-size: 0.85rem; }
         .nav button.active-btn { background: var(--timu-dark); color: white; }
+        
         .page-container { display: none; background: white; margin: 0 auto 50px auto; padding: 30px; border-radius: 2px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
         #formTab { max-width: 550px; }
-        #adminTab { max-width: 900px; }
+        #adminTab { max-width: 850px; }
         .active { display: block; }
-        h2 { font-weight: 300; text-align: center; letter-spacing: 4px; color: var(--timu-gold); }
+        
+        h2 { font-weight: 300; text-align: center; letter-spacing: 4px; margin-bottom: 30px; color: var(--timu-gold); }
+        
         .date-row { display: flex; align-items: center; gap: 12px; margin: 8px 0; }
         #orderDate { width: 160px; padding: 8px; font-size: 0.9rem; }
         .expected-hint { font-size: 0.8rem; color: var(--timu-gold); font-weight: bold; }
+
         .section-header { font-size: 1rem; font-weight: 600; margin: 30px 0 10px 0; border-bottom: 1px solid var(--timu-dark); padding-bottom: 5px; }
-        input, select { padding: 8px 12px; margin: 5px 0; border: 1px solid #eee; font-size: 0.95rem; }
-        .choices__inner { min-height: 38px !important; padding: 4px 8px !important; }
-        .btn-submit { background: var(--timu-dark); color: white; border: none; padding: 15px; width: 100%; margin-top: 30px; cursor: pointer; letter-spacing: 3px; }
+        label { display: block; font-size: 0.75rem; margin-top: 15px; color: #999; }
         
-        /* 進度清單樣式 */
+        input, select { padding: 8px 12px; margin: 5px 0; border: 1px solid #eee; font-size: 0.95rem; }
+        .choices__inner { min-height: 38px !important; padding: 4px 8px !important; background: white !important; }
+
+        .btn-submit { background: var(--timu-dark); color: white; border: none; padding: 15px; width: 100%; margin-top: 30px; cursor: pointer; letter-spacing: 3px; font-size: 1rem; }
+
         .order-item { border-bottom: 1px solid #f2f2f2; padding: 20px 0; }
-        .order-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; }
-        .order-info { flex: 1.5; }
-        .order-actions { flex: 1; text-align: right; }
+        .order-header { display: flex; justify-content: space-between; align-items: flex-start; }
+        
         .status-tag { padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; color: white; font-weight: 600; }
         .status-備料中 { background-color: #95a5a6; }
         .status-車縫中 { background-color: #3498db; }
         .status-細節修飾 { background-color: #f39c12; }
         .status-品檢完工 { background-color: #27ae60; }
-        .deadline-box { display: inline-block; padding: 3px 8px; border-radius: 4px; font-size: 0.8rem; margin: 5px 0; }
+
+        .deadline-box { display: inline-block; padding: 3px 8px; border-radius: 4px; font-size: 0.8rem; margin: 5px 0; font-weight: 500; }
         .time-safe { background-color: #e8f5e9; color: #2e7d32; }
         .time-normal { background-color: #e3f2fd; color: #1565c0; }
         .time-warning { background-color: #fff3e0; color: #ef6c00; }
         .time-urgent { background-color: #ffebee; color: #c62828; }
 
-        /* 備註與品項標示 */
-        .item-detail { font-size: 0.85rem; color: #666; margin-top: 8px; border-left: 2px solid #eee; padding-left: 10px; line-height: 1.6; }
+        .item-detail { font-size: 0.85rem; color: #666; margin-top: 5px; border-left: 2px solid #eee; padding-left: 10px; line-height: 1.6; }
+
         .note-container { margin-top: 12px; display: flex; gap: 5px; }
         .note-input { flex: 1; font-size: 0.8rem; padding: 6px; border: 1px solid #eee; background: #fffcf5; }
-        .btn-note-save { font-size: 0.7rem; background: #eee; border: none; padding: 0 10px; cursor: pointer; transition: 0.2s; }
-        .btn-note-save:hover { background: var(--timu-gold); color: white; }
+        .btn-note-save { font-size: 0.7rem; background: #eee; border: none; padding: 0 10px; cursor: pointer; }
+
         .status-select { width: 150px; height: 34px; font-size: 0.8rem; border: 1px solid #ddd; margin-top: 10px; }
         .search-box { width: 100%; margin-bottom: 20px; border: 1px solid #eee; padding: 12px; box-sizing: border-box; }
     </style>
@@ -55,14 +64,17 @@
 
 <div class="nav">
     <button id="btnForm" class="active-btn" onclick="showTab('form')">建立新單</button>
-    <button id="btnAdmin" onclick="showTab('admin'); loadOrders();">進度管理</button>
+    <button id="btnAdmin" onclick="showTab('admin')">進度管理</button>
 </div>
 
 <div id="formTab" class="page-container active">
     <h2>NEW ORDER</h2>
     <label>訂單編號</label><input type="text" id="orderId" placeholder="輸入編號">
     <label>訂製日期</label>
-    <div class="date-row"><input type="date" id="orderDate" onchange="calculateExpectedDate(this.value)"><div id="expectedHint" class="expected-hint"></div></div>
+    <div class="date-row">
+        <input type="date" id="orderDate" onchange="calculateExpectedDate(this.value)">
+        <div id="expectedHint" class="expected-hint"></div>
+    </div>
     <div class="section-header">Pre-order:1</div>
     <label>款式 1</label><select id="style1"></select>
     <label>顏色 1</label><select id="color1"></select>
@@ -76,7 +88,7 @@
 
 <div id="adminTab" class="page-container">
     <h2>STATUS</h2>
-    <input type="text" id="adminSearch" class="search-box" placeholder="🔍 搜尋訂單編號、品項或備註..." onkeyup="filterOrders()">
+    <input type="text" id="adminSearch" class="search-box" placeholder="🔍 搜尋訂單編號、款式或備註..." onkeyup="filterOrders()">
     <div id="orderList">載入中...</div>
 </div>
 
@@ -89,6 +101,11 @@
         document.getElementById('adminTab').style.display = (type === 'admin') ? 'block' : 'none';
         document.getElementById('btnForm').classList.toggle('active-btn', type === 'form');
         document.getElementById('btnAdmin').classList.toggle('active-btn', type === 'admin');
+        
+        // 【優化】自動判斷：如果列表沒資料才去讀取，否則直接呈現現有內容
+        if (type === 'admin' && allOrders.length === 0) {
+            loadOrders();
+        }
     }
 
     function calculateExpectedDate(val) {
@@ -134,7 +151,7 @@
         let html = '';
         orders.forEach(row => {
             const status = (row[9] || "備料中").trim();
-            const note = row[10] || ""; // 從 K 欄抓備註
+            const note = row[10] || ""; 
             const stage = getProductionStage(row[2] ? row[2].split('T')[0] : '');
             const hasStyle2 = row[6] && row[6].toString().trim().length > 0;
 
@@ -149,16 +166,18 @@
                         </div>
                         <div class="note-container">
                             <input type="text" class="note-input" id="note-${row[0]}" placeholder="填寫備註..." value="${note}">
-                            <button class="btn-note-save" onclick="updateNote('${row[0]}')">儲存</button>
+                            <button class="btn-note-save" onclick="updateNote('${row[0]}')">儲存備註</button>
                         </div>
                     </div>
-                    <div class="order-actions">
+                    <div style="text-align:right;">
                         <span class="status-tag status-${status}">${status}</span>
-                        <select class="status-select" onchange="updateStatus('${row[0]}', this.value)">
-                            <option value="">更改進度...</option>
-                            <option value="備料中">備料中</option><option value="車縫中">車縫中</option>
-                            <option value="細節修飾">細節修飾</option><option value="品檢完工">品檢完工</option>
-                        </select>
+                        <div style="margin-top:10px;">
+                            <select class="status-select" onchange="updateStatus('${row[0]}', this.value)">
+                                <option value="">更改進度...</option>
+                                <option value="備料中">備料中</option><option value="車縫中">車縫中</option>
+                                <option value="細節修飾">細節修飾</option><option value="品檢完工">品檢完工</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
             </div>`;
@@ -180,15 +199,18 @@
         btn.innerText = "⏳";
         fetch(scriptUrl, { method: "POST", mode: "no-cors", body: JSON.stringify({action: 'updateNote', id: id, note: note}) })
         .then(() => { 
-            btn.innerText = "✅"; 
-            setTimeout(() => { btn.innerText = "儲存"; }, 2000);
+            btn.innerText = "已儲存"; 
+            // 同步本地快取，避免切換頁面後備註變回舊的
+            const idx = allOrders.findIndex(r => r[0].toString() === id.toString());
+            if(idx !== -1) allOrders[idx][10] = note;
+            setTimeout(() => { btn.innerText = "儲存備註"; }, 2000);
         });
     }
 
     function updateStatus(id, status) {
         if(!status) return;
         fetch(scriptUrl, { method: "POST", mode: "no-cors", body: JSON.stringify({action: 'updateStatus', id: id, status: status}) })
-        .then(() => loadOrders());
+        .then(() => loadOrders()); // 狀態更改時強制重新讀取，確保準確
     }
 
     function filterOrders() {
