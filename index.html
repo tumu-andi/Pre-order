@@ -46,63 +46,69 @@
 </div>
 
 <script>
-    const scriptUrl = "https://script.google.com/macros/s/AKfycby9Q4NwRye6sDyFaq_ogKnvDSVJUUMGO_U7t65hGDk6rHQMKxyQFmkUFe8VXHm0XqTmJg/exec"; // 貼上剛才部署的網址
+    const scriptUrl = "https://script.google.com/macros/s/AKfycbwh-1fS08fb7rsrEs7_BgMVhQoGpE_wc_GUfG6R-C3D3Ds0ytj0GhH5x_MvgYvfQzejFA/exec"; // 
 
-    function showTab(type) {
-        document.getElementById('formTab').className = type === 'form' ? 'tab active card' : 'tab card';
-        document.getElementById('adminTab').className = type === 'admin' ? 'tab active card' : 'tab card';
-    }
-
-    // 初始化：讀取試算表中的款式下拉選單
-    window.onload = function() {
-        google.script.run.withSuccessHandler(styles => {
-            const selects = [document.getElementById('style1'), document.getElementById('style2')];
-            selects.forEach(s => {
-                styles.forEach(item => {
-                    let opt = document.createElement('option');
-                    opt.value = item[0]; opt.text = item[0];
-                    s.appendChild(opt);
-                });
+// 初始化：讀取款式
+window.onload = function() {
+    fetch(`${scriptUrl}?action=getStyles`)
+    .then(res => res.json())
+    .then(styles => {
+        const selects = [document.getElementById('style1'), document.getElementById('style2')];
+        selects.forEach(s => {
+            styles.forEach(item => {
+                let opt = document.createElement('option');
+                opt.value = item[0]; opt.text = item[0];
+                s.appendChild(opt);
             });
-        }).getStyles();
+        });
+    });
+};
+
+function submitOrder() {
+    const data = {
+        id: document.getElementById('orderId').value,
+        deadline: document.getElementById('deadline').value,
+        s1: document.getElementById('style1').value,
+        c1: document.getElementById('color1').value,
+        z1: document.getElementById('size1').value,
+        s2: document.getElementById('style2').value,
+        c2: document.getElementById('color2').value,
+        z2: document.getElementById('size2').value
     };
+    
+    fetch(scriptUrl, {
+        method: "POST",
+        body: JSON.stringify({action: 'addOrder', data: data})
+    }).then(() => alert('訂單已送出！'));
+}
 
-    function submitOrder() {
-        const data = {
-            id: document.getElementById('orderId').value,
-            deadline: document.getElementById('deadline').value,
-            s1: document.getElementById('style1').value,
-            c1: document.getElementById('color1').value,
-            z1: document.getElementById('size1').value,
-            s2: document.getElementById('style2').value,
-            c2: document.getElementById('color2').value,
-            z2: document.getElementById('size2').value
-        };
-        google.script.run.withSuccessHandler(() => alert('訂單已同步至試算表！')).addOrder(data);
-    }
+function loadOrders() {
+    fetch(`${scriptUrl}?action=getOrders`)
+    .then(res => res.json())
+    .then(data => {
+        let html = '';
+        for(let i=1; i<data.length; i++) {
+            html += `<div class="order-item">
+                <b>${data[i][0]}</b> - ${data[i][3]} (${data[i][9]})<br>
+                <select onchange="updateStatus('${data[i][0]}', this.value)">
+                    <option>更改進度</option>
+                    <option value="備料中">備料中</option>
+                    <option value="車縫中">車縫中</option>
+                    <option value="品檢中">品檢中</option>
+                    <option value="已完工">已完工</option>
+                </select>
+            </div>`;
+        }
+        document.getElementById('orderList').innerHTML = html;
+    });
+}
 
-    function loadOrders() {
-        google.script.run.withSuccessHandler(data => {
-            let html = '';
-            for(let i=1; i<data.length; i++) {
-                html += `<div class="order-item">
-                    <b>${data[i][0]}</b> - ${data[i][3]} (${data[i][9]})<br>
-                    <select onchange="updateStatus('${data[i][0]}', this.value)">
-                        <option>更改進度</option>
-                        <option value="備料中">備料中</option>
-                        <option value="車縫中">車縫中</option>
-                        <option value="品檢中">品檢中</option>
-                        <option value="已完工">已完工</option>
-                    </select>
-                </div>`;
-            }
-            document.getElementById('orderList').innerHTML = html;
-        }).getOrders();
-    }
-
-    function updateStatus(id, status) {
-        google.script.run.withSuccessHandler(() => alert('進度已更新')).updateStatus(id, status);
-    }
+function updateStatus(id, status) {
+    fetch(scriptUrl, {
+        method: "POST",
+        body: JSON.stringify({action: 'updateStatus', id: id, status: status})
+    }).then(() => alert('進度已同步回試算表！'));
+}
 </script>
 </body>
 </html>
