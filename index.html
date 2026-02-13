@@ -1,148 +1,108 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TIMU | Custom Order Management</title>
+    <title>TIMU | 生產管理系統</title>
     <style>
-        :root {
-            --timu-beige: #f9f8f6;
-            --timu-dark: #333333;
-            --timu-gold: #c5a35d;
-        }
-        body {
-            font-family: "PingFang TC", "Hiragino Sans GB", serif;
-            background-color: var(--timu-beige);
-            color: var(--timu-dark);
-            line-height: 1.6;
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-        }
-        .container {
-            background: #fff;
-            max-width: 500px;
-            width: 100%;
-            padding: 40px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-            border-radius: 2px;
-        }
-        h1 {
-            font-weight: 300;
-            letter-spacing: 4px;
-            text-align: center;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 20px;
-            font-size: 1.5rem;
-        }
-        .section-title {
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: var(--timu-gold);
-            margin-top: 30px;
-            border-left: 2px solid var(--timu-gold);
-            padding-left: 10px;
-        }
-        .input-group {
-            margin: 15px 0;
-        }
-        label {
-            display: block;
-            font-size: 0.9rem;
-            margin-bottom: 5px;
-        }
-        input, select, textarea {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #e0e0e0;
-            outline: none;
-            font-size: 1rem;
-            box-sizing: border-box;
-        }
-        input:focus { border-color: var(--timu-gold); }
-        
-        .status-check {
-            display: flex;
-            align-items: center;
-            margin: 10px 0;
-            cursor: pointer;
-        }
-        .status-check input { width: auto; margin-right: 15px; }
-
-        .btn-copy {
-            background: var(--timu-dark);
-            color: #fff;
-            width: 100%;
-            padding: 15px;
-            border: none;
-            margin-top: 30px;
-            cursor: pointer;
-            letter-spacing: 2px;
-            transition: 0.3s;
-        }
-        .btn-copy:hover { opacity: 0.8; }
-        
-        footer {
-            text-align: center;
-            font-size: 0.7rem;
-            margin-top: 40px;
-            color: #999;
-        }
+        /* 延續簡約設計 */
+        body { font-family: sans-serif; background: #f9f8f6; color: #333; padding: 20px; }
+        .card { background: white; max-width: 600px; margin: auto; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .tab { display: none; }
+        .active { display: block; }
+        .nav { text-align: center; margin-bottom: 20px; }
+        button { background: #333; color: white; border: none; padding: 10px 20px; cursor: pointer; margin: 5px; }
+        input, select { width: 100%; padding: 8px; margin: 10px 0; border: 1px solid #ddd; }
+        .order-item { border-bottom: 1px solid #eee; padding: 10px 0; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h1>TIMU CUSTOM</h1>
+<div class="nav">
+    <button onclick="showTab('form')">填寫新單</button>
+    <button onclick="showTab('admin'); loadOrders();">進度管理</button>
+</div>
+
+<div id="formTab" class="tab active card">
+    <h2>建立新訂單</h2>
+    <input type="text" id="orderId" placeholder="訂單編號">
+    <input type="date" id="deadline" placeholder="預計交期">
     
-    <div class="section-title">Order Info</div>
-    <div class="input-group">
-        <label>客戶姓名</label>
-        <input type="text" id="custName" placeholder="例如：林曉小姐">
-    </div>
-    <div class="input-group">
-        <label>訂製款式 / 色號</label>
-        <input type="text" id="style" placeholder="例如：Summer V / 焙茶綠">
-    </div>
+    <p>款式 1</p>
+    <select id="style1"></select>
+    <input type="text" id="color1" placeholder="顏色">
+    <input type="text" id="size1" placeholder="尺寸">
 
-    <div class="section-title">Production Status</div>
-    <div class="status-check">
-        <input type="checkbox" id="step1"> <label for="step1">1. 備料與剪裁 (完成)</label>
-    </div>
-    <div class="status-check">
-        <input type="checkbox" id="step2"> <label for="step2">2. 初步車縫 (完成)</label>
-    </div>
-    <div class="status-check">
-        <input type="checkbox" id="step3"> <label for="step3">3. 細節修飾 (完成)</label>
-    </div>
-    <div class="status-check">
-        <input type="checkbox" id="step4"> <label for="step4">4. 最終品檢 (完成)</label>
-    </div>
+    <p>款式 2</p>
+    <select id="style2"></select>
+    <input type="text" id="color2" placeholder="顏色">
+    <input type="text" id="size2" placeholder="尺寸">
+    
+    <button onclick="submitOrder()" style="width:100%">送出資料</button>
+</div>
 
-    <button class="btn-copy" onclick="copyProgress()">複製進度摘要</button>
-
-    <footer>
-        慢慢來的質感，是我們對美的堅持。
-    </footer>
+<div id="adminTab" class="tab card">
+    <h2>進度追蹤與修改</h2>
+    <div id="orderList">載入中...</div>
 </div>
 
 <script>
-    function copyProgress() {
-        const name = document.getElementById('custName').value;
-        const style = document.getElementById('style').value;
-        const s1 = document.getElementById('step1').checked ? "✓" : "○";
-        const s2 = document.getElementById('step2').checked ? "✓" : "○";
-        const s3 = document.getElementById('step3').checked ? "✓" : "○";
-        const s4 = document.getElementById('step4').checked ? "✓" : "○";
+    const scriptUrl = "你的GAS部署網址"; // 貼上剛才部署的網址
 
-        const text = `【TIMU 製作進度回報】\n客戶：${name}\n款式：${style}\n---\n${s1} 剪裁 | ${s2} 車縫 | ${s3} 細節 | ${s4} 品檢\n---\n期待與妳見面。`;
-        
-        navigator.clipboard.writeText(text);
-        alert("進度摘要已複製，可直接貼給師傅或客戶！");
+    function showTab(type) {
+        document.getElementById('formTab').className = type === 'form' ? 'tab active card' : 'tab card';
+        document.getElementById('adminTab').className = type === 'admin' ? 'tab active card' : 'tab card';
+    }
+
+    // 初始化：讀取試算表中的款式下拉選單
+    window.onload = function() {
+        google.script.run.withSuccessHandler(styles => {
+            const selects = [document.getElementById('style1'), document.getElementById('style2')];
+            selects.forEach(s => {
+                styles.forEach(item => {
+                    let opt = document.createElement('option');
+                    opt.value = item[0]; opt.text = item[0];
+                    s.appendChild(opt);
+                });
+            });
+        }).getStyles();
+    };
+
+    function submitOrder() {
+        const data = {
+            id: document.getElementById('orderId').value,
+            deadline: document.getElementById('deadline').value,
+            s1: document.getElementById('style1').value,
+            c1: document.getElementById('color1').value,
+            z1: document.getElementById('size1').value,
+            s2: document.getElementById('style2').value,
+            c2: document.getElementById('color2').value,
+            z2: document.getElementById('size2').value
+        };
+        google.script.run.withSuccessHandler(() => alert('訂單已同步至試算表！')).addOrder(data);
+    }
+
+    function loadOrders() {
+        google.script.run.withSuccessHandler(data => {
+            let html = '';
+            for(let i=1; i<data.length; i++) {
+                html += `<div class="order-item">
+                    <b>${data[i][0]}</b> - ${data[i][3]} (${data[i][9]})<br>
+                    <select onchange="updateStatus('${data[i][0]}', this.value)">
+                        <option>更改進度</option>
+                        <option value="備料中">備料中</option>
+                        <option value="車縫中">車縫中</option>
+                        <option value="品檢中">品檢中</option>
+                        <option value="已完工">已完工</option>
+                    </select>
+                </div>`;
+            }
+            document.getElementById('orderList').innerHTML = html;
+        }).getOrders();
+    }
+
+    function updateStatus(id, status) {
+        google.script.run.withSuccessHandler(() => alert('進度已更新')).updateStatus(id, status);
     }
 </script>
-
 </body>
 </html>
