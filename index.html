@@ -52,9 +52,43 @@
 
         .item-detail { font-size: 0.85rem; color: #666; margin-top: 5px; border-left: 2px solid #eee; padding-left: 10px; line-height: 1.6; }
 
-        .note-container { margin-top: 12px; display: flex; gap: 5px; }
-        .note-input { flex: 1; font-size: 0.8rem; padding: 6px; border: 1px solid #eee; background: #fffcf5; }
-        .btn-note-save { font-size: 0.7rem; background: #eee; border: none; padding: 0 10px; cursor: pointer; }
+        /* --- 備註欄新樣式：去框、更像訂單資訊 --- */
+        .note-container { 
+            margin-top: 15px; 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+            border-top: 1px dashed #eee; 
+            padding-top: 10px; 
+        }
+        .note-label { font-size: 0.7rem; color: #aaa; white-space: nowrap; }
+        .note-input { 
+            flex: 1; 
+            font-size: 0.8rem; 
+            padding: 4px 0; 
+            border: none; 
+            border-bottom: 1px solid transparent; 
+            background: transparent; 
+            color: #666;
+            transition: border-bottom 0.3s;
+        }
+        .note-input:focus { 
+            outline: none; 
+            border-bottom: 1px solid var(--timu-gold); 
+            background: #fffcf5;
+        }
+        .btn-note-save { 
+            font-size: 0.7rem; 
+            background: none; 
+            border: 1px solid #ddd; 
+            padding: 2px 8px; 
+            cursor: pointer; 
+            color: #999;
+            border-radius: 2px;
+            transition: 0.2s;
+        }
+        .btn-note-save:hover { border-color: var(--timu-gold); color: var(--timu-gold); }
+        /* ---------------------------------- */
 
         .status-select { width: 150px; height: 34px; font-size: 0.8rem; border: 1px solid #ddd; margin-top: 10px; }
         .search-box { width: 100%; margin-bottom: 20px; border: 1px solid #eee; padding: 12px; box-sizing: border-box; }
@@ -102,7 +136,6 @@
         document.getElementById('btnForm').classList.toggle('active-btn', type === 'form');
         document.getElementById('btnAdmin').classList.toggle('active-btn', type === 'admin');
         
-        // 【優化】自動判斷：如果列表沒資料才去讀取，否則直接呈現現有內容
         if (type === 'admin' && allOrders.length === 0) {
             loadOrders();
         }
@@ -165,8 +198,9 @@
                             ${hasStyle2 ? `<br>② ${row[6]} / ${row[7]} / ${row[8]}` : ''}
                         </div>
                         <div class="note-container">
-                            <input type="text" class="note-input" id="note-${row[0]}" placeholder="填寫備註..." value="${note}">
-                            <button class="btn-note-save" onclick="updateNote('${row[0]}')">儲存備註</button>
+                            <span class="note-label">備註：</span>
+                            <input type="text" class="note-input" id="note-${row[0]}" placeholder="點擊填寫備註..." value="${note}">
+                            <button class="btn-note-save" onclick="updateNote('${row[0]}')">儲存</button>
                         </div>
                     </div>
                     <div style="text-align:right;">
@@ -199,18 +233,17 @@
         btn.innerText = "⏳";
         fetch(scriptUrl, { method: "POST", mode: "no-cors", body: JSON.stringify({action: 'updateNote', id: id, note: note}) })
         .then(() => { 
-            btn.innerText = "已儲存"; 
-            // 同步本地快取，避免切換頁面後備註變回舊的
+            btn.innerText = "✅"; 
             const idx = allOrders.findIndex(r => r[0].toString() === id.toString());
             if(idx !== -1) allOrders[idx][10] = note;
-            setTimeout(() => { btn.innerText = "儲存備註"; }, 2000);
+            setTimeout(() => { btn.innerText = "儲存"; }, 2000);
         });
     }
 
     function updateStatus(id, status) {
         if(!status) return;
         fetch(scriptUrl, { method: "POST", mode: "no-cors", body: JSON.stringify({action: 'updateStatus', id: id, status: status}) })
-        .then(() => loadOrders()); // 狀態更改時強制重新讀取，確保準確
+        .then(() => loadOrders());
     }
 
     function filterOrders() {
