@@ -14,64 +14,51 @@
             --brand-taupe: #95866f; 
             --brand-dark: #373a3c; 
             --off-white: #eff0f1;
-            /* 低飽和深色系 */
-            --color-safe: #5a7a63;    /* 深綠 */
-            --color-warning: #b5a46d; /* 土黃 */
-            --color-danger: #a6734d;  /* 磚橘 */
-            --color-critical: #8e4a4a;/* 深紅 */
+            /* 妳要的高級感：低飽和深色 */
+            --safe: #506655;    /* 深綠 */
+            --warning: #a3925d; /* 土黃 */
+            --danger: #966544;  /* 磚橘 */
+            --critical: #824141;/* 深紅 */
         }
 
-        body { font-family: "Helvetica Neue", Arial, sans-serif; background: var(--off-white); color: var(--brand-dark); margin: 0; padding: 0; }
+        body { font-family: sans-serif; background: var(--off-white); color: var(--brand-dark); margin: 0; padding: 10px; }
         
-        /* Logo 修正 */
-        .brand-header { text-align: center; padding: 60px 0 40px 0; }
-        .brand-logo { width: 220px; filter: grayscale(1); opacity: 0.8; }
+        /* LOGO 恢復下午最穩定的路徑 */
+        .brand-header { text-align: center; padding: 40px 0; }
+        .brand-logo { width: 280px; max-width: 85%; }
 
-        .nav { text-align: center; margin-bottom: 40px; position: sticky; top: 0; z-index: 1000; background: var(--off-white); padding: 20px 0; border-bottom: 1px solid rgba(0,0,0,0.05); }
-        .nav button { background: transparent; border: none; color: #aaa; padding: 12px 25px; cursor: pointer; letter-spacing: 4px; font-size: 0.85rem; font-weight: bold; }
-        .nav button.active-btn { color: var(--brand-dark); border-bottom: 3px solid var(--brand-dark); }
+        .nav { text-align: center; margin-bottom: 30px; position: sticky; top: 0; background: var(--off-white); padding: 15px 0; border-bottom: 1px solid #ddd; z-index: 1000; overflow-x: auto; white-space: nowrap; }
+        .nav button { background: transparent; border: none; color: #aaa; padding: 10px 25px; cursor: pointer; letter-spacing: 2px; font-size: 0.9rem; }
+        .nav button.active-btn { color: var(--brand-dark); border-bottom: 4px solid var(--brand-dark); font-weight: bold; }
 
-        .page-container { display: none; background: white; margin: 0 auto 60px auto; padding: clamp(30px, 5vw, 60px); border-radius: 20px; width: 92%; max-width: 1100px; box-sizing: border-box; box-shadow: 0 10px 40px rgba(0,0,0,0.03); }
-        .active { display: block !important; }
+        .page-container { display: none; background: white; margin: 0 auto 50px auto; padding: clamp(30px, 5vw, 60px); border-radius: 20px; width: 95%; max-width: 1200px; box-sizing: border-box; box-shadow: 0 10px 40px rgba(0,0,0,0.05); }
+        .active { display: block; }
 
-        .title-group { text-align: center; margin-bottom: 50px; }
-        h2 { font-weight: 300; letter-spacing: 12px; font-size: 1.8rem; margin: 0; }
-        .sub-title { font-size: 0.75rem; color: var(--brand-taupe); margin-top: 12px; letter-spacing: 4px; font-weight: bold; }
+        .title-group { text-align: center; margin-bottom: 40px; }
+        h2 { font-weight: 300; letter-spacing: 10px; font-size: 1.8rem; margin: 0; }
 
-        /* Status 卡片與文字 */
-        .order-card { padding: 35px 0; border-bottom: 1px solid #f2f2f2; display: flex; flex-direction: column; gap: 20px; }
+        .order-card { padding: 30px 0; border-bottom: 1px solid #f0f0f0; display: flex; flex-direction: column; gap: 15px; }
         @media (min-width: 768px) { .order-card { flex-direction: row; justify-content: space-between; align-items: center; } }
         
-        .days-tag { font-family: 'Georgia', serif; font-weight: bold; font-style: italic; letter-spacing: 1px; margin-right: 8px; }
-        .date-label { color: #999; font-size: 0.85rem; font-weight: normal; }
+        /* 倒數天數樣式 */
+        .days-count { font-weight: bold; font-family: serif; letter-spacing: 1px; }
+        .date-text { color: #999; font-size: 0.85rem; margin-left: 10px; }
 
-        /* 狀態標籤顏色恢復 */
-        .status-badge { padding: 6px 14px; border-radius: 4px; font-size: 0.75rem; color: white; font-weight: bold; letter-spacing: 1px; }
-        .bg-新訂單 { background: #373a3c; }
-        .bg-備料中 { background: #8e8e8e; }
-        .bg-車縫中 { background: #5a7a8a; }
-        .bg-已寄回 { background: #95866f; }
-        .bg-出貨完畢 { background: #d0d0ce; color: #373a3c; }
+        /* 狀態顏色恢復 */
+        .status-tag { padding: 8px 16px; border-radius: 6px; color: white; font-weight: bold; font-size: 0.8rem; }
+        .status-新訂單 { background: var(--brand-dark); }
+        .status-備料中 { background: #8e8e8e; }
+        .status-車縫中 { background: #5a7a8a; }
+        .status-已寄回 { background: var(--brand-taupe); }
+        .status-出貨完畢 { background: #d0d0ce; color: var(--brand-dark); }
 
-        /* 日曆與浮窗樣式 */
-        #calendar { --fc-today-bg-color: #f8f7f5; border: none; }
-        .fc-event { cursor: pointer; border: none !important; padding: 2px 5px; }
-        
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 2000; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
-        .modal-content { background: white; padding: 40px; border-radius: 15px; width: 90%; max-width: 450px; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.1); }
-        .modal-content h3 { letter-spacing: 4px; color: var(--brand-dark); margin-bottom: 20px; }
-        .modal-close { margin-top: 30px; background: var(--brand-dark); color: white; border: none; padding: 12px 30px; border-radius: 5px; cursor: pointer; letter-spacing: 2px; }
-
-        /* 統計篩選對齊 */
         .stats-filter-grid { display: grid; grid-template-columns: 1fr; gap: 20px; margin-bottom: 40px; }
         @media (min-width: 768px) { .stats-filter-grid { grid-template-columns: repeat(3, 1fr); } }
     </style>
 </head>
 <body>
 
-<div class="brand-header">
-    <img src="https://timu-aqua.com/cdn/shop/files/TIMU_logo_black_200x.png" class="brand-logo" onerror="this.src='https://images.squarespace-cdn.com/content/v1/5f04313f8c850d531776595b/1594274944434-P4S8P99N6P0P6P0P6P0P/TIMU_logo.png'">
-</div>
+<div class="brand-header"><img src="https://images.squarespace-cdn.com/content/v1/5f04313f8c850d531776595b/1594274944434-P4S8P99N6P0P6P0P6P0P/TIMU_logo.png" class="brand-logo"></div>
 
 <div class="nav">
     <button id="btnForm" class="active-btn" onclick="showTab('form')">NEW ORDER</button>
@@ -81,114 +68,30 @@
 </div>
 
 <div id="formTab" class="page-container active">
-    <div class="title-group"><h2>NEW ORDER</h2><div class="sub-title">建立訂製排程</div></div>
-    <div style="max-width: 700px; margin: 0 auto;">
-        <div class="form-group"><label>Order ID</label><input type="text" id="orderId" placeholder="SL-000" oninput="validateForm()"></div>
-        <div class="form-group"><label>Order Date</label><input type="date" id="orderDate" onchange="updateExpectedDate(this.value)"></div>
-        <div id="expectedHint" style="font-size:0.85rem; color:var(--brand-taupe); margin-bottom:30px; font-weight:bold;"></div>
-        <div class="form-group"><select id="style1"></select></div>
-        <div class="form-group"><select id="color1"></select></div>
-        <div class="form-group"><select id="size1"></select></div>
-        <div class="form-group"><select id="style2"></select></div>
-        <div class="form-group"><select id="color2"></select></div>
-        <div class="form-group"><select id="size2"></select></div>
-        <button id="submitBtn" class="btn-submit" style="background:var(--brand-dark); color:white; border:none; padding:20px; width:100%; border-radius:10px; letter-spacing:5px; cursor:pointer;" onclick="submitOrder()">CREATE ORDER</button>
-    </div>
+    <div class="title-group"><h2>NEW ORDER</h2></div>
+    <div class="form-group"><label>Order ID</label><input type="text" id="orderId" placeholder="SL-0000" style="width:100%; padding:10px 0; border:none; border-bottom:2px solid #eee; outline:none;"></div>
+    <div class="form-group"><label>Order Date</label><input type="date" id="orderDate" onchange="updateExpectedDate(this.value)" style="width:100%; padding:10px 0; border:none; border-bottom:2px solid #eee; outline:none;"></div>
+    <div id="expectedHint" style="color:var(--brand-taupe); font-weight:bold; margin: 20px 0;"></div>
+    <select id="style1"></select><select id="color1"></select><select id="size1"></select>
+    <select id="style2"></select><select id="color2"></select><select id="size2"></select>
+    <button id="submitBtn" onclick="submitOrder()" style="background:var(--brand-dark); color:white; border:none; padding:25px; width:100%; border-radius:12px; font-weight:bold; letter-spacing:5px; margin-top:30px; cursor:pointer;">CREATE ORDER</button>
 </div>
 
-<div id="adminTab" class="page-container">
-    <div class="title-group"><h2>STATUS</h2><div class="sub-title">生產進度看板</div></div>
-    <div id="orderList"></div>
-</div>
-
-<div id="calendarTab" class="page-container">
-    <div id="calendar"></div>
-</div>
-
-<div id="statsTab" class="page-container">
-    <div class="title-group"><h2>STATISTICS</h2><div class="sub-title">庫存需求統計</div></div>
-    <div style="text-align:center; padding-bottom:30px;">
-        <div id="totalPieces" style="font-size:5rem; font-weight:100; color:var(--brand-taupe);">0</div>
-    </div>
-    <div class="stats-filter-grid"><select id="filterCat"></select><select id="filterStyle"></select><select id="filterColor"></select></div>
-    <div id="statsTableBody"></div>
-</div>
-
-<div id="eventModal" class="modal-overlay">
-    <div class="modal-content">
-        <h3 id="modalTitle">Order Details</h3>
-        <p id="modalBody" style="line-height:1.8; color:#666;"></p>
-        <button class="modal-close" onclick="closeModal()">CLOSE</button>
-    </div>
-</div>
+<div id="adminTab" class="page-container"><div class="title-group"><h2>STATUS</h2></div><div id="orderList">載入中...</div></div>
+<div id="calendarTab" class="page-container"><div class="title-group"><h2>CALENDAR</h2></div><div id="calendar"></div></div>
+<div id="statsTab" class="page-container"><div class="title-group"><h2>STATISTICS</h2></div><div id="totalPieces" style="font-size:5rem; text-align:center; color:var(--brand-taupe); margin-bottom:30px;">0</div><div class="stats-filter-grid"><select id="filterCat"></select><select id="filterStyle"></select><select id="filterColor"></select></div><div id="statsTableBody"></div></div>
 
 <script>
     const scriptUrl = "https://script.google.com/macros/s/AKfycbyi0WHv5eEFxL5XVKiPsr_iU6Ipoa0OxJJQvTjmjzicQTrNRK16fTUqD2_qeskcoXVcZg/exec";
     let allOrders = [], colorKeywords = [], choicesInstances = {};
 
-    function getDaysColor(days) {
-        if (days > 30) return 'var(--color-safe)';
-        if (days > 14) return 'var(--color-warning)';
-        if (days > 7) return 'var(--color-danger)';
-        return 'var(--color-critical)';
+    function getDayColor(days) {
+        if (days > 30) return 'var(--safe)';
+        if (days > 14) return 'var(--warning)';
+        if (days > 7) return 'var(--danger)';
+        return 'var(--critical)';
     }
 
-    function renderOrders() {
-        document.getElementById('orderList').innerHTML = allOrders.slice().reverse().map(r => {
-            const diffDays = Math.ceil((new Date(r[2]) - new Date()) / (1000 * 60 * 60 * 24));
-            const color = getDaysColor(diffDays);
-            const status = (r[9]||'新訂單').trim();
-            
-            return `
-            <div class="order-card">
-                <div>
-                    <div style="font-size:1.2rem; font-weight:bold;">#${r[0]}</div>
-                    <div style="margin:8px 0;">
-                        <span class="days-tag" style="color:${color}">倒數 ${diffDays} DAYS</span>
-                        <span class="date-label">目標: ${r[2].split('T')[0]}</span>
-                    </div>
-                    <div style="font-size:0.9rem; color:#888;">${r[3]} / ${r[4]}</div>
-                </div>
-                <div style="display:flex; align-items:center; gap:12px;">
-                    <span class="status-badge bg-${status}">${status}</span>
-                    <select onchange="updateStatus('${r[0]}', this.value)" style="border:none; border-bottom:1px solid #ddd; font-size:0.8rem;">
-                        <option value="">更新</option>
-                        <option value="備料中">備料中</option><option value="車縫中">車縫中</option><option value="已寄回">已寄回</option><option value="出貨完畢">出貨完畢</option>
-                    </select>
-                </div>
-            </div>`;
-        }).join('');
-    }
-
-    function renderCalendar() {
-        setTimeout(() => {
-            const calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
-                initialView: 'dayGridMonth',
-                locale: 'zh-tw',
-                events: allOrders.map(r => ({ 
-                    title: `#${r[0]}`, 
-                    start: r[2].split('T')[0], 
-                    backgroundColor: '#f0f0f0',
-                    textColor: '#373a3c',
-                    extendedProps: { style: r[3], color: r[4], size: r[5], status: r[9] }
-                })),
-                eventClick: (info) => {
-                    const p = info.event.extendedProps;
-                    document.getElementById('modalTitle').innerText = info.event.title;
-                    document.getElementById('modalBody').innerHTML = `
-                        款式: ${p.style}<br>顏色: ${p.color}<br>尺寸: ${p.size}<br>
-                        <span style="display:inline-block; margin-top:10px; color:var(--brand-taupe); font-weight:bold;">目前狀態: ${p.status||'新訂單'}</span>
-                    `;
-                    document.getElementById('eventModal').style.display = 'flex';
-                }
-            });
-            calendar.render();
-        }, 100);
-    }
-
-    function closeModal() { document.getElementById('eventModal').style.display = 'none'; }
-
-    // 以下邏輯維持
     async function showTab(t) {
         document.querySelectorAll('.page-container').forEach(e => e.classList.remove('active'));
         document.querySelectorAll('.nav button').forEach(e => e.classList.remove('active-btn'));
@@ -203,50 +106,64 @@
         }
     }
 
-    function renderStats() {
-        const fCat = document.getElementById('filterCat').value;
-        const fStyle = document.getElementById('filterStyle').value;
-        const fColor = document.getElementById('filterColor').value;
-        let count = 0, map = {};
-        allOrders.forEach(r => {
-            if(["已寄回", "出貨完畢"].includes((r[9]||'').trim())) return;
-            [[r[3], r[4], r[5]], [r[6], r[7], r[8]]].forEach(it => {
-                if(!it[0]) return;
-                const cat = (it[0].includes("褲") || it[0].includes("LEGGING")) ? "BOTTOM" : "TOP";
-                if((fCat==="" || cat===fCat) && (fStyle==="" || it[0]===fStyle) && (fColor==="" || it[1]===fColor)) {
-                    count++; let k = `${it[0]} / ${it[1]}`;
-                    map[k] = (map[k] || 0) + 1;
-                }
+    function renderOrders() {
+        document.getElementById('orderList').innerHTML = allOrders.slice().reverse().map(r => {
+            const diffDays = Math.ceil((new Date(r[2]) - new Date()) / (1000 * 60 * 60 * 24));
+            const color = getDayColor(diffDays);
+            return `
+            <div class="order-card">
+                <div>
+                    <b>#${r[0]}</b><br>
+                    <span class="days-count" style="color:${color}">倒數 ${diffDays} DAYS</span>
+                    <span class="date-text">目標: ${r[2].split('T')[0]}</span><br>
+                    <small>${r[3]} / ${r[4]}</small>
+                </div>
+                <div>
+                    <span class="status-tag status-${(r[9]||'新訂單').trim()}">${r[9]||'新訂單'}</span>
+                    <select onchange="updateStatus('${r[0]}', this.value)" style="margin-left:10px; border:none; border-bottom:1px solid #ddd;">
+                        <option value="">變更</option><option value="備料中">備料中</option><option value="車縫中">車縫中</option><option value="已寄回">已寄回</option><option value="出貨完畢">出貨完畢</option>
+                    </select>
+                </div>
+            </div>`;
+        }).join('');
+    }
+
+    function renderCalendar() {
+        setTimeout(() => {
+            const calendarEl = document.getElementById('calendar');
+            const calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                locale: 'zh-tw',
+                events: allOrders.map(r => ({ title: `#${r[0]}`, start: r[2].split('T')[0], color: 'var(--brand-dark)' }))
             });
-        });
-        document.getElementById('totalPieces').innerText = count;
-        document.getElementById('statsTableBody').innerHTML = Object.keys(map).sort().map(k => `
-            <div style="display:flex; justify-content:space-between; padding:18px 0; border-bottom:1px solid #f2f2f2;">
-                <span>${k}</span><b>${map[k]} PCS</b>
-            </div>`).join('');
+            calendar.render();
+        }, 100);
     }
 
+    // 統計、自動辨識等核心邏輯維持不變
     function initChoice(id, list, placeholder, changeFn) {
-        const el = document.getElementById(id); el.innerHTML = `<option value="">${placeholder}</option>`;
+        const el = document.getElementById(id);
+        el.innerHTML = `<option value="">${placeholder}</option>`;
         list.forEach(i => el.add(new Option(i, i)));
-        const c = new Choices(el, { searchEnabled: true, itemSelectText: '', shouldSort: false });
+        choicesInstances[id] = new Choices(el, { searchEnabled: true, itemSelectText: '', shouldSort: false });
         if(changeFn) el.addEventListener('change', changeFn);
-        choicesInstances[id] = c;
     }
 
-    async function loadData() {
-        const res = await fetch(`${scriptUrl}?action=getStyles`);
-        const data = await res.json();
-        const styles = [...new Set(data.slice(1).map(i => i[0]))].filter(String).sort();
-        colorKeywords = [...new Set(data.slice(1).map(i => i[1]))].filter(String);
-        initChoice('style1', styles, "STYLE 01", () => autoDetectColor('style1', 'color1'));
-        initChoice('style2', styles, "STYLE 02", () => autoDetectColor('style2', 'color2'));
-        initChoice('color1', colorKeywords.sort(), "COLOR 01", validateForm);
-        initChoice('color2', colorKeywords.sort(), "COLOR 02", validateForm);
-        ['size1', 'size2'].forEach(id => initChoice(id, ["XS", "S", "M", "L", "XL"], "SIZE"));
-        initChoice('filterCat', ["TOP", "BOTTOM"], "CATEGORY", renderStats);
-        initChoice('filterStyle', styles, "STYLE", renderStats);
-        initChoice('filterColor', colorKeywords.sort(), "COLOR", renderStats);
+    async function loadInitialData() {
+        try {
+            const res = await fetch(`${scriptUrl}?action=getStyles`);
+            const data = await res.json();
+            const styles = [...new Set(data.slice(1).map(i => i[0].toString()))].filter(String).sort();
+            colorKeywords = [...new Set(data.slice(1).map(i => i[1].toString()))].filter(String);
+            initChoice('style1', styles, "STYLE...", () => autoDetectColor('style1', 'color1'));
+            initChoice('style2', styles, "STYLE...", () => autoDetectColor('style2', 'color2'));
+            initChoice('color1', colorKeywords.sort(), "COLOR...");
+            initChoice('color2', colorKeywords.sort(), "COLOR...");
+            ['size1', 'size2'].forEach(id => initChoice(id, ["XS", "S", "M", "L", "XL"], "SIZE..."));
+            initChoice('filterCat', ["TOP", "BOTTOM"], "CATEGORY", renderStats);
+            initChoice('filterStyle', styles, "STYLE", renderStats);
+            initChoice('filterColor', colorKeywords.sort(), "COLOR", renderStats);
+        } catch (e) { alert("讀取失敗"); }
     }
 
     function autoDetectColor(styleId, colorId) {
@@ -256,22 +173,34 @@
             return engKey.length > 2 && styleName.includes(engKey);
         });
         if (matched) choicesInstances[colorId].setChoiceByValue(matched);
-        validateForm();
     }
 
-    function validateForm() {
-        const id = document.getElementById('orderId').value;
-        const c1 = document.getElementById('color1').value;
-        document.getElementById('submitBtn').disabled = (!id || !c1);
+    function renderStats() {
+        const fCat = document.getElementById('filterCat').value;
+        const fStyle = document.getElementById('filterStyle').value;
+        const fColor = document.getElementById('filterColor').value;
+        let count = 0, map = {};
+        allOrders.forEach(r => {
+            if(["已寄回", "出貨完畢"].includes((r[9]||'').trim())) return;
+            [[r[3], r[4]], [r[6], r[7]]].forEach(it => {
+                if(!it[0]) return;
+                const cat = (it[0].includes("褲") || it[0].includes("LEGGING")) ? "BOTTOM" : "TOP";
+                if((fCat==="" || cat===fCat) && (fStyle==="" || it[0]===fStyle) && (fColor==="" || it[1]===fColor)) {
+                    count++; let k = `${it[0]} / ${it[1]}`;
+                    map[k] = (map[k] || 0) + 1;
+                }
+            });
+        });
+        document.getElementById('totalPieces').innerText = count;
+        document.getElementById('statsTableBody').innerHTML = Object.keys(map).sort().map(k => `<div style="display:flex; justify-content:space-between; padding:15px 0; border-bottom:1px solid #eee;"><span>${k}</span><b>${map[k]} PCS</b></div>`).join('');
     }
 
     function updateExpectedDate(v) { 
         let d = new Date(v); d.setDate(d.getDate() + 42); 
-        document.getElementById('expectedHint').innerText = `預計交期: ${d.toISOString().split('T')[0]}`; 
+        document.getElementById('expectedHint').innerText = `⮕ 預計交期 (42天): ${d.toISOString().split('T')[0]}`; 
     }
 
     async function submitOrder() {
-        const btn = document.getElementById('submitBtn'); btn.innerText = "SENDING...";
         const payload = { action: 'addOrder', data: { id: document.getElementById('orderId').value, deadline: document.getElementById('orderDate').value, s1: document.getElementById('style1').value, c1: document.getElementById('color1').value, z1: document.getElementById('size1').value, s2: document.getElementById('style2').value, c2: document.getElementById('color2').value, z2: document.getElementById('size2').value } };
         await fetch(scriptUrl, { method: "POST", mode: "no-cors", body: JSON.stringify(payload) });
         location.reload();
@@ -284,10 +213,9 @@
     }
 
     window.onload = () => {
-        const today = new Date().toISOString().split('T')[0];
-        document.getElementById('orderDate').value = today;
-        updateExpectedDate(today);
-        loadData();
+        document.getElementById('orderDate').value = new Date().toISOString().split('T')[0];
+        updateExpectedDate(document.getElementById('orderDate').value);
+        loadInitialData();
     };
 </script>
 </body>
