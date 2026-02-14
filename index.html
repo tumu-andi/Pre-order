@@ -41,20 +41,15 @@
         .form-group { margin-bottom: 20px; }
         label { display: block; font-size: 0.55rem; color: #bbb; letter-spacing: 1px; margin-bottom: 6px; font-weight: 600; text-transform: uppercase; }
         input { padding: 8px 0; border: none !important; border-bottom: 1px solid #eee !important; font-size: 0.85rem; width: 100%; background: transparent !important; color: #555; outline: none; border-radius: 0; }
-        
-        /* Choices.js 手機版優化 */
         .choices__inner { border: none !important; border-bottom: 1px solid #eee !important; background: transparent !important; padding: 4px 0 !important; min-height: 35px !important; font-size: 0.85rem; }
-        .choices__list--single { padding: 0 !important; }
-        
+
         /* STATUS 樣式 */
         .order-card { padding: 25px 0; border-bottom: 1px solid #f7f7f7; display: flex; flex-direction: column; gap: 15px; }
         @media (min-width: 600px) { .order-card { flex-direction: row; justify-content: space-between; } }
-        
         .countdown-label { font-size: 0.6rem; font-weight: bold; padding: 3px 10px; border-radius: 20px; display: inline-block; margin-bottom: 5px; letter-spacing: 1px; }
         .bg-urgent { background: #fee2e2; color: #dc2626; }
         .bg-normal { background: #f3f4f6; color: var(--brand-taupe); }
         .size-tag { background: #f0f0f0; color: #888; padding: 1px 6px; border-radius: 4px; font-size: 0.65rem; font-weight: bold; margin-left: 5px; }
-        
         .status-tag { padding: 4px 10px; border-radius: 4px; font-size: 0.6rem; color: white; font-weight: bold; display: inline-block; }
         .status-新訂單 { background: var(--st-new); }
         .status-備料中 { background: var(--st-material); }
@@ -62,15 +57,21 @@
         .status-已寄回 { background: var(--st-sent); }
         .status-出貨完畢 { background: var(--st-done); color: var(--brand-dark); }
 
-        /* STATISTICS 手機版篩選器堆疊 */
+        /* CALENDAR 優化：徹底移除黃色，使用品牌 Taupe */
+        .fc-theme-standard td, .fc-theme-standard th { border: 1px solid #f2f2f2 !important; }
+        .fc-day-today { background: rgba(149, 134, 111, 0.18) !important; } /* 品牌 Taupe 色底 */
+        .fc-day-today .fc-daygrid-day-number { color: var(--brand-taupe) !important; font-weight: bold; }
+        .fc-daygrid-day-number { font-size: 0.7rem !important; padding: 5px !important; color: #bbb; }
+        .fc-event { border: none !important; border-radius: 4px !important; font-size: 0.6rem !important; }
+        .fc-highlight { background: rgba(149, 134, 111, 0.1) !important; } /* 選取區塊也不用黃色 */
+
+        /* STATISTICS 間距修正 */
         .filter-container { display: flex; flex-direction: column; gap: 15px; margin-bottom: 30px; }
         @media (min-width: 600px) { .filter-container { flex-direction: row; } .filter-container > div { flex: 1; } }
+        .stats-row { display: flex; justify-content: space-between; align-items: flex-start; padding: 15px 0; border-bottom: 1px solid #f9f9f9; font-size: 0.75rem; color: #555; gap: 20px; }
+        .stats-name { flex: 1; line-height: 1.5; }
+        .stats-count { font-weight: bold; color: var(--brand-dark); white-space: nowrap; }
 
-        /* CALENDAR 霧化浮窗與日曆文字 */
-        .fc-toolbar-title { font-size: 0.9rem !important; letter-spacing: 2px !important; }
-        .fc-col-header-cell-cushion { font-size: 0.6rem !important; }
-        .fc-daygrid-day-number { font-size: 0.7rem !important; padding: 5px !important; }
-        
         #custom-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.7); backdrop-filter: blur(10px); z-index: 2000; justify-content: center; align-items: center; }
         .modal-content { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.05); text-align: center; max-width: 320px; width: 85%; }
         
@@ -196,6 +197,7 @@
         const calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
             initialView: 'dayGridMonth',
             height: 'auto',
+            locale: 'zh-tw',
             events: allOrders.map(r => ({
                 title: `#${r[0]}`,
                 start: r[2] ? r[2].split('T')[0] : '',
@@ -207,7 +209,7 @@
                 const r = info.event.extendedProps.r;
                 openModal(`
                     <h3 style="letter-spacing:3px; font-weight:300; font-size:1.1rem;">ORDER #${r[0]}</h3>
-                    <p style="font-size:0.65rem; color:var(--brand-taupe); margin-bottom:15px;">STATUS: ${r[9]}</p>
+                    <p style="font-size:0.65rem; color:var(--brand-taupe); margin-bottom:15px;">進度：${r[9]}</p>
                     <div style="text-align:left; font-size:0.8rem; color:#555; line-height:1.8;">● ${r[3]} / ${r[4]} / ${r[5]}<br>${r[6] ? `● ${r[6]} / ${r[7]} / ${r[8]}` : ''}</div>
                 `);
             }
@@ -272,7 +274,7 @@
         document.getElementById('totalPieces').innerText = count;
         let html = '';
         Object.keys(map).sort().forEach(k => {
-            html += `<div style="display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px solid #f9f9f9; font-size:0.7rem; color:#666;"><div>${k}</div><b>${map[k]} PCS</b></div>`;
+            html += `<div class="stats-row"><div class="stats-name">${k}</div><div class="stats-count">${map[k]} PCS</div></div>`;
         });
         document.getElementById('statsTableBody').innerHTML = html;
     }
