@@ -18,65 +18,72 @@
             --off-white: #eff0f1; --text-light: #999;
             --st-new: #373a3c; --st-material: #8e8e8e; --st-sewing: #003b5c; --st-sent: #95866f; --st-done: #d0d0ce;
         }
-        body { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; background: var(--off-white); color: var(--brand-dark); padding: 10px; margin: 0; min-height: 100vh; -webkit-font-smoothing: antialiased; }
+        /* 提升電腦版基礎字體大小 */
+        body { 
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; 
+            background: var(--off-white); 
+            color: var(--brand-dark); 
+            padding: 20px 10px; 
+            margin: 0; 
+            min-height: 100vh; 
+            -webkit-font-smoothing: antialiased; 
+            font-size: 16px; 
+        }
         
-        .brand-header { text-align: center; padding: 30px 0; }
-        .brand-logo { width: 220px; height: auto; max-width: 80%; }
+        .brand-header { text-align: center; padding: 40px 0; }
+        .brand-logo { width: 240px; height: auto; max-width: 80%; }
 
-        .nav { text-align: center; margin-bottom: 20px; position: sticky; top: 0; z-index: 1000; background: var(--off-white); padding: 10px 0; overflow-x: auto; white-space: nowrap; }
-        .nav button { background: transparent; border: none; color: var(--text-light); padding: 10px 15px; cursor: pointer; letter-spacing: 1px; font-size: 0.7rem; font-weight: 500; }
+        .nav { text-align: center; margin-bottom: 30px; position: sticky; top: 0; z-index: 1000; background: var(--off-white); padding: 15px 0; overflow-x: auto; white-space: nowrap; }
+        .nav button { background: transparent; border: none; color: var(--text-light); padding: 10px 20px; cursor: pointer; letter-spacing: 2px; font-size: 0.8rem; font-weight: 500; transition: 0.3s; }
         .nav button.active-btn { color: var(--brand-dark); border-bottom: 2px solid var(--brand-dark); }
 
-        .page-container { display: none; background: white; margin: 0 auto 40px auto; padding: 30px 20px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); width: calc(100% - 40px); box-sizing: border-box; }
+        /* 調整容器寬度使其在電腦上更舒服 */
+        .page-container { display: none; background: white; margin: 0 auto 40px auto; padding: 40px 30px; border-radius: 12px; box-shadow: 0 4px 25px rgba(0,0,0,0.04); width: 95%; max-width: 1000px; box-sizing: border-box; }
         .active { display: block; }
-        #formTab { max-width: 550px; }
-        #adminTab, #calendarTab, #statsTab { max-width: 900px; }
+        #formTab { max-width: 650px; } /* 表單維持適中寬度以利填寫 */
 
-        .title-group { text-align: center; margin-bottom: 30px; }
-        h2 { font-weight: 300; letter-spacing: 6px; font-size: 1.1rem; color: var(--brand-dark); margin: 0; }
-        .sub-title { font-size: 0.65rem; color: var(--brand-taupe); margin-top: 8px; letter-spacing: 2px; font-weight: bold; }
+        .title-group { text-align: center; margin-bottom: 40px; }
+        h2 { font-weight: 300; letter-spacing: 8px; font-size: 1.4rem; color: var(--brand-dark); margin: 0; }
+        .sub-title { font-size: 0.75rem; color: var(--brand-taupe); margin-top: 10px; letter-spacing: 3px; font-weight: bold; }
 
-        /* NEW ORDER: 下底線與清楚標題 */
-        .item-header { font-size: 0.8rem; font-weight: bold; letter-spacing: 2px; color: var(--brand-taupe); margin: 35px 0 15px 0; padding-bottom: 5px; border-bottom: 1.5px solid #f0f0f0; display: block; }
-        .form-group { margin-bottom: 20px; }
-        label { display: block; font-size: 0.55rem; color: #bbb; letter-spacing: 1px; margin-bottom: 6px; font-weight: 600; text-transform: uppercase; }
-        input { padding: 8px 0; border: none !important; border-bottom: 1px solid #eee !important; font-size: 0.85rem; width: 100%; background: transparent !important; color: #555; outline: none; border-radius: 0; }
-        .choices__inner { border: none !important; border-bottom: 1px solid #eee !important; background: transparent !important; padding: 4px 0 !important; min-height: 35px !important; font-size: 0.85rem; }
+        .item-header { font-size: 0.9rem; font-weight: bold; letter-spacing: 2px; color: var(--brand-taupe); margin: 45px 0 20px 0; padding-bottom: 8px; border-bottom: 1.5px solid #f0f0f0; display: block; }
+        .form-group { margin-bottom: 25px; }
+        label { display: block; font-size: 0.65rem; color: #bbb; letter-spacing: 1px; margin-bottom: 8px; font-weight: 600; text-transform: uppercase; }
+        input { padding: 10px 0; border: none !important; border-bottom: 1px solid #eee !important; font-size: 1rem; width: 100%; background: transparent !important; color: #555; outline: none; border-radius: 0; }
+        .choices__inner { border: none !important; border-bottom: 1px solid #eee !important; background: transparent !important; padding: 6px 0 !important; min-height: 40px !important; font-size: 1rem; }
 
-        /* STATUS 樣式 */
         .order-card { padding: 25px 0; border-bottom: 1px solid #f7f7f7; display: flex; flex-direction: column; gap: 15px; }
         @media (min-width: 600px) { .order-card { flex-direction: row; justify-content: space-between; } }
-        .countdown-label { font-size: 0.6rem; font-weight: bold; padding: 3px 10px; border-radius: 20px; display: inline-block; margin-bottom: 5px; letter-spacing: 1px; }
+        .countdown-label { font-size: 0.65rem; font-weight: bold; padding: 4px 12px; border-radius: 20px; display: inline-block; margin-bottom: 5px; letter-spacing: 1px; }
         .bg-urgent { background: #fee2e2; color: #dc2626; }
         .bg-normal { background: #f3f4f6; color: var(--brand-taupe); }
-        .size-tag { background: #f0f0f0; color: #888; padding: 1px 6px; border-radius: 4px; font-size: 0.65rem; font-weight: bold; margin-left: 5px; }
-        .status-tag { padding: 4px 10px; border-radius: 4px; font-size: 0.6rem; color: white; font-weight: bold; display: inline-block; }
+        .size-tag { background: #f0f0f0; color: #888; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; margin-left: 5px; }
+        .status-tag { padding: 5px 12px; border-radius: 4px; font-size: 0.7rem; color: white; font-weight: bold; display: inline-block; }
         .status-新訂單 { background: var(--st-new); }
         .status-備料中 { background: var(--st-material); }
         .status-車縫中 { background: var(--st-sewing); }
         .status-已寄回 { background: var(--st-sent); }
         .status-出貨完畢 { background: var(--st-done); color: var(--brand-dark); }
 
-        /* CALENDAR 優化：徹底移除黃色，使用品牌 Taupe */
         .fc-theme-standard td, .fc-theme-standard th { border: 1px solid #f2f2f2 !important; }
-        .fc-day-today { background: rgba(149, 134, 111, 0.18) !important; } /* 品牌 Taupe 色底 */
+        .fc-day-today { background: rgba(149, 134, 111, 0.1) !important; }
         .fc-day-today .fc-daygrid-day-number { color: var(--brand-taupe) !important; font-weight: bold; }
-        .fc-daygrid-day-number { font-size: 0.7rem !important; padding: 5px !important; color: #bbb; }
-        .fc-event { border: none !important; border-radius: 4px !important; font-size: 0.6rem !important; }
-        .fc-highlight { background: rgba(149, 134, 111, 0.1) !important; } /* 選取區塊也不用黃色 */
+        .fc-daygrid-day-number { font-size: 0.8rem !important; padding: 8px !important; color: #bbb; }
+        .fc-col-header-cell-cushion { font-size: 0.75rem; letter-spacing: 1px; color: var(--brand-dark); text-decoration: none !important; text-transform: uppercase; }
+        .fc-event { border: none !important; border-radius: 4px !important; font-size: 0.7rem !important; padding: 2px 4px !important; }
 
-        /* STATISTICS 間距修正 */
-        .filter-container { display: flex; flex-direction: column; gap: 15px; margin-bottom: 30px; }
+        .filter-container { display: flex; flex-direction: column; gap: 15px; margin-bottom: 35px; }
         @media (min-width: 600px) { .filter-container { flex-direction: row; } .filter-container > div { flex: 1; } }
-        .stats-row { display: flex; justify-content: space-between; align-items: flex-start; padding: 15px 0; border-bottom: 1px solid #f9f9f9; font-size: 0.75rem; color: #555; gap: 20px; }
+        .stats-row { display: flex; justify-content: space-between; align-items: flex-start; padding: 20px 0; border-bottom: 1px solid #f9f9f9; font-size: 0.9rem; color: #555; gap: 20px; }
         .stats-name { flex: 1; line-height: 1.5; }
         .stats-count { font-weight: bold; color: var(--brand-dark); white-space: nowrap; }
 
         #custom-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.7); backdrop-filter: blur(10px); z-index: 2000; justify-content: center; align-items: center; }
-        .modal-content { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.05); text-align: center; max-width: 320px; width: 85%; }
+        .modal-content { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.05); text-align: center; max-width: 400px; width: 85%; }
         
-        .btn-submit { background: var(--brand-dark); color: white; border: none; padding: 18px; width: 100%; margin-top: 30px; cursor: pointer; letter-spacing: 3px; font-size: 0.75rem; border-radius: 6px; font-weight: bold; }
-        .footer-copyright { text-align: center; padding: 30px 0; font-size: 0.55rem; color: rgba(149, 134, 111, 0.4); letter-spacing: 1px; }
+        .btn-submit { background: var(--brand-dark); color: white; border: none; padding: 20px; width: 100%; margin-top: 40px; cursor: pointer; letter-spacing: 4px; font-size: 0.85rem; border-radius: 6px; font-weight: bold; transition: 0.3s; }
+        .btn-submit:hover { opacity: 0.8; }
+        .footer-copyright { text-align: center; padding: 40px 0; font-size: 0.65rem; color: rgba(149, 134, 111, 0.4); letter-spacing: 1px; }
     </style>
 </head>
 <body>
@@ -84,7 +91,7 @@
 <div id="custom-modal" onclick="closeModal()">
     <div class="modal-content" onclick="event.stopPropagation()">
         <div id="modal-body"></div>
-        <button onclick="closeModal()" style="margin-top:20px; background:var(--brand-dark); color:white; border:none; padding:10px 25px; border-radius:30px; cursor:pointer; font-size:0.65rem; letter-spacing:2px;">CLOSE</button>
+        <button onclick="closeModal()" style="margin-top:25px; background:var(--brand-dark); color:white; border:none; padding:12px 30px; border-radius:30px; cursor:pointer; font-size:0.75rem; letter-spacing:2px;">CLOSE</button>
     </div>
 </div>
 
@@ -104,7 +111,7 @@
         <div class="title-group"><h2>NEW ORDER</h2><div class="sub-title">建立新訂製單</div></div>
         <div class="form-group"><label>Order ID</label><input type="text" id="orderId" placeholder="SL-0000"></div>
         <div class="form-group"><label>Order Date</label><input type="date" id="orderDate" onchange="updateExpectedDate(this.value)"></div>
-        <div id="expectedHint" style="font-size:0.65rem; color:var(--brand-taupe); margin:-15px 0 10px 0; font-weight:bold;"></div>
+        <div id="expectedHint" style="font-size:0.75rem; color:var(--brand-taupe); margin:-15px 0 15px 0; font-weight:bold;"></div>
         
         <span class="item-header">ITEM 01 內容詳情</span>
         <div class="form-group"><label>Style</label><select id="style1"></select></div>
@@ -131,9 +138,9 @@
 
     <div id="statsTab" class="page-container">
         <div class="title-group"><h2>STATISTICS</h2><div class="sub-title">生產數據看板</div></div>
-        <div class="stats-summary" style="text-align:center; padding-bottom:20px;">
-            <label style="font-size: 0.55rem; color: var(--brand-taupe); letter-spacing: 2px;">TOTAL PIECES</label>
-            <div id="totalPieces" style="font-size: 1.8rem; font-weight: 200; color: #555;">0</div>
+        <div class="stats-summary" style="text-align:center; padding-bottom:30px;">
+            <label style="font-size: 0.65rem; color: var(--brand-taupe); letter-spacing: 2px;">TOTAL PIECES</label>
+            <div id="totalPieces" style="font-size: 2.5rem; font-weight: 200; color: #555;">0</div>
         </div>
         <div class="filter-container">
             <div><label>Category</label><select id="filterCat"></select></div>
@@ -149,6 +156,8 @@
 <script>
     const scriptUrl = "https://script.google.com/macros/s/AKfycbyi0WHv5eEFxL5XVKiPsr_iU6Ipoa0OxJJQvTjmjzicQTrNRK16fTUqD2_qeskcoXVcZg/exec";
     let allOrders = null;
+    let masterData = []; // 存儲 Style 與 Color 的對應關係
+    let choiceInstances = {};
     const statusColors = { "新訂單": "#373a3c", "備料中": "#8e8e8e", "車縫中": "#003b5c", "已寄回": "#95866f", "出貨完畢": "#d0d0ce" };
 
     async function showTab(t) {
@@ -177,16 +186,16 @@
             html += `<div class="order-card">
                 <div>
                     <div class="countdown-label ${diff <= 7 ? 'bg-urgent' : 'bg-normal'}">${diff} DAYS LEFT</div>
-                    <div style="font-size:0.6rem; color:#bbb; margin-bottom:8px;">EXP: ${expDate}</div>
-                    <b style="font-size:0.95rem; color:#555; letter-spacing:1px;">#${r[0]}</b>
-                    <div style="margin-top:10px; font-size:0.75rem; line-height:1.8; color:#777;">
+                    <div style="font-size:0.7rem; color:#bbb; margin-bottom:8px;">EXP: ${expDate}</div>
+                    <b style="font-size:1.1rem; color:#555; letter-spacing:1px;">#${r[0]}</b>
+                    <div style="margin-top:10px; font-size:0.85rem; line-height:1.8; color:#777;">
                         ● ${r[3]} / ${r[4]} <span class="size-tag">${r[5]}</span><br>
                         ${r[6] ? `● ${r[6]} / ${r[7]} <span class="size-tag">${r[8]}</span>` : ''}
                     </div>
                 </div>
                 <div style="text-align:left;">
                     <span class="status-tag status-${status}">${status}</span>
-                    <div style="margin-top:10px;"><select onchange="updateStatus('${r[0]}', this.value)" style="border:none; border-bottom:1px solid #eee; font-size:0.65rem; padding:4px; color:#999; width:100px;"><option value="">CHANGE</option><option value="備料中">備料中</option><option value="車縫中">車縫中</option><option value="已寄回">已寄回</option><option value="出貨完畢">出貨完畢</option></select></div>
+                    <div style="margin-top:10px;"><select onchange="updateStatus('${r[0]}', this.value)" style="border:none; border-bottom:1px solid #eee; font-size:0.75rem; padding:4px; color:#999; width:100px;"><option value="">CHANGE</option><option value="備料中">備料中</option><option value="車縫中">車縫中</option><option value="已寄回">已寄回</option><option value="出貨完畢">出貨完畢</option></select></div>
                 </div>
             </div>`;
         });
@@ -197,7 +206,7 @@
         const calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
             initialView: 'dayGridMonth',
             height: 'auto',
-            locale: 'zh-tw',
+            locale: 'en', // 改為英文，星期會自動顯示為 MON, TUE...
             events: allOrders.map(r => ({
                 title: `#${r[0]}`,
                 start: r[2] ? r[2].split('T')[0] : '',
@@ -208,9 +217,9 @@
             eventClick: function(info) {
                 const r = info.event.extendedProps.r;
                 openModal(`
-                    <h3 style="letter-spacing:3px; font-weight:300; font-size:1.1rem;">ORDER #${r[0]}</h3>
-                    <p style="font-size:0.65rem; color:var(--brand-taupe); margin-bottom:15px;">進度：${r[9]}</p>
-                    <div style="text-align:left; font-size:0.8rem; color:#555; line-height:1.8;">● ${r[3]} / ${r[4]} / ${r[5]}<br>${r[6] ? `● ${r[6]} / ${r[7]} / ${r[8]}` : ''}</div>
+                    <h3 style="letter-spacing:3px; font-weight:300; font-size:1.2rem;">ORDER #${r[0]}</h3>
+                    <p style="font-size:0.75rem; color:var(--brand-taupe); margin-bottom:20px;">進度：${r[9]}</p>
+                    <div style="text-align:left; font-size:0.9rem; color:#555; line-height:2;">● ${r[3]} / ${r[4]} / ${r[5]}<br>${r[6] ? `● ${r[6]} / ${r[7]} / ${r[8]}` : ''}</div>
                 `);
             }
         });
@@ -233,21 +242,53 @@
         list.forEach(i => el.add(new Option(i, i)));
         const c = new Choices(el, { searchEnabled: true, itemSelectText: '', shouldSort: false });
         if(changeFn) el.addEventListener('change', changeFn);
+        choiceInstances[id] = c;
         return c;
+    }
+
+    // 更新顏色選項的連動邏輯
+    function updateColorOptions(styleId, colorId) {
+        const selectedStyle = document.getElementById(styleId).value;
+        const colorChoice = choiceInstances[colorId];
+        
+        // 找出該 Style 對應的所有 Color
+        const filteredColors = masterData
+            .filter(item => item[0] === selectedStyle)
+            .map(item => item[1])
+            .filter(Boolean);
+        
+        const uniqueColors = [...new Set(filteredColors)].sort();
+        
+        colorChoice.clearChoices();
+        colorChoice.setChoices([{ value: '', label: 'COLOR...', selected: true, disabled: false }].concat(
+            uniqueColors.map(c => ({ value: c, label: c }))
+        ), 'value', 'label', true);
     }
 
     window.onload = async function() {
         const today = new Date().toISOString().split('T')[0];
         document.getElementById('orderDate').value = today;
         updateExpectedDate(today);
+        
         const res = await fetch(`${scriptUrl}?action=getStyles`);
-        const data = (await res.json()).slice(1);
-        const styles = [...new Set(data.map(i => i[0]))].filter(String).sort();
-        const colors = [...new Set(data.map(i => i[1]))].filter(String).sort();
-        ['style1', 'style2', 'filterStyle'].forEach(id => initChoice(id, styles, "STYLE...", id.includes('filter') ? renderStatistics : null));
-        ['color1', 'color2', 'filterColor'].forEach(id => initChoice(id, colors, "COLOR...", id.includes('filter') ? renderStatistics : null));
-        ['size1', 'size2'].forEach(id => initChoice(id, ["XS", "S", "M", "L", "XL"], "SIZE..."));
+        masterData = (await res.json()).slice(1);
+        
+        const styles = [...new Set(masterData.map(i => i[0]))].filter(String).sort();
+        const colors = [...new Set(masterData.map(i => i[1]))].filter(String).sort();
+        
+        // 初始化 Style 並加上連動觸發
+        initChoice('style1', styles, "STYLE...", () => updateColorOptions('style1', 'color1'));
+        initChoice('style2', styles, "STYLE...", () => updateColorOptions('style2', 'color2'));
+        initChoice('filterStyle', styles, "STYLE...", renderStatistics);
+        
+        initChoice('color1', colors, "COLOR...");
+        initChoice('color2', colors, "COLOR...");
+        initChoice('filterColor', colors, "COLOR...", renderStatistics);
+        
+        initChoice('size1', ["XS", "S", "M", "L", "XL"], "SIZE...");
+        initChoice('size2', ["XS", "S", "M", "L", "XL"], "SIZE...");
         initChoice('filterCat', ["TOP", "BOTTOM", "ONEPIECE"], "CATEGORY...", renderStatistics);
+        
         loadOrders();
     };
 
