@@ -16,7 +16,6 @@
             --brand-dark: #373a3c;
             --off-white: #eff0f1; --text-light: #999;
             --st-new: #373a3c; --st-material: #8e8e8e; --st-sewing: #003b5c; --st-sent: #95866f; --st-done: #d0d0ce;
-            /* 智能字體大小控制：手機小、電腦大 */
             --font-main: clamp(0.85rem, 0.4vw + 0.7rem, 1.1rem);
             --font-title: clamp(1rem, 0.8vw + 0.8rem, 1.4rem);
             --font-label: clamp(0.55rem, 0.3vw + 0.5rem, 0.75rem);
@@ -32,7 +31,7 @@
 
         .page-container { display: none; background: white; margin: 0 auto 40px auto; padding: clamp(20px, 4vw, 40px); border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); width: calc(100% - 30px); box-sizing: border-box; }
         .active { display: block; }
-        #formTab { max-width: 650px; } /* 電腦版表單稍微寬一點更好看 */
+        #formTab { max-width: 650px; }
         #adminTab, #calendarTab, #statsTab { max-width: 1000px; }
 
         .title-group { text-align: center; margin-bottom: 30px; }
@@ -53,23 +52,19 @@
         .size-tag { background: #f0f0f0; color: #888; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; margin-left: 5px; }
         .status-tag { padding: 5px 12px; border-radius: 4px; font-size: 0.65rem; color: white; font-weight: bold; display: inline-block; }
         
-        /* 狀態顏色 */
         .status-新訂單 { background: var(--st-new); }
         .status-備料中 { background: var(--st-material); }
         .status-車縫中 { background: var(--st-sewing); }
         .status-已寄回 { background: var(--st-sent); }
         .status-出貨完畢 { background: var(--st-done); color: var(--brand-dark); }
 
-        /* 日曆 */
         .fc { font-size: 0.8rem; }
         .fc-col-header-cell-cushion { color: #ccc !important; text-transform: uppercase; letter-spacing: 1px; text-decoration: none !important; font-size: 0.7rem; }
         .fc-day-today { background: rgba(149, 134, 111, 0.12) !important; }
 
-        /* 統計數字放大 */
         .stats-summary #totalPieces { font-size: 2.5rem !important; font-weight: 200; color: var(--brand-taupe); margin: 10px 0; }
         .stats-row { padding: 15px 0; font-size: var(--font-main); }
 
-        /* 按鈕反饋效果 */
         .btn-submit { background: var(--brand-dark); color: white; border: none; padding: 20px; width: 100%; margin-top: 30px; cursor: pointer; letter-spacing: 4px; font-size: 0.8rem; border-radius: 8px; font-weight: bold; transition: all 0.4s ease; }
         .btn-submit.success { background: var(--brand-taupe); }
 
@@ -148,10 +143,11 @@
 <script>
     const scriptUrl = "https://script.google.com/macros/s/AKfycbyi0WHv5eEFxL5XVKiPsr_iU6Ipoa0OxJJQvTjmjzicQTrNRK16fTUqD2_qeskcoXVcZg/exec";
     let allOrders = null;
+    let rawStyleData = []; // 儲存原始款式顏色對照表
     let choicesInstances = {};
     const statusColors = { "新訂單": "#373a3c", "備料中": "#8e8e8e", "車縫中": "#003b5c", "已寄回": "#95866f", "出貨完畢": "#d0d0ce" };
 
-    // --- 提交訂單：取消彈窗，增加按鈕動態 ---
+    // --- 提交訂單 ---
     async function submitOrder() {
         const btn = document.getElementById('submitBtn');
         const orderId = document.getElementById('orderId').value;
@@ -188,12 +184,9 @@
 
         try {
             await fetch(scriptUrl, { method: "POST", mode: "no-cors", body: JSON.stringify(payload) });
-
-            // 按鈕成功狀態反饋
             btn.classList.add('success');
             btn.innerText = "✓ ORDER CREATED";
 
-            // 1.5 秒後自動重置並跳轉
             setTimeout(async () => {
                 document.getElementById('orderId').value = '';
                 ['style1','color1','size1','style2','color2','size2'].forEach(id => {
@@ -205,7 +198,6 @@
                 allOrders = null; 
                 showTab('admin');
             }, 1500);
-
         } catch (e) {
             btn.innerText = "ERROR, TRY AGAIN";
             btn.disabled = false;
@@ -220,6 +212,38 @@
         allOrders = null;
         await loadOrders(); 
         renderOrders(allOrders.slice().reverse()); 
+    }
+
+    // --- 根據款式過濾顏色 ---
+    function updateColorsByStyle(styleId, colorId) {
+        const selectedStyle = document.getElementById(styleId).value;
+        const colorChoice = choicesInstances[colorId];
+        
+        if (!selectedStyle) {
+            colorChoice.clearChoices();
+            colorChoice.setChoices([{ value: '', label: 'SELECT STYLE FIRST', selected: true }], 'value', 'label', true);
+            return;
+        }
+
+        // 找出對應款式的顏色
+        const availableColors = rawStyleData
+            .filter(row => row[0] === selectedStyle)
+            .map(row => row[1])
+            .filter(String);
+        
+        const uniqueColors = [...new Set(availableColors)].sort();
+
+        colorChoice.clearChoices();
+        const choicesList = uniqueColors.map(c => ({ value: c, label: c }));
+        
+        colorChoice.setChoices(choicesList, 'value', 'label', true);
+
+        // 如果只有一個顏色，自動選取
+        if (uniqueColors.length === 1) {
+            colorChoice.setChoiceByValue(uniqueColors[0]);
+        } else {
+            colorChoice.setChoiceByValue('');
+        }
     }
 
     async function showTab(t) {
@@ -238,7 +262,7 @@
             const res = await fetch(`${scriptUrl}?action=getOrders`);
             const data = await res.json();
             allOrders = data.slice(1);
-        } catch (e) { document.getElementById('orderList').innerText = "連線失敗，請重新整理"; }
+        } catch (e) { console.error(e); }
     }
 
     function renderOrders(orders) {
@@ -311,15 +335,27 @@
         try {
             const res = await fetch(`${scriptUrl}?action=getStyles`);
             const data = await res.json();
-            const rawData = data.slice(1);
-            const styles = [...new Set(rawData.map(i => i[0]))].filter(String).sort();
-            const colors = [...new Set(rawData.map(i => i[1]))].filter(String).sort();
-            ['style1', 'style2', 'filterStyle'].forEach(id => initChoice(id, styles, "STYLE...", id.includes('filter') ? renderStatistics : null));
-            ['color1', 'color2', 'filterColor'].forEach(id => initChoice(id, colors, "COLOR...", id.includes('filter') ? renderStatistics : null));
+            rawStyleData = data.slice(1);
+            
+            const styles = [...new Set(rawStyleData.map(i => i[0]))].filter(String).sort();
+            const colors = [...new Set(rawStyleData.map(i => i[1]))].filter(String).sort();
+            
+            // 初始化款式選單，並加入連動事件
+            initChoice('style1', styles, "STYLE...", () => updateColorsByStyle('style1', 'color1'));
+            initChoice('style2', styles, "STYLE...", () => updateColorsByStyle('style2', 'color2'));
+            
+            // 初始化顏色選單 (一開始是空的)
+            initChoice('color1', [], "SELECT STYLE FIRST");
+            initChoice('color2', [], "SELECT STYLE FIRST");
+            
+            // 統計與篩選選單
+            initChoice('filterStyle', styles, "STYLE...", renderStatistics);
+            initChoice('filterColor', colors, "COLOR...", renderStatistics);
             ['size1', 'size2'].forEach(id => initChoice(id, ["XS", "S", "M", "L", "XL"], "SIZE..."));
             initChoice('filterCat', ["TOP", "BOTTOM", "ONEPIECE"], "CATEGORY...", renderStatistics);
+            
             loadOrders();
-        } catch (e) { console.error("初始化失敗", e); }
+        } catch (e) { console.error(e); }
     };
 
     function updateExpectedDate(v) {
