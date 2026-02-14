@@ -6,7 +6,6 @@
     <title>TIMU | 生產管理系統</title>
     
     <link rel="icon" type="image/png" href="https://lh3.googleusercontent.com/d/1ImMExx8ZF1Qji8LgxoiM1KcXrH1touse"> 
-    
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
@@ -14,9 +13,10 @@
     <style>
         :root { 
             --brand-taupe: rgb(149, 134, 111); 
-            --brand-dark: #25282a; --brand-blue: #003b5c; 
+            --brand-dark: #373a3c; /* 調整為柔和一點的深灰 */
+            --brand-blue: #003b5c; 
             --off-white: #eff0f1; --text-light: #999;
-            --st-new: #25282a; --st-material: #8e8e8e; --st-sewing: #003b5c; --st-sent: #95866f; --st-done: #d0d0ce;
+            --st-new: #373a3c; --st-material: #8e8e8e; --st-sewing: #003b5c; --st-sent: #95866f; --st-done: #d0d0ce;
         }
         body { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; background: var(--off-white); color: var(--brand-dark); padding: 20px; margin: 0; min-height: 100vh; }
         
@@ -24,7 +24,7 @@
         .brand-logo { width: 280px; height: auto; }
 
         .nav { text-align: center; margin-bottom: 30px; position: sticky; top: 0; z-index: 1000; background: var(--off-white); padding: 10px 0; }
-        .nav button { background: transparent; border: none; color: var(--text-light); padding: 12px 20px; cursor: pointer; letter-spacing: 2px; font-size: 0.75rem; font-weight: 500; transition: 0.3s; }
+        .nav button { background: transparent; border: none; color: var(--text-light); padding: 12px 20px; cursor: pointer; letter-spacing: 2px; font-size: 0.75rem; font-weight: 500; }
         .nav button.active-btn { color: var(--brand-dark); border-bottom: 2px solid var(--brand-dark); }
 
         .page-container { display: none; background: white; margin: 0 auto 60px auto; padding: 50px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); }
@@ -33,48 +33,43 @@
         #adminTab, #calendarTab, #statsTab { max-width: 900px; }
 
         .title-group { text-align: center; margin-bottom: 40px; }
-        h2 { font-weight: 300; letter-spacing: 8px; font-size: 1.2rem; margin: 0; }
-        .sub-title { font-size: 0.7rem; color: var(--brand-taupe); margin-top: 8px; letter-spacing: 2px; font-weight: bold; }
+        h2 { font-weight: 300; letter-spacing: 8px; font-size: 1.2rem; color: var(--brand-dark); }
 
-        /* NEW ORDER ITEM SECTIONS */
-        .item-section { border-left: 2px solid #eee; padding-left: 25px; margin: 35px 0; }
-        .item-label { font-size: 0.7rem; font-weight: bold; color: var(--brand-taupe); margin-bottom: 15px; letter-spacing: 1px; }
-
+        /* NEW ORDER: 下底線設計 */
         .form-group { margin-bottom: 25px; }
         label { display: block; font-size: 0.6rem; color: #bbb; letter-spacing: 1.5px; margin-bottom: 8px; font-weight: 600; text-transform: uppercase; }
-        input { padding: 10px 0; border: none; border-bottom: 0.5px solid #eee !important; font-size: 0.9rem; width: 100%; background: transparent !important; }
+        input { padding: 10px 0; border: none !important; border-bottom: 1px solid #eee !important; font-size: 0.9rem; width: 100%; background: transparent !important; color: #555; outline: none; }
+        .choices__inner { border: none !important; border-bottom: 1px solid #eee !important; background: transparent !important; padding: 4px 0 !important; min-height: 35px !important; }
+        .choices__list--single { padding: 0 !important; color: #555 !important; }
 
-        /* STATUS PAGE DESIGN */
-        .order-card { padding: 30px 0; border-bottom: 1px solid #f7f7f7; display: flex; justify-content: space-between; align-items: flex-start; }
-        .status-tag { padding: 4px 10px; border-radius: 4px; font-size: 0.65rem; color: white; font-weight: bold; display: inline-block; margin-bottom: 8px; }
-        .status-新訂單 { background: var(--st-new); }
-        .status-備料中 { background: var(--st-material); }
-        .status-車縫中 { background: var(--st-sewing); }
-        .status-已寄回 { background: var(--st-sent); }
-        .status-出貨完畢 { background: var(--st-done); color: var(--brand-dark); }
+        /* STATUS 標籤設計 */
+        .order-card { padding: 30px 0; border-bottom: 1px solid #f7f7f7; display: flex; justify-content: space-between; }
+        .countdown-label { font-size: 0.65rem; font-weight: bold; padding: 4px 12px; border-radius: 20px; display: inline-block; margin-bottom: 8px; letter-spacing: 1px; }
+        .bg-urgent { background: #fee2e2; color: #dc2626; }
+        .bg-normal { background: #f3f4f6; color: var(--brand-taupe); }
         
-        .countdown-text { font-size: 0.7rem; font-weight: bold; letter-spacing: 1px; margin-bottom: 4px; }
-        .urgent { color: #dc2626; }
-        .normal { color: var(--brand-taupe); }
+        .size-tag { background: #f0f0f0; color: #888; padding: 1px 6px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; margin-left: 5px; }
+        .status-tag { padding: 4px 10px; border-radius: 4px; font-size: 0.65rem; color: white; font-weight: bold; }
 
-        /* CALENDAR DESIGN */
-        #calendar { padding: 10px; border: none; }
-        .fc { --fc-border-color: #f0f0f0; --fc-today-bg-color: rgba(149, 134, 111, 0.1); }
-        .fc .fc-daygrid-day-number { font-size: 0.8rem; color: #aaa; padding: 8px; }
-        .fc .fc-col-header-cell-cushion { font-size: 0.7rem; color: #bbb; letter-spacing: 1px; }
-        .fc-event { border: none !important; padding: 2px 5px; font-size: 0.65rem !important; cursor: pointer; }
-
-        /* STATISTICS DESIGN */
-        .stats-summary { text-align: center; padding-bottom: 30px; }
-        .total-num { font-size: 2.2rem; font-weight: 200; }
-        .stats-filters .choices__inner { min-height: 38px !important; padding: 4px 0 !important; }
-        .stats-filters .choices__list--single { padding: 0 !important; }
+        /* CALENDAR 霧化浮窗 */
+        #custom-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.7); backdrop-filter: blur(10px); z-index: 2000; justify-content: center; align-items: center; }
+        .modal-content { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.05); text-align: center; max-width: 400px; width: 90%; }
+        
+        .fc-day-today { background: rgba(149, 134, 111, 0.08) !important; }
+        .fc-daygrid-day-number { color: var(--brand-taupe) !important; font-weight: bold; }
 
         .btn-submit { background: var(--brand-dark); color: white; border: none; padding: 20px; width: 100%; margin-top: 40px; cursor: pointer; letter-spacing: 4px; font-size: 0.8rem; border-radius: 6px; font-weight: bold; }
-        .footer-copyright { text-align: center; padding: 40px 0; font-size: 0.6rem; color: rgba(149, 134, 111, 0.4); letter-spacing: 2px; text-transform: uppercase; }
+        .footer-copyright { text-align: center; padding: 40px 0; font-size: 0.6rem; color: rgba(149, 134, 111, 0.4); letter-spacing: 2px; }
     </style>
 </head>
 <body>
+
+<div id="custom-modal" onclick="closeModal()">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <div id="modal-body"></div>
+        <button onclick="closeModal()" style="margin-top:30px; background:var(--brand-dark); color:white; border:none; padding:10px 30px; border-radius:30px; cursor:pointer; font-size:0.7rem; letter-spacing:2px;">CLOSE</button>
+    </div>
+</div>
 
 <div class="brand-header">
     <img src="https://lh3.googleusercontent.com/d/12yR1r7b4SlVYa9T3quajqKZmqeO7MLPb" alt="TIMU" class="brand-logo">
@@ -89,49 +84,40 @@
 
 <div class="main-content">
     <div id="formTab" class="page-container active">
-        <div class="title-group"><h2>NEW ORDER</h2><div class="sub-title">建立新訂製單</div></div>
+        <div class="title-group"><h2>NEW ORDER</h2></div>
         <div class="form-group"><label>Order ID</label><input type="text" id="orderId" placeholder="SL-0000"></div>
-        <div class="form-group">
-            <label>Order Date</label>
-            <div style="display:flex; align-items:center; gap:15px;">
-                <input type="date" id="orderDate" onchange="updateExpectedDate(this.value)">
-                <div id="expectedHint" style="font-size:0.75rem; color:var(--brand-blue); font-weight:bold; white-space:nowrap;"></div>
-            </div>
-        </div>
+        <div class="form-group"><label>Order Date</label><input type="date" id="orderDate" onchange="updateExpectedDate(this.value)"></div>
+        <div id="expectedHint" style="font-size:0.7rem; color:var(--brand-taupe); margin:-15px 0 25px 0; font-weight:bold;"></div>
         
-        <div class="item-section">
-            <div class="item-label">ITEM 01</div>
-            <div class="form-group"><label>Style</label><select id="style1"></select></div>
-            <div class="form-group"><label>Color</label><select id="color1"></select></div>
-            <div class="form-group"><label>Size</label><select id="size1"></select></div>
-        </div>
+        <div class="form-group"><label>Item 01 Style</label><select id="style1"></select></div>
+        <div class="form-group"><label>Item 01 Color</label><select id="color1"></select></div>
+        <div class="form-group"><label>Item 01 Size</label><select id="size1"></select></div>
+        
+        <div style="margin:40px 0; border-top:1px solid #f9f9f9;"></div>
 
-        <div class="item-section">
-            <div class="item-label">ITEM 02</div>
-            <div class="form-group"><label>Style</label><select id="style2"></select></div>
-            <div class="form-group"><label>Color</label><select id="color2"></select></div>
-            <div class="form-group"><label>Size</label><select id="size2"></select></div>
-        </div>
+        <div class="form-group"><label>Item 02 Style</label><select id="style2"></select></div>
+        <div class="form-group"><label>Item 02 Color</label><select id="color2"></select></div>
+        <div class="form-group"><label>Item 02 Size</label><select id="size2"></select></div>
+        
         <button id="submitBtn" class="btn-submit" onclick="submitOrder()">CREATE ORDER</button>
     </div>
 
     <div id="adminTab" class="page-container">
-        <div class="title-group"><h2>STATUS</h2><div class="sub-title">生產進度管理</div></div>
+        <div class="title-group"><h2>STATUS</h2></div>
         <div id="orderList">載入中...</div>
     </div>
 
     <div id="calendarTab" class="page-container">
-        <div class="title-group"><h2>CALENDAR</h2><div class="sub-title">交期視覺日曆</div></div>
         <div id="calendar"></div>
     </div>
 
     <div id="statsTab" class="page-container">
-        <div class="title-group"><h2>STATISTICS</h2><div class="sub-title">生產數據看板</div></div>
-        <div class="stats-summary">
-            <label style="font-size: 0.6rem; color: var(--brand-taupe); letter-spacing: 2px;">TOTAL PIECES</label>
-            <div id="totalPieces" class="total-num">0</div>
+        <div class="title-group"><h2>STATISTICS</h2></div>
+        <div style="text-align: center; padding-bottom: 30px;">
+            <label style="font-size: 0.6rem; color: var(--brand-taupe); letter-spacing: 2px;">TOTAL PRODUCTION</label>
+            <div id="totalPieces" style="font-size: 2.2rem; font-weight: 200; color: #555;">0</div>
         </div>
-        <div class="stats-filters" style="display:flex; gap:10px; margin-bottom:30px;">
+        <div style="display:flex; gap:10px; margin-bottom:30px;">
             <div style="flex:1"><label>Category</label><select id="filterCat"></select></div>
             <div style="flex:1"><label>Style</label><select id="filterStyle"></select></div>
             <div style="flex:1"><label>Color</label><select id="filterColor"></select></div>
@@ -145,10 +131,7 @@
 <script>
     const scriptUrl = "https://script.google.com/macros/s/AKfycbyi0WHv5eEFxL5XVKiPsr_iU6Ipoa0OxJJQvTjmjzicQTrNRK16fTUqD2_qeskcoXVcZg/exec";
     let allOrders = null;
-    let choiceInstances = {};
-
-    // 狀態對應顏色
-    const statusColors = { "新訂單": "#25282a", "備料中": "#8e8e8e", "車縫中": "#003b5c", "已寄回": "#95866f", "出貨完畢": "#d0d0ce" };
+    const statusColors = { "新訂單": "#373a3c", "備料中": "#8e8e8e", "車縫中": "#003b5c", "已寄回": "#95866f", "出貨完畢": "#d0d0ce" };
 
     async function showTab(t) {
         document.querySelectorAll('.page-container').forEach(e => e.classList.remove('active'));
@@ -166,14 +149,6 @@
         allOrders = (await res.json()).slice(1);
     }
 
-    function updateExpectedDate(v) {
-        if(!v) return;
-        let d = new Date(v); d.setDate(d.getDate() + 42);
-        let res = `${d.getFullYear()}-${(d.getMonth()+1).toString().padStart(2,'0')}-${d.getDate().toString().padStart(2,'0')}`;
-        document.getElementById('expectedHint').innerText = `⮕ Expected: ${res}`;
-        return res;
-    }
-
     function renderOrders(orders) {
         const today = new Date().setHours(0,0,0,0);
         let html = '';
@@ -184,19 +159,19 @@
             
             html += `<div class="order-card">
                 <div>
-                    <div class="countdown-text ${diff <= 7 ? 'urgent' : 'normal'}">${diff} DAYS LEFT</div>
+                    <div class="countdown-label ${diff <= 7 ? 'bg-urgent' : 'bg-normal'}">${diff} DAYS LEFT</div>
                     <div style="font-size:0.65rem; color:#bbb; margin-bottom:10px;">EXP: ${expDate}</div>
-                    <b style="font-size:1rem; letter-spacing:1px;">#${r[0]}</b>
-                    <div style="margin-top:12px; font-size:0.8rem; line-height:1.6; color:#555;">
-                        <span style="color:#ccc;">●</span> ${r[3]} / ${r[4]} / ${r[5]}<br>
-                        ${r[6] ? `<span style="color:#ccc;">●</span> ${r[6]} / ${r[7]} / ${r[8]}` : ''}
+                    <b style="font-size:1rem; color:#555; letter-spacing:1px;">#${r[0]}</b>
+                    <div style="margin-top:12px; font-size:0.8rem; line-height:1.8; color:#777;">
+                        ● ${r[3]} / ${r[4]} <span class="size-tag">${r[5]}</span><br>
+                        ${r[6] ? `● ${r[6]} / ${r[7]} <span class="size-tag">${r[8]}</span>` : ''}
                     </div>
                 </div>
                 <div style="text-align:right;">
                     <span class="status-tag status-${status}">${status}</span>
-                    <div style="margin-top:8px;">
-                        <select onchange="updateStatus('${r[0]}', this.value)" style="border:1px solid #eee; font-size:0.65rem; padding:4px;">
-                            <option value="">更換狀態</option>
+                    <div style="margin-top:12px;">
+                        <select onchange="updateStatus('${r[0]}', this.value)" style="border:none; border-bottom:1px solid #eee; font-size:0.65rem; padding:4px; color:#999;">
+                            <option value="">CHANGE</option>
                             <option value="備料中">備料中</option>
                             <option value="車縫中">車縫中</option>
                             <option value="已寄回">已寄回</option>
@@ -210,22 +185,74 @@
     }
 
     function renderCalendar() {
-        const calDiv = document.getElementById('calendar');
-        const calendar = new FullCalendar.Calendar(calDiv, {
+        const calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
             initialView: 'dayGridMonth',
             headerToolbar: { left: 'prev', center: 'title', right: 'next' },
-            locale: 'zh-tw',
             events: allOrders.map(r => ({
                 title: `#${r[0]} ${r[3]}`,
                 start: r[2] ? r[2].split('T')[0] : '',
-                backgroundColor: statusColors[r[9]?.trim()] || "#25282a",
-                extendedProps: { style: r[3], status: r[9] }
+                backgroundColor: statusColors[r[9]?.trim()] || "#373a3c",
+                borderColor: 'transparent',
+                extendedProps: { r: r }
             })),
             eventClick: function(info) {
-                alert(`訂單編號: ${info.event.title}\n款式: ${info.event.extendedProps.style}\n目前進度: ${info.event.extendedProps.status}`);
+                const r = info.event.extendedProps.r;
+                openModal(`
+                    <h3 style="letter-spacing:4px; font-weight:300; margin-bottom:5px;">ORDER #${r[0]}</h3>
+                    <p style="font-size:0.7rem; color:var(--brand-taupe); margin-bottom:25px;">STATUS: ${r[9]}</p>
+                    <div style="text-align:left; font-size:0.85rem; color:#555; line-height:2;">
+                        ● ${r[3]} / ${r[4]} / ${r[5]}<br>
+                        ${r[6] ? `● ${r[6]} / ${r[7]} / ${r[8]}` : ''}
+                    </div>
+                `);
             }
         });
         calendar.render();
+    }
+
+    function openModal(content) {
+        document.getElementById('modal-body').innerHTML = content;
+        document.getElementById('custom-modal').style.display = 'flex';
+    }
+    function closeModal() { document.getElementById('custom-modal').style.display = 'none'; }
+
+    async function updateStatus(id, s) {
+        if(!s) return;
+        await fetch(scriptUrl, { method: "POST", mode: "no-cors", body: JSON.stringify({action:'updateStatus', id:id, status:s}) });
+        await loadOrders(); // 背景更新數據
+        renderOrders(allOrders.slice().reverse()); // 即時重繪列表
+    }
+
+    function initChoice(id, list, placeholder, changeFn) {
+        const el = document.getElementById(id);
+        el.innerHTML = `<option value="">${placeholder}</option>`;
+        list.forEach(i => el.add(new Option(i, i)));
+        const c = new Choices(el, { searchEnabled: true, itemSelectText: '', shouldSort: false });
+        if(changeFn) el.addEventListener('change', changeFn);
+        return c;
+    }
+
+    window.onload = async function() {
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('orderDate').value = today;
+        updateExpectedDate(today);
+
+        const res = await fetch(`${scriptUrl}?action=getStyles`);
+        const data = (await res.json()).slice(1);
+        const styles = [...new Set(data.map(i => i[0]))].filter(String).sort();
+        const colors = [...new Set(data.map(i => i[1]))].filter(String).sort();
+        
+        ['style1', 'style2', 'filterStyle'].forEach(id => initChoice(id, styles, "STYLE...", id.includes('filter') ? renderStatistics : null));
+        ['color1', 'color2', 'filterColor'].forEach(id => initChoice(id, colors, "COLOR...", id.includes('filter') ? renderStatistics : null));
+        ['size1', 'size2'].forEach(id => initChoice(id, ["XS", "S", "M", "L", "XL"], "SIZE..."));
+        initChoice('filterCat', ["TOP", "BOTTOM", "ONEPIECE"], "CATEGORY...", renderStatistics);
+        
+        loadOrders();
+    };
+
+    function updateExpectedDate(v) {
+        let d = new Date(v); d.setDate(d.getDate() + 42);
+        document.getElementById('expectedHint').innerText = `⮕ Expected Delivery: ${d.toISOString().split('T')[0]}`;
     }
 
     function renderStatistics() {
@@ -246,55 +273,9 @@
         document.getElementById('totalPieces').innerText = count;
         let html = '';
         Object.keys(map).sort().forEach(k => {
-            html += `<div style="display:flex; justify-content:space-between; padding:15px 0; border-bottom:1px solid #f9f9f9; font-size:0.75rem;"><div style="max-width:80%;">${k}</div><b>${map[k]} PCS</b></div>`;
+            html += `<div style="display:flex; justify-content:space-between; padding:15px 0; border-bottom:1px solid #f9f9f9; font-size:0.75rem; color:#666;"><div>${k}</div><b>${map[k]} PCS</b></div>`;
         });
         document.getElementById('statsTableBody').innerHTML = html;
-    }
-
-    function updateStatus(id, s) {
-        if(!s) return;
-        fetch(scriptUrl, { method: "POST", mode: "no-cors", body: JSON.stringify({action:'updateStatus', id:id, status:s}) })
-        .then(() => { location.reload(); });
-    }
-
-    function initChoice(id, list, placeholder, changeFn) {
-        const el = document.getElementById(id);
-        el.innerHTML = `<option value="">${placeholder}</option>`;
-        list.forEach(i => el.add(new Option(i, i)));
-        const c = new Choices(el, { searchEnabled: true, itemSelectText: '', shouldSort: false });
-        if(changeFn) el.addEventListener('change', changeFn);
-        return c;
-    }
-
-    window.onload = async function() {
-        // 設定當天日期
-        const todayStr = new Date().toISOString().split('T')[0];
-        document.getElementById('orderDate').value = todayStr;
-        updateExpectedDate(todayStr);
-
-        const res = await fetch(`${scriptUrl}?action=getStyles`);
-        const data = (await res.json()).slice(1);
-        const styles = [...new Set(data.map(i => i[0]))].filter(String).sort();
-        const colors = [...new Set(data.map(i => i[1]))].filter(String).sort();
-        
-        initChoice('style1', styles, "STYLE..."); initChoice('style2', styles, "STYLE...");
-        initChoice('color1', colors, "COLOR..."); initChoice('color2', colors, "COLOR...");
-        initChoice('size1', ["XS", "S", "M", "L", "XL"], "SIZE..."); initChoice('size2', ["XS", "S", "M", "L", "XL"], "SIZE...");
-        initChoice('filterCat', ["TOP", "BOTTOM", "ONEPIECE"], "CATEGORY...", renderStatistics);
-        initChoice('filterStyle', styles, "STYLE...", renderStatistics);
-        initChoice('filterColor', colors, "COLOR...", renderStatistics);
-        
-        loadOrders();
-    };
-
-    function submitOrder() {
-        const data = { 
-            id: document.getElementById('orderId').value, deadline: document.getElementById('orderDate').value,
-            s1: document.getElementById('style1').value, c1: document.getElementById('color1').value, z1: document.getElementById('size1').value,
-            s2: document.getElementById('style2').value, c2: document.getElementById('color2').value, z2: document.getElementById('size2').value
-        };
-        fetch(scriptUrl, { method: "POST", mode: "no-cors", body: JSON.stringify({action:'addOrder', data:data}) })
-        .then(() => { location.reload(); });
     }
 </script>
 </body>
