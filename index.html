@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TIMU | 生產管理系統</title>
     
-    <link rel="icon" type="image/png" href="https://lh3.googleusercontent.com/u/0/d/1baVkq8CkM6skayfEhKBebfWjzpSk20n0"> 
+    <link rel="icon" type="image/png" href="https://lh3.googleusercontent.com/d/1baVkq8CkM6skayfEhKBebfWjzpSk20n0"> 
     
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
@@ -20,9 +20,9 @@
         }
         body { font-family: "Helvetica Neue", "PingFang TC", sans-serif; background: var(--off-white); color: var(--brand-dark); padding: 20px; margin: 0; min-height: 100vh; display: flex; flex-direction: column; -webkit-font-smoothing: antialiased; }
         
-        .brand-header { text-align: center; padding: 30px 0 10px 0; }
-        /* 調整 Logo 顯示比例，維持質感 */
-        .brand-logo { width: 120px; height: auto; opacity: 1; }
+        .brand-header { text-align: center; padding: 40px 0 20px 0; }
+        /* Logo 尺寸調整：從 120px 調大到 220px */
+        .brand-logo { width: 220px; height: auto; opacity: 1; }
 
         .nav { text-align: center; margin-bottom: 30px; position: sticky; top: 0; z-index: 1000; background: var(--off-white); padding: 10px 0; }
         .nav button { background: transparent; border: none; color: var(--text-light); padding: 12px 20px; cursor: pointer; margin: 0 5px; letter-spacing: 2px; font-size: 0.75rem; transition: 0.3s; font-weight: 500; }
@@ -46,7 +46,6 @@
         .btn-submit:hover { opacity: 0.9; transform: translateY(-1px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
 
         .size-tag { background: var(--brand-taupe); color: #fff; padding: 2px 8px; border-radius: 4px; font-weight: bold; font-size: 0.7rem; margin-left: 6px; letter-spacing: 0.5px; }
-
         .deadline-box { font-size: 0.65rem; font-weight: bold; letter-spacing: 1px; padding: 4px 10px; border-radius: 4px; display: inline-block; margin: 8px 0; }
         .time-urgent { background: #e8dada; color: #8c5a5a; }
         .time-warning { background: #e8e2d5; color: #9c8466; }
@@ -75,7 +74,7 @@
 <body>
 
 <div class="brand-header">
-    <img src="https://lh3.googleusercontent.com/u/0/d/17PiZYCKxPp36soMG-zSyokxPdMB7mDOV" alt="TIMU LOGO" class="brand-logo">
+    <img src="https://lh3.googleusercontent.com/d/17PiZYCKxPp36soMG-zSyokxPdMB7mDOV" alt="TIMU LOGO" class="brand-logo">
 </div>
 
 <div class="nav">
@@ -107,14 +106,183 @@
         <div class="title-group"><h2>STATUS</h2><div class="sub-title">生產進度管理</div></div>
         <div id="orderList"><div class='loader'></div>載入中...</div>
     </div>
+
+    <div id="calendarTab" class="page-container">
+        <div class="title-group"><h2>CALENDAR</h2><div class="sub-title">交期視覺日曆</div></div>
+        <div id="calendar"></div>
     </div>
+
+    <div id="statsTab" class="page-container">
+        <div class="title-group"><h2>STATISTICS</h2><div class="sub-title">款式統計彙整</div></div>
+        <div class="stats-summary"><label>Total Pieces in Production</label><span class="stats-total-num" id="totalPieces">0</span></div>
+        <div class="filter-bar" style="display:flex; gap:15px; margin-bottom:30px;">
+            <div style="flex:1"><label>Category</label><select id="filterCat" onchange="renderStatistics()"><option value="">ALL</option><option value="TOP">TOP</option><option value="BOTTOM">BOTTOM</option><option value="ONEPIECE">ONEPIECE</option></select></div>
+            <div style="flex:1"><label>Style</label><select id="filterStyle" onchange="renderStatistics()"></select></div>
+            <div style="flex:1"><label>Color</label><select id="filterColor" onchange="renderStatistics()"></select></div>
+        </div>
+        <table style="width:100%; border-collapse:collapse;"><tbody id="statsTableBody"></tbody></table>
+    </div>
+</div>
 
 <div class="footer-copyright">Copyright for Internal Use Only © Timu International Ltd.</div>
 
+<div id="orderModal" class="modal" onclick="closeModalOutside(event)">
+    <div class="modal-content">
+        <span style="position:absolute; right:20px; top:15px; cursor:pointer; color:#ccc; font-size:1.2rem;" onclick="closeModal()">&times;</span>
+        <div id="modalTitle" style="font-weight:bold; border-bottom:0.5px solid #eee; padding-bottom:15px; margin-bottom:20px; font-size:1.1rem; letter-spacing:1px;"></div>
+        <div id="modalBody" style="line-height:2.2;"></div>
+    </div>
+</div>
+
 <script>
-    // 請確認 scriptUrl 是否正確
     const scriptUrl = "https://script.google.com/macros/s/AKfycbyi0WHv5eEFxL5XVKiPsr_iU6Ipoa0OxJJQvTjmjzicQTrNRK16fTUqD2_qeskcoXVcZg/exec";
-    // ... (其餘 JS 邏輯不變)
+    let allOrders = null;
+    let calendar;
+    let choiceInstances = {};
+    const statusColors = { "新訂單": "#25282a", "備料中": "#8e8e8e", "車縫中": "#003b5c", "已寄回": "#95866f", "出貨完畢": "#d0d0ce" };
+
+    async function showTab(t) {
+        document.querySelectorAll('.page-container').forEach(e => e.classList.remove('active'));
+        document.querySelectorAll('.nav button').forEach(e => e.classList.remove('active-btn'));
+        document.getElementById(t + 'Tab').classList.add('active');
+        document.getElementById('btn' + t.charAt(0).toUpperCase() + t.slice(1)).classList.add('active-btn');
+        if (!allOrders) await loadOrders();
+        if (t === 'calendar') setTimeout(renderCalendar, 50);
+        if (t === 'stats') renderStatistics();
+        if (t === 'admin') renderOrders(allOrders.slice().reverse());
+    }
+
+    async function loadOrders() {
+        const res = await fetch(`${scriptUrl}?action=getOrders`);
+        const data = await res.json();
+        allOrders = data.slice(1);
+        return allOrders;
+    }
+
+    function renderOrders(orders) {
+        const listDiv = document.getElementById('orderList');
+        let html = '';
+        const today = new Date().setHours(0,0,0,0);
+        orders.forEach(row => {
+            const status = (row[9] || "新訂單").trim();
+            const expDateStr = row[2] ? row[2].split('T')[0] : '';
+            const diffDays = Math.ceil((new Date(expDateStr) - today) / 86400000);
+            let dClass = diffDays <= 7 ? 'time-urgent' : (diffDays <= 14 ? 'time-warning' : (diffDays <= 21 ? 'time-normal' : 'time-safe'));
+
+            html += `<div class="order-item" style="border-bottom: 0.5px solid #f7f7f7; padding: 30px 0;"><div style="display:flex; justify-content:space-between; align-items:flex-start;"><div><div style="font-weight:bold; font-size:1rem; letter-spacing:1px;">#${row[0]}</div><div style="font-size:0.7rem; color:#aaa; margin-top:4px;">EXP: ${expDateStr.replace(/-/g,'/')}</div><div class="deadline-box ${dClass}">${diffDays} DAYS LEFT</div><div style="margin-top:15px; font-size:0.85rem; line-height:2.2;"><b>①</b> ${row[3]} <span class="size-tag">${row[5]}</span><br>${row[6] ? `<b>②</b> ${row[6]} <span class="size-tag">${row[8]}</span>` : ''}</div></div><div style="text-align:right;"><span class="status-tag status-${status}">${status}</span><div style="margin-top:15px;"><select onchange="updateStatus('${row[0]}', this.value)" style="font-size:0.65rem; border:0.5px solid #eee; padding:5px; border-radius:4px; color:#888;"><option value="">CHANGE</option><option value="新訂單">新訂單</option><option value="備料中">備料中</option><option value="車縫中">車縫中</option><option value="已寄回">已寄回</option><option value="出貨完畢">出貨完畢</option></select></div></div></div></div>`;
+        });
+        listDiv.innerHTML = html || "NO DATA";
+    }
+
+    function renderCalendar() {
+        if (calendar) { calendar.render(); return; }
+        calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
+            initialView: 'dayGridMonth',
+            events: allOrders.map(row => {
+                const status = (row[9] || "新訂單").trim();
+                let rDate = row[2] ? row[2].toString().split('T')[0].trim() : '';
+                return rDate ? { title: `#${row[0]}`, start: rDate, backgroundColor: statusColors[status], borderColor: 'transparent', extendedProps: {row} } : null;
+            }).filter(e => e),
+            height: 'auto',
+            headerToolbar: { left: 'prev', center: 'title', right: 'next' },
+            eventClick: info => {
+                const r = info.event.extendedProps.row;
+                document.getElementById('orderModal').style.display = 'block';
+                document.getElementById('modalTitle').innerText = `Order #${r[0]}`;
+                document.getElementById('modalBody').innerHTML = `<div style="margin-bottom:20px;"><span class="status-tag status-${r[9].trim()}">${r[9]}</span></div><div style="font-size:0.85rem; line-height:2.2;">交期：<b style="color:var(--brand-blue)">${r[2].split('T')[0]}</b><br>款式①：${r[3]} <span class="size-tag">${r[5]}</span><br>${r[6] ? '款式②：' + r[6] + ' <span class="size-tag">' + r[8] + '</span>' : ''}</div>`;
+            }
+        });
+        calendar.render();
+    }
+
+    function renderStatistics() {
+        const fCat = document.getElementById('filterCat').value, fStyle = document.getElementById('filterStyle').value, fColor = document.getElementById('filterColor').value;
+        const statsMap = {}; let totalCount = 0;
+        allOrders.filter(row => !["已寄回", "出貨完畢"].includes((row[9]||"").trim())).forEach(row => {
+            [[row[3], row[4], row[5]], [row[6], row[7], row[8]]].forEach(it => {
+                if (!it[0]) return;
+                let cat = it[0].includes("上衣")||it[0].includes("BRA")?"TOP":(it[0].includes("褲")||it[0].includes("LEGGING")?"BOTTOM":"ONEPIECE");
+                if ((fCat === "" || cat === fCat) && (fStyle === "" || it[0] === fStyle) && (fColor === "" || it[1] === fColor)) {
+                    const key = `${it[0]} / ${it[1]} / ${it[2]}`;
+                    statsMap[key] = (statsMap[key] || 0) + 1;
+                    totalCount++;
+                }
+            });
+        });
+        document.getElementById('totalPieces').innerText = totalCount;
+        let html = '';
+        Object.keys(statsMap).sort().forEach(key => {
+            html += `<tr><td style="padding:15px 0; border-bottom:0.5px solid #f7f7f7; font-size:0.8rem; letter-spacing:0.5px;">${key}</td><td style="text-align:right; border-bottom:0.5px solid #f7f7f7; font-weight:bold; font-size:0.9rem;">${statsMap[key]} <span style="font-size:0.6rem; color:#ccc;">PCS</span></td></tr>`;
+        });
+        document.getElementById('statsTableBody').innerHTML = html || '<tr><td colspan="2" style="text-align:center; padding:50px; color:#ccc;">NO DATA</td></tr>';
+    }
+
+    function setupSelect(id, list, p) {
+        const s = document.getElementById(id);
+        if (list.length > 0) {
+            s.innerHTML = `<option value="">${p}</option>`;
+            list.forEach(i => s.add(new Option(i, i)));
+        }
+        return new Choices(s, { searchEnabled: true, itemSelectText: '', shouldSort: false, placeholder: true });
+    }
+
+    window.onload = async function() {
+        const now = new Date(); 
+        document.getElementById('orderDate').value = (new Date(now - now.getTimezoneOffset()*60000)).toISOString().split('T')[0];
+        calculateExpectedDate(document.getElementById('orderDate').value);
+        
+        try {
+            const res = await fetch(`${scriptUrl}?action=getStyles`);
+            const data = await res.json();
+            const d = data.slice(1), 
+                  styles = [...new Set(d.map(i => i[0]))].filter(String), 
+                  colors = [...new Set(d.map(i => i[1]))].filter(String);
+            
+            setupSelect('style1', styles, "STYLE..."); setupSelect('style2', styles, "STYLE...");
+            setupSelect('color1', colors, "COLOR..."); setupSelect('color2', colors, "COLOR...");
+            setupSelect('size1', ["XS", "S", "M", "L", "XL"], "SIZE..."); setupSelect('size2', ["XS", "S", "M", "L", "XL"], "SIZE...");
+            
+            setTimeout(() => {
+                choiceInstances['filterStyle'] = setupSelect('filterStyle', styles.sort(), "STYLE...");
+                choiceInstances['filterColor'] = setupSelect('filterColor', colors.sort(), "COLOR...");
+            }, 300);
+            loadOrders();
+        } catch(e) { console.log("初期化出錯", e); }
+    };
+
+    function updateStatus(id, s) {
+        if(!s) return;
+        fetch(scriptUrl, { method: "POST", mode: "no-cors", body: JSON.stringify({action:'updateStatus', id:id, status:s}) });
+        if(allOrders) {
+            const o = allOrders.find(ord => ord[0] == id);
+            if(o) o[9] = s;
+            renderOrders(allOrders.slice().reverse());
+            if(calendar) { calendar.destroy(); calendar = null; }
+        }
+    }
+
+    function calculateExpectedDate(v) { 
+        if(!v) return ""; 
+        const d = new Date(v); d.setDate(d.getDate()+42); 
+        const res = `${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')}`; 
+        document.getElementById('expectedHint').innerText = `⮕ ${res}`; 
+        return res; 
+    }
+    
+    function submitOrder() {
+        const id = document.getElementById('orderId').value; if(!id) return alert("ENTER ID");
+        const btn = document.getElementById('submitBtn'); btn.innerText = "SENDING..."; btn.style.pointerEvents = 'none';
+        const d = document.getElementById('orderDate').value;
+        const data = { id:id, deadline:d.replace(/-/g,'/'), expectedDate:calculateExpectedDate(d), s1:document.getElementById('style1').value, c1:document.getElementById('color1').value, z1:document.getElementById('size1').value, s2:document.getElementById('style2').value, c2:document.getElementById('color2').value, z2:document.getElementById('size2').value };
+        fetch(scriptUrl, { method: "POST", mode: "no-cors", body: JSON.stringify({action:'addOrder', data:data}) }).then(() => { 
+            btn.innerText = "SUCCESS"; 
+            allOrders = null; 
+            setTimeout(() => location.reload(), 1000); 
+        });
+    }
+
+    function closeModal() { document.getElementById('orderModal').style.display='none'; }
+    function closeModalOutside(e) { if(e.target.id === 'orderModal') closeModal(); }
 </script>
 </body>
 </html>
