@@ -1,311 +1,676 @@
 <!DOCTYPE html>
+
 <html lang="zh-TW">
+
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
     <title>TIMU | 生產管理系統</title>
+
     
+
     <link rel="icon" type="image/png" href="https://lh3.googleusercontent.com/d/1ImMExx8ZF1Qji8LgxoiM1KcXrH1touse"> 
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
+
     <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
+
     
+
     <style>
+
         :root { 
+
             --brand-taupe: rgb(149, 134, 111); 
+
             --brand-dark: #373a3c;
+
             --brand-blue: #003b5c; 
+
             --off-white: #eff0f1; --text-light: #999;
+
             --st-new: #373a3c; --st-material: #8e8e8e; --st-sewing: #003b5c; --st-sent: #95866f; --st-done: #d0d0ce;
+
         }
+
         
+
         body { 
+
             font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; 
+
             background: var(--off-white); 
+
             color: var(--brand-dark); 
+
             padding: 20px 10px; 
+
             margin: 0; 
+
             min-height: 100vh; 
+
             -webkit-font-smoothing: antialiased; 
+
             font-size: 16px; 
+
         }
+
         
+
         .brand-header { text-align: center; padding: 40px 0; }
+
         .brand-logo { width: 240px; height: auto; max-width: 80%; }
 
+
+
         .nav { text-align: center; margin-bottom: 30px; position: sticky; top: 0; z-index: 1000; background: var(--off-white); padding: 15px 0; overflow-x: auto; white-space: nowrap; }
+
         .nav button { background: transparent; border: none; color: var(--text-light); padding: 10px 20px; cursor: pointer; letter-spacing: 2px; font-size: 0.8rem; font-weight: 500; transition: 0.3s; }
+
         .nav button.active-btn { color: var(--brand-dark); border-bottom: 2px solid var(--brand-dark); }
 
+
+
         .page-container { display: none; background: white; margin: 0 auto 40px auto; padding: 40px 30px; border-radius: 12px; box-shadow: 0 4px 25px rgba(0,0,0,0.04); width: 95%; max-width: 1000px; box-sizing: border-box; }
+
         .active { display: block; }
+
         #formTab { max-width: 650px; }
 
+
+
         .title-group { text-align: center; margin-bottom: 40px; }
+
         h2 { font-weight: 300; letter-spacing: 8px; font-size: 1.4rem; color: var(--brand-dark); margin: 0; }
+
         .sub-title { font-size: 0.75rem; color: var(--brand-taupe); margin-top: 10px; letter-spacing: 3px; font-weight: bold; }
 
+
+
         .item-header { font-size: 0.9rem; font-weight: bold; letter-spacing: 2px; color: var(--brand-taupe); margin: 45px 0 20px 0; padding-bottom: 8px; border-bottom: 1.5px solid #f0f0f0; display: block; }
+
         .form-group { margin-bottom: 25px; }
+
         label { display: block; font-size: 0.65rem; color: #bbb; letter-spacing: 1px; margin-bottom: 8px; font-weight: 600; text-transform: uppercase; }
+
         input { padding: 10px 0; border: none !important; border-bottom: 1px solid #eee !important; font-size: 1rem; width: 100%; background: transparent !important; color: #555; outline: none; border-radius: 0; }
+
         
-        /* Choices 渲染樣式穩定化 - 統一高度與邊距防止歪斜 */
-        .choices__inner { 
-            border: none !important; 
-            border-bottom: 1px solid #eee !important; 
-            background: transparent !important; 
-            padding: 2px 8px !important; 
-            min-height: 45px !important; 
-            display: flex;
-            align-items: center;
-            font-size: 1rem; 
-        }
+
+        /* 解決 Choices 渲染跑版問題 */
+
+        .choices__inner { border: none !important; border-bottom: 1px solid #eee !important; background: transparent !important; padding: 6px 0 !important; min-height: 40px !important; font-size: 1rem; }
+
         .choices__list--dropdown { z-index: 5000 !important; }
 
-        /* STATISTICS 頁面選單對齊修正 */
-        .filter-container { 
-            display: flex; 
-            flex-direction: row; 
-            align-items: flex-end; 
-            gap: 15px; 
-            margin-bottom: 35px; 
-            width: 100%;
-        }
-        .filter-container > div { 
-            flex: 1; 
-            min-width: 0; 
-        }
-        @media (max-width: 600px) {
-            .filter-container { flex-direction: column; align-items: stretch; }
-        }
+
 
         .order-card { padding: 25px 0; border-bottom: 1px solid #f7f7f7; display: flex; flex-direction: column; gap: 15px; }
+
         @media (min-width: 600px) { .order-card { flex-direction: row; justify-content: space-between; } }
+
         .countdown-label { font-size: 0.65rem; font-weight: bold; padding: 4px 12px; border-radius: 20px; display: inline-block; margin-bottom: 5px; letter-spacing: 1px; }
+
         .bg-urgent { background: #fee2e2; color: #dc2626; }
+
         .bg-normal { background: #f3f4f6; color: var(--brand-taupe); }
+
         .size-tag { background: #f0f0f0; color: #888; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; margin-left: 5px; }
+
         .status-tag { padding: 5px 12px; border-radius: 4px; font-size: 0.7rem; color: white; font-weight: bold; display: inline-block; }
+
         .status-新訂單 { background: var(--st-new); }
+
         .status-備料中 { background: var(--st-material); }
+
         .status-車縫中 { background: var(--st-sewing); }
+
         .status-已寄回 { background: var(--st-sent); }
+
         .status-出貨完畢 { background: var(--st-done); color: var(--brand-dark); }
 
+
+
+        .fc-theme-standard td, .fc-theme-standard th { border: 1px solid #f2f2f2 !important; }
+
+        .fc-day-today { background: rgba(149, 134, 111, 0.1) !important; }
+
+        .fc-day-today .fc-daygrid-day-number { color: var(--brand-taupe) !important; font-weight: bold; }
+
+        .fc-daygrid-day-number { font-size: 0.8rem !important; padding: 8px !important; color: #bbb; }
+
+        .fc-col-header-cell-cushion { font-size: 0.75rem; letter-spacing: 1px; color: var(--brand-dark); text-decoration: none !important; text-transform: uppercase; }
+
+        .fc-event { border: none !important; border-radius: 4px !important; font-size: 0.7rem !important; padding: 2px 4px !important; }
+
+
+
+        .filter-container { display: flex; flex-direction: column; gap: 15px; margin-bottom: 35px; }
+
+        @media (min-width: 600px) { .filter-container { flex-direction: row; } .filter-container > div { flex: 1; } }
+
         .stats-row { display: flex; justify-content: space-between; align-items: flex-start; padding: 20px 0; border-bottom: 1px solid #f9f9f9; font-size: 0.9rem; color: #555; gap: 20px; }
+
         .stats-name { flex: 1; line-height: 1.5; }
+
         .stats-count { font-weight: bold; color: var(--brand-dark); white-space: nowrap; }
 
+
+
         #custom-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.7); backdrop-filter: blur(10px); z-index: 2000; justify-content: center; align-items: center; }
+
         .modal-content { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.05); text-align: center; max-width: 400px; width: 85%; }
+
         
+
         .btn-submit { background: var(--brand-dark); color: white; border: none; padding: 20px; width: 100%; margin-top: 40px; cursor: pointer; letter-spacing: 4px; font-size: 0.85rem; border-radius: 6px; font-weight: bold; transition: 0.3s; }
+
         .footer-copyright { text-align: center; padding: 40px 0; font-size: 0.65rem; color: rgba(149, 134, 111, 0.4); letter-spacing: 1px; }
+
     </style>
+
 </head>
+
 <body>
 
+
+
 <div id="custom-modal" onclick="closeModal()">
+
     <div class="modal-content" onclick="event.stopPropagation()">
+
         <div id="modal-body"></div>
+
         <button onclick="closeModal()" style="margin-top:25px; background:var(--brand-dark); color:white; border:none; padding:12px 30px; border-radius:30px; cursor:pointer; font-size:0.75rem; letter-spacing:2px;">CLOSE</button>
+
     </div>
+
 </div>
 
-<div class="brand-header"><img src="https://lh3.googleusercontent.com/d/12yR1r7b4SlVYa9T3quajqKZmqeO7MLPb" alt="TIMU" class="brand-logo"></div>
+
+
+<div class="brand-header">
+
+    <img src="https://lh3.googleusercontent.com/d/12yR1r7b4SlVYa9T3quajqKZmqeO7MLPb" alt="TIMU" class="brand-logo">
+
+</div>
+
+
 
 <div class="nav">
+
     <button id="btnForm" class="active-btn" onclick="showTab('form')">NEW ORDER</button>
+
     <button id="btnAdmin" onclick="showTab('admin')">STATUS</button>
+
     <button id="btnCalendar" onclick="showTab('calendar')">CALENDAR</button>
+
     <button id="btnStats" onclick="showTab('stats')">STATISTICS</button>
+
 </div>
+
+
 
 <div class="main-content">
+
     <div id="formTab" class="page-container active">
+
         <div class="title-group"><h2>NEW ORDER</h2><div class="sub-title">建立新訂製單</div></div>
+
         <div class="form-group"><label>Order ID</label><input type="text" id="orderId" placeholder="SL-0000"></div>
+
         <div class="form-group"><label>Order Date</label><input type="date" id="orderDate" onchange="updateExpectedDate(this.value)"></div>
+
         <div id="expectedHint" style="font-size:0.75rem; color:var(--brand-taupe); margin:-15px 0 15px 0; font-weight:bold;"></div>
+
         
+
         <span class="item-header">ITEM 01 內容詳情</span>
+
         <div class="form-group"><label>Style</label><select id="style1"></select></div>
+
         <div class="form-group"><label>Color</label><select id="color1"></select></div>
+
         <div class="form-group"><label>Size</label><select id="size1"></select></div>
+
         
+
         <span class="item-header">ITEM 02 內容詳情</span>
+
         <div class="form-group"><label>Style</label><select id="style2"></select></div>
+
         <div class="form-group"><label>Color</label><select id="color2"></select></div>
+
         <div class="form-group"><label>Size</label><select id="size2"></select></div>
+
         
+
         <button id="submitBtn" class="btn-submit" onclick="submitOrder()">CREATE ORDER</button>
+
     </div>
+
+
 
     <div id="adminTab" class="page-container">
+
         <div class="title-group"><h2>STATUS</h2><div class="sub-title">生產進度管理</div></div>
+
         <div id="orderList">載入中...</div>
+
     </div>
+
+
 
     <div id="calendarTab" class="page-container">
+
         <div class="title-group"><h2>CALENDAR</h2><div class="sub-title">交期視覺日曆</div></div>
+
         <div id="calendar"></div>
+
     </div>
+
+
 
     <div id="statsTab" class="page-container">
+
         <div class="title-group"><h2>STATISTICS</h2><div class="sub-title">生產數據看板</div></div>
+
         <div class="stats-summary" style="text-align:center; padding-bottom:30px;">
+
             <label style="font-size: 0.65rem; color: var(--brand-taupe); letter-spacing: 2px;">TOTAL PIECES</label>
+
             <div id="totalPieces" style="font-size: 2.5rem; font-weight: 200; color: #555;">0</div>
+
         </div>
+
         <div class="filter-container">
+
             <div><label>Category</label><select id="filterCat"></select></div>
+
             <div><label>Style</label><select id="filterStyle"></select></div>
+
             <div><label>Color</label><select id="filterColor"></select></div>
+
         </div>
+
         <div id="statsTableBody"></div>
+
     </div>
+
 </div>
 
+
+
+<div class="footer-copyright">Copyright for Internal Use Only © Timu International Ltd.</div>
+
+
+
 <script>
+
     const scriptUrl = "https://script.google.com/macros/s/AKfycbyi0WHv5eEFxL5XVKiPsr_iU6Ipoa0OxJJQvTjmjzicQTrNRK16fTUqD2_qeskcoXVcZg/exec";
+
     let allOrders = null;
+
     let masterData = []; 
+
     let choiceInstances = {};
+
     const statusColors = { "新訂單": "#373a3c", "備料中": "#8e8e8e", "車縫中": "#003b5c", "已寄回": "#95866f", "出貨完畢": "#d0d0ce" };
 
+
+
     async function showTab(t) {
+
         document.querySelectorAll('.page-container').forEach(e => e.classList.remove('active'));
+
         document.querySelectorAll('.nav button').forEach(e => e.classList.remove('active-btn'));
+
         document.getElementById(t + 'Tab').classList.add('active');
+
         document.getElementById('btn' + t.charAt(0).toUpperCase() + t.slice(1)).classList.add('active-btn');
+
         if (!allOrders) await loadOrders();
+
         if (t === 'admin') renderOrders(allOrders.slice().reverse());
+
         if (t === 'stats') renderStatistics();
+
         if (t === 'calendar') setTimeout(renderCalendar, 100);
+
     }
+
+
 
     async function loadOrders() {
+
         const res = await fetch(`${scriptUrl}?action=getOrders`);
+
         allOrders = (await res.json()).slice(1);
+
     }
+
+
 
     function renderOrders(orders) {
+
         const today = new Date().setHours(0,0,0,0);
+
         let html = '';
+
         orders.forEach(r => {
+
             const expDate = r[2] ? r[2].split('T')[0] : '';
+
+            const diff = expDate ? Math.ceil((new Date(expDate) - today) / 86400000) : '--';
+
             const status = (r[9] || "新訂單").trim();
+
             html += `<div class="order-card">
+
                 <div>
-                    <b style="font-size:1.1rem; color:#555;">#${r[0]}</b>
-                    <div style="margin-top:10px; font-size:0.85rem; color:#777;">● ${r[3]} / ${r[4]} <span class="size-tag">${r[5]}</span></div>
+
+                    <div class="countdown-label ${diff <= 7 ? 'bg-urgent' : 'bg-normal'}">${diff} DAYS LEFT</div>
+
+                    <div style="font-size:0.7rem; color:#bbb; margin-bottom:8px;">EXP: ${expDate}</div>
+
+                    <b style="font-size:1.1rem; color:#555; letter-spacing:1px;">#${r[0]}</b>
+
+                    <div style="margin-top:10px; font-size:0.85rem; line-height:1.8; color:#777;">
+
+                        ● ${r[3]} / ${r[4]} <span class="size-tag">${r[5]}</span><br>
+
+                        ${r[6] ? `● ${r[6]} / ${r[7]} <span class="size-tag">${r[8]}</span>` : ''}
+
+                    </div>
+
                 </div>
-                <div><span class="status-tag status-${status}">${status}</span></div>
+
+                <div style="text-align:left;">
+
+                    <span class="status-tag status-${status}">${status}</span>
+
+                    <div style="margin-top:10px;"><select onchange="updateStatus('${r[0]}', this.value)" style="border:none; border-bottom:1px solid #eee; font-size:0.75rem; padding:4px; color:#999; width:100px;"><option value="">CHANGE</option><option value="備料中">備料中</option><option value="車縫中">車縫中</option><option value="已寄回">已寄回</option><option value="出貨完畢">出貨完畢</option></select></div>
+
+                </div>
+
             </div>`;
+
         });
+
         document.getElementById('orderList').innerHTML = html;
+
     }
 
-    function initChoice(id, list, placeholder, changeFn) {
-        const el = document.getElementById(id);
-        el.innerHTML = `<option value="">${placeholder}</option>`;
-        list.forEach(i => el.add(new Option(i, i)));
-        const c = new Choices(el, { searchEnabled: true, itemSelectText: '', shouldSort: false });
-        if(changeFn) el.addEventListener('change', changeFn);
-        choiceInstances[id] = c;
-        return c;
-    }
 
-    function updateColorOptions(styleId, colorId) {
-        const selectedStyleText = document.getElementById(styleId).value.trim();
-        const colorChoice = choiceInstances[colorId];
-        const allAvailableColors = [...new Set(masterData.map(i => i[1]))].filter(String);
-
-        colorChoice.clearStore();
-        
-        let matchedColors = allAvailableColors.filter(c => selectedStyleText.includes(c));
-        matchedColors.sort((a, b) => b.length - a.length);
-
-        const isMatch = matchedColors.length > 0;
-        // 修正順序：移除 .sort()
-        let displayList = isMatch ? matchedColors : allAvailableColors;
-        
-        const finalOpts = displayList.map(c => ({ value: c, label: c, selected: false }));
-        colorChoice.setChoices([{ value: '', label: 'COLOR...', selected: true }].concat(finalOpts), 'value', 'label', true);
-
-        if (isMatch && matchedColors.length === 1) {
-            setTimeout(() => { colorChoice.setChoiceByValue(matchedColors[0]); }, 50);
-        }
-    }
-
-    window.onload = async function() {
-        const today = new Date().toISOString().split('T')[0];
-        document.getElementById('orderDate').value = today;
-        
-        const res = await fetch(`${scriptUrl}?action=getStyles`);
-        masterData = (await res.json()).slice(1);
-        
-        // 修正順序：移除 .sort()，依照資料庫排列
-        const styles = [...new Set(masterData.map(i => i[0]))].filter(String);
-        const colors = [...new Set(masterData.map(i => i[1]))].filter(String);
-        
-        initChoice('style1', styles, "STYLE...", () => updateColorOptions('style1', 'color1'));
-        initChoice('style2', styles, "STYLE...", () => updateColorOptions('style2', 'color2'));
-        initChoice('filterStyle', styles, "STYLE...", renderStatistics);
-        
-        initChoice('color1', colors, "COLOR...");
-        initChoice('color2', colors, "COLOR...");
-        initChoice('filterColor', colors, "COLOR...", renderStatistics);
-        
-        ['size1', 'size2'].forEach(id => initChoice(id, ["XS", "S", "M", "L", "XL"], "SIZE..."));
-        initChoice('filterCat', ["TOP", "BOTTOM", "ONEPIECE"], "CATEGORY...", renderStatistics);
-        
-        loadOrders();
-    };
-
-    function updateExpectedDate(v) {
-        let d = new Date(v); d.setDate(d.getDate() + 42);
-        document.getElementById('expectedHint').innerText = `⮕ Expected Delivery: ${d.toISOString().split('T')[0]}`;
-    }
-
-    function renderStatistics() {
-        const fCat = document.getElementById('filterCat').value;
-        const fStyle = document.getElementById('filterStyle').value;
-        const fColor = document.getElementById('filterColor').value;
-        let count = 0, map = {};
-        allOrders.filter(r => !["已寄回", "出貨完畢"].includes((r[9]||"").trim())).forEach(r => {
-            [[r[3], r[4], r[5]], [r[6], r[7], r[8]]].forEach(it => {
-                if (!it[0]) return;
-                const cat = (it[0].includes("褲") || it[0].includes("LEGGING")) ? "BOTTOM" : (it[0].includes("BRA") || it[0].includes("上衣")) ? "TOP" : "ONEPIECE";
-                if ((fCat==="" || cat===fCat) && (fStyle==="" || it[0]===fStyle) && (fColor==="" || it[1]===fColor)) {
-                    const k = `${it[0]} / ${it[1]} / ${it[2]}`;
-                    map[k] = (map[k] || 0) + 1; count++;
-                }
-            });
-        });
-        document.getElementById('totalPieces').innerText = count;
-        let html = '';
-        // 修正順序：移除列表排序
-        Object.keys(map).forEach(k => {
-            html += `<div class="stats-row"><div class="stats-name">${k}</div><div class="stats-count">${map[k]} PCS</div></div>`;
-        });
-        document.getElementById('statsTableBody').innerHTML = html;
-    }
 
     function renderCalendar() {
+
         const calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
+
             initialView: 'dayGridMonth',
+
             height: 'auto',
+
             locale: 'en', 
+
             events: allOrders.map(r => ({
+
                 title: `#${r[0]}`,
+
                 start: r[2] ? r[2].split('T')[0] : '',
-                backgroundColor: statusColors[r[9]?.trim()] || "#373a3c"
-            }))
+
+                backgroundColor: statusColors[r[9]?.trim()] || "#373a3c",
+
+                borderColor: 'transparent',
+
+                extendedProps: { r: r }
+
+            })),
+
+            eventClick: function(info) {
+
+                const r = info.event.extendedProps.r;
+
+                openModal(`
+
+                    <h3 style="letter-spacing:3px; font-weight:300; font-size:1.2rem;">ORDER #${r[0]}</h3>
+
+                    <p style="font-size:0.75rem; color:var(--brand-taupe); margin-bottom:20px;">進度：${r[9]}</p>
+
+                    <div style="text-align:left; font-size:0.9rem; color:#555; line-height:2;">● ${r[3]} / ${r[4]} / ${r[5]}<br>${r[6] ? `● ${r[6]} / ${r[7]} / ${r[8]}` : ''}</div>
+
+                `);
+
+            }
+
         });
+
         calendar.render();
+
     }
+
+
+
+    function openModal(content) { document.getElementById('modal-body').innerHTML = content; document.getElementById('custom-modal').style.display = 'flex'; }
+
+    function closeModal() { document.getElementById('custom-modal').style.display = 'none'; }
+
+
+
+    async function updateStatus(id, s) {
+
+        if(!s) return;
+
+        await fetch(scriptUrl, { method: "POST", mode: "no-cors", body: JSON.stringify({action:'updateStatus', id:id, status:s}) });
+
+        await loadOrders(); 
+
+        renderOrders(allOrders.slice().reverse()); 
+
+    }
+
+
+
+    function initChoice(id, list, placeholder, changeFn) {
+
+        const el = document.getElementById(id);
+
+        el.innerHTML = `<option value="">${placeholder}</option>`;
+
+        list.forEach(i => el.add(new Option(i, i)));
+
+        const c = new Choices(el, { searchEnabled: true, itemSelectText: '', shouldSort: false });
+
+        if(changeFn) el.addEventListener('change', changeFn);
+
+        choiceInstances[id] = c;
+
+        return c;
+
+    }
+
+
+
+    // 顏色自動抓取核心邏輯 - 穩定增強版
+
+    function updateColorOptions(styleId, colorId) {
+
+        const selectedStyle = document.getElementById(styleId).value;
+
+        const colorChoice = choiceInstances[colorId];
+
+        const allAvailableColors = [...new Set(masterData.map(i => i[1]))].filter(String);
+
+
+
+        // 強力清除現有狀態，解決跑版
+
+        colorChoice.clearStore(); 
+
+
+
+        if (!selectedStyle) {
+
+            const allOpts = allAvailableColors.sort().map(c => ({ value: c, label: c, selected: false }));
+
+            colorChoice.setChoices([{ value: '', label: 'COLOR...', selected: true, disabled: false }].concat(allOpts), 'value', 'label', true);
+
+            return;
+
+        }
+
+
+
+        // 模糊篩選顏色
+
+        let matchedColors = allAvailableColors.filter(colorName => selectedStyle.includes(colorName));
+
+
+
+        // 字數優先排序（處理黑色泡泡布 vs 黑色）
+
+        matchedColors.sort((a, b) => b.length - a.length);
+
+
+
+        if (matchedColors.length === 0) {
+
+            matchedColors = allAvailableColors.sort();
+
+        }
+
+        
+
+        const finalChoices = matchedColors.map(c => ({
+
+            value: c,
+
+            label: c,
+
+            selected: matchedColors.length === 1 
+
+        }));
+
+
+
+        colorChoice.setChoices([{ value: '', label: 'COLOR...', selected: matchedColors.length !== 1, disabled: false }].concat(finalChoices), 'value', 'label', true);
+
+    }
+
+
+
+    window.onload = async function() {
+
+        const today = new Date().toISOString().split('T')[0];
+
+        document.getElementById('orderDate').value = today;
+
+        updateExpectedDate(today);
+
+        
+
+        const res = await fetch(`${scriptUrl}?action=getStyles`);
+
+        masterData = (await res.json()).slice(1);
+
+        
+
+        const styles = [...new Set(masterData.map(i => i[0]))].filter(String).sort();
+
+        const colors = [...new Set(masterData.map(i => i[1]))].filter(String).sort();
+
+        
+
+        initChoice('style1', styles, "STYLE...", () => updateColorOptions('style1', 'color1'));
+
+        initChoice('style2', styles, "STYLE...", () => updateColorOptions('style2', 'color2'));
+
+        initChoice('filterStyle', styles, "STYLE...", renderStatistics);
+
+        
+
+        initChoice('color1', colors, "COLOR...");
+
+        initChoice('color2', colors, "COLOR...");
+
+        initChoice('filterColor', colors, "COLOR...", renderStatistics);
+
+        
+
+        ['size1', 'size2'].forEach(id => initChoice(id, ["XS", "S", "M", "L", "XL"], "SIZE..."));
+
+        initChoice('filterCat', ["TOP", "BOTTOM", "ONEPIECE"], "CATEGORY...", renderStatistics);
+
+        
+
+        loadOrders();
+
+    };
+
+
+
+    function updateExpectedDate(v) {
+
+        let d = new Date(v); d.setDate(d.getDate() + 42);
+
+        document.getElementById('expectedHint').innerText = `⮕ Expected Delivery: ${d.toISOString().split('T')[0]}`;
+
+    }
+
+
+
+    function renderStatistics() {
+
+        const fCat = document.getElementById('filterCat').value;
+
+        const fStyle = document.getElementById('filterStyle').value;
+
+        const fColor = document.getElementById('filterColor').value;
+
+        let count = 0, map = {};
+
+        allOrders.filter(r => !["已寄回", "出貨完畢"].includes((r[9]||"").trim())).forEach(r => {
+
+            [[r[3], r[4], r[5]], [r[6], r[7], r[8]]].forEach(it => {
+
+                if (!it[0]) return;
+
+                const cat = (it[0].includes("褲") || it[0].includes("LEGGING")) ? "BOTTOM" : (it[0].includes("BRA") || it[0].includes("上衣")) ? "TOP" : "ONEPIECE";
+
+                if ((fCat==="" || cat===fCat) && (fStyle==="" || it[0]===fStyle) && (fColor==="" || it[1]===fColor)) {
+
+                    const k = `${it[0]} / ${it[1]} / ${it[2]}`;
+
+                    map[k] = (map[k] || 0) + 1; count++;
+
+                }
+
+            });
+
+        });
+
+        document.getElementById('totalPieces').innerText = count;
+
+        let html = '';
+
+        Object.keys(map).sort().forEach(k => {
+
+            html += `<div class="stats-row"><div class="stats-name">${k}</div><div class="stats-count">${map[k]} PCS</div></div>`;
+
+        });
+
+        document.getElementById('statsTableBody').innerHTML = html;
+
+    }
+
 </script>
+
 </body>
+
 </html>
+
