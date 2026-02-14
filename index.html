@@ -51,7 +51,26 @@
         input { padding: 10px 0; border: none !important; border-bottom: 1px solid #eee !important; font-size: 1rem; width: 100%; background: transparent !important; color: #555; outline: none; border-radius: 0; }
         
         /* 解決 Choices 渲染跑版問題 */
-        .choices__inner { border: none !important; border-bottom: 1px solid #eee !important; background: transparent !important; padding: 6px 0 !important; min-height: 40px !important; font-size: 1rem; }
+.filter-container { 
+    display: flex; 
+    flex-direction: row; /* 強制橫向排列 */
+    align-items: flex-end; /* 讓標籤跟選單底部對齊 */
+    gap: 15px; 
+    margin-bottom: 35px; 
+    width: 100%;
+}
+
+.filter-container > div { 
+    flex: 1; 
+    min-width: 0; /* 核心公式：防止長文字撐歪選單 */
+}
+
+/* 統一選單高度，防止歪七紐八 */
+.choices__inner {
+    min-height: 45px !important;
+    display: flex;
+    align-items: center;
+}
         .choices__list--dropdown { z-index: 5000 !important; }
 
         .order-card { padding: 25px 0; border-bottom: 1px solid #f7f7f7; display: flex; flex-direction: column; gap: 15px; }
