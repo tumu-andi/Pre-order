@@ -5,8 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TIMU | 生產管理系統</title>
     
-    <link rel="icon" type="image/png" href="https://drive.google.com/thumbnail?id=1ImMExx8ZF1Qji8LgxoiM1KcXrH1touse&sz=w32"> 
-    
+    <link rel="icon" type="image/png" href="https://drive.google.com/uc?id=1ImMExx8ZF1Qji8LgxoiM1KcXrH1touse"> 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
@@ -18,14 +17,13 @@
             --off-white: #eff0f1; --text-light: #999;
             --st-new: #25282a; --st-material: #8e8e8e; --st-sewing: #003b5c; --st-sent: #95866f; --st-done: #d0d0ce;
         }
-        body { font-family: "Helvetica Neue", "PingFang TC", sans-serif; background: var(--off-white); color: var(--brand-dark); padding: 20px; margin: 0; min-height: 100vh; -webkit-font-smoothing: antialiased; }
+        body { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; background: var(--off-white); color: var(--brand-dark); padding: 20px; margin: 0; min-height: 100vh; }
         
-        /* Logo 區域 */
-        .brand-header { text-align: center; padding: 50px 0 30px 0; }
-        .brand-logo { width: 280px; height: auto; display: inline-block; }
+        .brand-header { text-align: center; padding: 40px 0; }
+        .brand-logo { width: 280px; height: auto; }
 
         .nav { text-align: center; margin-bottom: 30px; position: sticky; top: 0; z-index: 1000; background: var(--off-white); padding: 10px 0; }
-        .nav button { background: transparent; border: none; color: var(--text-light); padding: 12px 20px; cursor: pointer; margin: 0 5px; letter-spacing: 2px; font-size: 0.75rem; transition: 0.3s; font-weight: 500; }
+        .nav button { background: transparent; border: none; color: var(--text-light); padding: 12px 20px; cursor: pointer; letter-spacing: 2px; font-size: 0.75rem; font-weight: 500; }
         .nav button.active-btn { color: var(--brand-dark); border-bottom: 2px solid var(--brand-dark); }
 
         .page-container { display: none; background: white; margin: 0 auto 60px auto; padding: 50px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); }
@@ -33,38 +31,39 @@
         #formTab { max-width: 550px; }
         #adminTab, #calendarTab, #statsTab { max-width: 900px; }
 
-        .title-group { text-align: center; margin-bottom: 50px; }
-        h2 { font-weight: 300; letter-spacing: 8px; margin: 0; font-size: 1.2rem; }
+        .title-group { text-align: center; margin-bottom: 40px; }
+        h2 { font-weight: 300; letter-spacing: 8px; font-size: 1.2rem; margin: 0; }
         .sub-title { font-size: 0.7rem; color: var(--brand-taupe); margin-top: 8px; letter-spacing: 2px; font-weight: bold; }
 
-        /* Item 區分樣式 */
-        .item-section { border-left: 2px solid #eee; padding-left: 25px; margin: 40px 0; }
-        .item-label { font-size: 0.7rem; font-weight: bold; letter-spacing: 2px; color: var(--brand-taupe); margin-bottom: 20px; text-transform: uppercase; display: flex; align-items: center; }
-        .item-label::after { content: ""; flex: 1; height: 1px; background: #f0f0f0; margin-left: 15px; }
+        /* Item Section */
+        .item-section { border-left: 2px solid #eee; padding-left: 25px; margin: 35px 0; }
+        .item-label { font-size: 0.7rem; font-weight: bold; color: var(--brand-taupe); margin-bottom: 15px; letter-spacing: 1px; }
 
         .form-group { margin-bottom: 25px; }
         label { display: block; font-size: 0.6rem; color: #bbb; letter-spacing: 1.5px; margin-bottom: 8px; font-weight: 600; text-transform: uppercase; }
-        input { padding: 12px 0; border: none; border-bottom: 0.5px solid #eee !important; font-size: 0.9rem; width: 100%; background: transparent !important; color: var(--brand-dark); }
-        
-        /* 統一選單樣式 */
-        .choices__inner { background-color: transparent !important; border: none !important; border-bottom: 0.5px solid #eee !important; padding: 8px 0 !important; font-size: 0.9rem !important; }
+        input { padding: 10px 0; border: none; border-bottom: 0.5px solid #eee !important; font-size: 0.9rem; width: 100%; background: transparent !important; }
 
-        .btn-submit { background: var(--brand-dark); color: white; border: none; padding: 22px; width: 100%; margin-top: 50px; cursor: pointer; letter-spacing: 5px; font-size: 0.85rem; border-radius: 6px; font-weight: bold; }
+        /* Status & Calendar Tags */
+        .deadline-tag { font-size: 0.65rem; font-weight: bold; padding: 3px 8px; border-radius: 4px; display: inline-block; margin-top: 5px; }
+        .time-urgent { background: #fee2e2; color: #dc2626; } /* < 7 days */
+        .time-warning { background: #ffedd5; color: #ea580c; } /* < 14 days */
+        .time-safe { background: #f0fdf4; color: #16a34a; }
         
         .status-tag { padding: 4px 10px; border-radius: 4px; font-size: 0.65rem; color: white; font-weight: bold; }
-        .status-新訂單 { background: var(--st-new); }
-        .status-備料中 { background: var(--st-material); }
-        .status-車縫中 { background: var(--st-sewing); }
-        .status-已寄回 { background: var(--st-sent); }
-        .status-出貨完畢 { background: var(--st-done); color: var(--brand-dark); }
 
+        /* Calendar Grid */
+        #calendar { padding: 20px; border: 1px solid #f0f0f0; border-radius: 8px; }
+        .fc-daygrid-day { border: 1px solid #f4f4f4 !important; }
+        .fc-toolbar-title { font-size: 1.1rem !important; font-weight: 300 !important; letter-spacing: 2px; }
+
+        .btn-submit { background: var(--brand-dark); color: white; border: none; padding: 20px; width: 100%; margin-top: 40px; cursor: pointer; letter-spacing: 4px; font-size: 0.8rem; border-radius: 6px; font-weight: bold; }
         .footer-copyright { text-align: center; padding: 40px 0; font-size: 0.6rem; color: rgba(149, 134, 111, 0.4); letter-spacing: 2px; text-transform: uppercase; }
     </style>
 </head>
 <body>
 
 <div class="brand-header">
-    <img src="https://drive.google.com/thumbnail?id=12yR1r7b4SlVYa9T3quajqKZmqeO7MLPb&sz=w600" alt="TIMU" class="brand-logo">
+    <img src="https://drive.google.com/uc?id=12yR1r7b4SlVYa9T3quajqKZmqeO7MLPb" alt="TIMU" class="brand-logo">
 </div>
 
 <div class="nav">
@@ -78,22 +77,27 @@
     <div id="formTab" class="page-container active">
         <div class="title-group"><h2>NEW ORDER</h2><div class="sub-title">建立新訂製單</div></div>
         <div class="form-group"><label>Order ID</label><input type="text" id="orderId" placeholder="SL-0000"></div>
-        <div class="form-group"><label>Order Date</label><input type="date" id="orderDate"></div>
+        <div class="form-group">
+            <label>Order Date (Auto-calc 6 weeks)</label>
+            <div style="display:flex; align-items:center; gap:15px;">
+                <input type="date" id="orderDate" onchange="updateExpectedDate(this.value)">
+                <div id="expectedHint" style="font-size:0.8rem; color:var(--brand-blue); font-weight:bold; width:140px;"></div>
+            </div>
+        </div>
         
         <div class="item-section">
-            <div class="item-label">Item 01</div>
+            <div class="item-label">ITEM 01</div>
             <div class="form-group"><label>Style</label><select id="style1"></select></div>
             <div class="form-group"><label>Color</label><select id="color1"></select></div>
             <div class="form-group"><label>Size</label><select id="size1"></select></div>
         </div>
 
         <div class="item-section">
-            <div class="item-label">Item 02</div>
+            <div class="item-label">ITEM 02</div>
             <div class="form-group"><label>Style</label><select id="style2"></select></div>
             <div class="form-group"><label>Color</label><select id="color2"></select></div>
             <div class="form-group"><label>Size</label><select id="size2"></select></div>
         </div>
-        
         <button id="submitBtn" class="btn-submit" onclick="submitOrder()">CREATE ORDER</button>
     </div>
 
@@ -109,11 +113,11 @@
 
     <div id="statsTab" class="page-container">
         <div class="title-group"><h2>STATISTICS</h2><div class="sub-title">生產數據看板</div></div>
-        <div style="text-align: center; padding-bottom: 40px;">
-            <label style="font-size: 0.65rem; color: var(--brand-taupe); letter-spacing: 2px;">TOTAL PRODUCTION</label>
-            <div id="totalPieces" style="font-size: 2.2rem; font-weight: 200; margin-top: 5px;">0</div>
+        <div style="text-align: center; padding-bottom: 30px;">
+            <label style="font-size: 0.6rem; color: var(--brand-taupe); letter-spacing: 2px;">TOTAL PRODUCTION</label>
+            <div id="totalPieces" style="font-size: 2.2rem; font-weight: 200;">0</div>
         </div>
-        <div style="display:flex; gap:15px; margin-bottom:40px;">
+        <div style="display:flex; gap:10px; margin-bottom:30px;">
             <div style="flex:1"><label>Category</label><select id="filterCat"></select></div>
             <div style="flex:1"><label>Style</label><select id="filterStyle"></select></div>
             <div style="flex:1"><label>Color</label><select id="filterColor"></select></div>
@@ -127,7 +131,6 @@
 <script>
     const scriptUrl = "https://script.google.com/macros/s/AKfycbyi0WHv5eEFxL5XVKiPsr_iU6Ipoa0OxJJQvTjmjzicQTrNRK16fTUqD2_qeskcoXVcZg/exec";
     let allOrders = null;
-    let calendarInstance = null;
     let choiceInstances = {};
 
     async function showTab(t) {
@@ -146,37 +149,63 @@
         allOrders = (await res.json()).slice(1);
     }
 
+    function updateExpectedDate(v) {
+        if(!v) return;
+        let d = new Date(v); d.setDate(d.getDate() + 42); // 6週
+        let res = `${d.getFullYear()}/${(d.getMonth()+1).toString().padStart(2,'0')}/${d.getDate().toString().padStart(2,'0')}`;
+        document.getElementById('expectedHint').innerText = `⮕ ${res}`;
+        return res;
+    }
+
     function renderOrders(orders) {
+        const today = new Date().setHours(0,0,0,0);
         let html = '';
         orders.forEach(r => {
+            const expStr = r[2] ? r[2].split('T')[0] : '';
+            const diff = expStr ? Math.ceil((new Date(expStr) - today) / 86400000) : 99;
+            const dClass = diff <= 7 ? 'time-urgent' : (diff <= 14 ? 'time-warning' : 'time-safe');
             const status = (r[9] || "新訂單").trim();
-            html += `<div style="padding: 25px 0; border-bottom: 1px solid #f9f9f9; display: flex; justify-content: space-between; align-items: center;">
-                <div><b style="letter-spacing:1px;">#${r[0]}</b><div style="font-size: 0.7rem; color: #aaa; margin-top: 5px;">${r[3]} | ${r[4]}</div></div>
-                <div><span class="status-tag status-${status}">${status}</span><select onchange="updateStatus('${r[0]}', this.value)" style="margin-left:10px; font-size:0.6rem;"><option value="">Update</option><option value="備料中">備料中</option><option value="車縫中">車縫中</option><option value="已寄回">已寄回</option><option value="出貨完畢">出貨完畢</option></select></div>
+            
+            html += `<div style="padding: 30px 0; border-bottom: 1px solid #f7f7f7; display: flex; justify-content: space-between;">
+                <div>
+                    <b style="font-size:1rem; letter-spacing:1px;">#${r[0]}</b>
+                    <div class="deadline-tag ${dClass}">${diff} DAYS LEFT (EXP: ${expStr})</div>
+                    <div style="margin-top:15px; font-size:0.85rem; line-height:1.8;">
+                        <span style="color:#777;">①</span> ${r[3]} / ${r[4]} / ${r[5]}<br>
+                        ${r[6] ? `<span style="color:#777;">②</span> ${r[6]} / ${r[7]} / ${r[8]}` : ''}
+                    </div>
+                </div>
+                <div style="text-align:right;">
+                    <span class="status-tag status-${status}">${status}</span>
+                    <div style="margin-top:10px;"><select onchange="updateStatus('${r[0]}', this.value)" style="font-size:0.65rem;"><option value="">Update</option><option value="備料中">備料中</option><option value="車縫中">車縫中</option><option value="已寄回">已寄回</option><option value="出貨完畢">出貨完畢</option></select></div>
+                </div>
             </div>`;
         });
-        document.getElementById('orderList').innerHTML = html || "No Orders";
+        document.getElementById('orderList').innerHTML = html;
     }
 
     function renderCalendar() {
         const calDiv = document.getElementById('calendar');
-        if (calendarInstance) calendarInstance.destroy();
-        calendarInstance = new FullCalendar.Calendar(calDiv, {
+        const calendar = new FullCalendar.Calendar(calDiv, {
             initialView: 'dayGridMonth',
-            events: allOrders.map(r => ({ title: `#${r[0]}`, start: r[2] ? r[2].split('T')[0] : '', color: '#25282a' })),
+            headerToolbar: { left: 'prev', center: 'title', right: 'next' },
+            events: allOrders.map(r => ({
+                title: `#${r[0]}`,
+                start: r[2] ? r[2].split('T')[0] : '',
+                backgroundColor: (r[9] || "").includes("出貨") ? "#d0d0ce" : "#25282a",
+                borderColor: 'transparent'
+            })),
             height: 'auto'
         });
-        calendarInstance.render();
+        calendar.render();
     }
 
     function renderStatistics() {
         const fCat = document.getElementById('filterCat').value;
         const fStyle = document.getElementById('filterStyle').value;
         const fColor = document.getElementById('filterColor').value;
-        let count = 0; let html = ''; let map = {};
-
-        const active = allOrders.filter(r => !["已寄回", "出貨完畢"].includes((r[9]||"").trim()));
-        active.forEach(r => {
+        let count = 0, map = {};
+        allOrders.filter(r => !["已寄回", "出貨完畢"].includes((r[9]||"").trim())).forEach(r => {
             [[r[3], r[4], r[5]], [r[6], r[7], r[8]]].forEach(it => {
                 if (!it[0]) return;
                 const cat = (it[0].includes("褲") || it[0].includes("LEGGING")) ? "BOTTOM" : (it[0].includes("BRA") || it[0].includes("上衣")) ? "TOP" : "ONEPIECE";
@@ -187,25 +216,25 @@
             });
         });
         document.getElementById('totalPieces').innerText = count;
+        let html = '';
         Object.keys(map).sort().forEach(k => {
-            html += `<div style="display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px solid #f9f9f9; font-size:0.8rem;"><div>${k}</div><b>${map[k]}</b></div>`;
+            html += `<div style="display:flex; justify-content:space-between; padding:15px 0; border-bottom:1px solid #f9f9f9; font-size:0.8rem;"><div>${k}</div><b>${map[k]} PCS</b></div>`;
         });
-        document.getElementById('statsTableBody').innerHTML = html;
+        document.getElementById('statsTableBody').innerHTML = html || "No Data";
     }
 
     function updateStatus(id, s) {
         if(!s) return;
-        fetch(scriptUrl, { method: "POST", mode: "no-cors", body: JSON.stringify({action:'updateStatus', id:id, status:s}) });
-        alert("Status Updated");
-        location.reload();
+        fetch(scriptUrl, { method: "POST", mode: "no-cors", body: JSON.stringify({action:'updateStatus', id:id, status:s}) })
+        .then(() => { alert("已更新狀態"); location.reload(); });
     }
 
-    function initChoice(id, list, placeholder, onchange) {
+    function initChoice(id, list, placeholder, changeFn) {
         const el = document.getElementById(id);
         el.innerHTML = `<option value="">${placeholder}</option>`;
         list.forEach(i => el.add(new Option(i, i)));
         const c = new Choices(el, { searchEnabled: true, itemSelectText: '', shouldSort: false });
-        if(onchange) el.addEventListener('change', onchange);
+        if(changeFn) el.addEventListener('change', changeFn);
         return c;
     }
 
@@ -218,8 +247,6 @@
         initChoice('style1', styles, "STYLE..."); initChoice('style2', styles, "STYLE...");
         initChoice('color1', colors, "COLOR..."); initChoice('color2', colors, "COLOR...");
         initChoice('size1', ["XS", "S", "M", "L", "XL"], "SIZE..."); initChoice('size2', ["XS", "S", "M", "L", "XL"], "SIZE...");
-        
-        // 統一 STATISTICS 的下拉選單樣式
         initChoice('filterCat', ["TOP", "BOTTOM", "ONEPIECE"], "CATEGORY...", renderStatistics);
         initChoice('filterStyle', styles, "STYLE...", renderStatistics);
         initChoice('filterColor', colors, "COLOR...", renderStatistics);
@@ -228,16 +255,16 @@
     };
 
     function submitOrder() {
-        const btn = document.getElementById('submitBtn');
-        btn.innerText = "Processing...";
+        const id = document.getElementById('orderId').value;
+        const d = document.getElementById('orderDate').value;
+        if(!id || !d) return alert("請填寫編號與日期");
         const data = { 
-            id: document.getElementById('orderId').value,
-            deadline: document.getElementById('orderDate').value,
+            id: id, deadline: d, expectedDate: updateExpectedDate(d),
             s1: document.getElementById('style1').value, c1: document.getElementById('color1').value, z1: document.getElementById('size1').value,
             s2: document.getElementById('style2').value, c2: document.getElementById('color2').value, z2: document.getElementById('size2').value
         };
         fetch(scriptUrl, { method: "POST", mode: "no-cors", body: JSON.stringify({action:'addOrder', data:data}) })
-        .then(() => { alert("Success"); location.reload(); });
+        .then(() => { alert("訂單建立成功"); location.reload(); });
     }
 </script>
 </body>
