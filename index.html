@@ -11,7 +11,7 @@
     
     <style>
         :root { 
-            --brand-taupe: rgb(149, 134, 111); /* 妳指定的棕色 RGB 149 134 111 */
+            --brand-taupe: rgb(149, 134, 111); /* 品牌棕 RGB 149 134 111 */
             --brand-dark: #25282a;      /* RGB 37 40 42 */
             --brand-blue: #003b5c;      /* PANTONE 302 C */
             --brand-grey-base: #d0d0ce; /* RGB 208 208 206 */
@@ -68,10 +68,14 @@
         .status-備料中 { background-color: #aaa; }
 
         /* CALENDAR 優化 */
-        .fc-day-today { background: rgba(149, 134, 111, 0.1) !important; } /* 當日使用品牌棕的淡色 */
-        .fc-event { border: none !important; border-radius: 4px !important; padding: 2px 4px !important; font-size: 0.7rem !important; }
+        .fc-day-today { background: rgba(149, 134, 111, 0.1) !important; }
+        .fc-event { border: none !important; border-radius: 4px !important; padding: 2px 4px !important; font-size: 0.7rem !important; cursor: pointer; }
 
-        /* STATISTICS 列表底色應用品牌棕 */
+        /* Modal */
+        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(37, 40, 42, 0.2); backdrop-filter: blur(5px); }
+        .modal-content { background: white; margin: 10% auto; padding: 40px; border-radius: 4px; width: 85%; max-width: 400px; position: relative; box-shadow: 0 20px 50px rgba(0,0,0,0.1); }
+
+        /* STATISTICS 列表底色 */
         #statsTableBody tr:nth-child(even) { background-color: rgba(149, 134, 111, 0.05); }
     </style>
 </head>
@@ -122,7 +126,13 @@
     <table style="width:100%; border-collapse:collapse; margin-top:20px;"><tbody id="statsTableBody"></tbody></table>
 </div>
 
-<div id="orderModal" class="modal"><div class="modal-content" style="background:white; margin:10% auto; padding:40px; border-radius:4px; width:85%; max-width:400px; position:relative;"><span style="float:right; cursor:pointer;" onclick="closeModal()">&times;</span><div id="modalTitle" style="font-weight:bold; border-bottom:1px solid var(--brand-taupe); padding-bottom:15px; margin-bottom:20px;"></div><div id="modalBody"></div></div></div>
+<div id="orderModal" class="modal">
+    <div class="modal-content">
+        <span style="position:absolute; right:20px; top:15px; cursor:pointer; color:#ccc; font-size:1.5rem;" onclick="closeModal()">&times;</span>
+        <div id="modalTitle" style="font-weight:bold; border-bottom:1px solid var(--brand-taupe); padding-bottom:15px; margin-bottom:20px; letter-spacing:1px;"></div>
+        <div id="modalBody" style="line-height:1.8; font-size:0.9rem;"></div>
+    </div>
+</div>
 
 <script>
     const scriptUrl = "https://script.google.com/macros/s/AKfycbyi0WHv5eEFxL5XVKiPsr_iU6Ipoa0OxJJQvTjmjzicQTrNRK16fTUqD2_qeskcoXVcZg/exec";
@@ -151,6 +161,40 @@
             html += `<div class="order-item"><div style="display:flex; justify-content:space-between;"><div style="flex:1;"><div style="font-weight:bold; font-size:1.1rem; letter-spacing:1px;">#${row[0]}</div><div style="font-size:0.7rem; color:#aaa; margin:5px 0;">EXP: ${expDate}</div><div class="${tClass} deadline-box">${diffDays} DAYS LEFT</div><div style="border-left:2px solid var(--brand-blue); padding-left:15px; margin-top:15px;"><div style="margin-bottom:8px; font-size:0.9rem;"><b>①</b> ${row[3]} <span class="size-tag">${row[5]}</span></div>${row[6] ? `<div style="font-size:0.9rem;"><b>②</b> ${row[6]} <span class="size-tag">${row[8]}</span></div>` : ''}</div></div><div style="text-align:right;"><span class="status-tag status-${status}">${status}</span><div style="margin-top:15px;"><select onchange="updateStatus('${row[0]}', this.value)" style="font-size:0.7rem; border:1px solid #eee; padding:4px;"><option value="">CHANGE</option><option value="新訂單">新訂單</option><option value="備料中">備料中</option><option value="車縫中">車縫中</option><option value="已寄回">已寄回</option><option value="出貨完畢">出貨完畢</option></select></div></div></div></div>`;
         });
         listDiv.innerHTML = html || "NO DATA";
+    }
+
+    function renderCalendar() {
+        if (calendar) calendar.destroy();
+        const events = allOrders.map(row => {
+            const status = (row[9] || "新訂單").trim();
+            let rawDate = row[2] ? row[2].toString().split('T')[0].trim() : '';
+            if(!rawDate || rawDate === '-') return null;
+            let color = '#25282a';
+            if(status==='車縫中') color='#003b5c';
+            if(status==='已寄回') color='rgb(149, 134, 111)';
+            return { title: `#${row[0]}`, start: rawDate.replace(/\//g, '-'), backgroundColor: color, borderColor: color, extendedProps: {row} };
+        }).filter(e => e !== null);
+
+        calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
+            initialView: 'dayGridMonth',
+            events: events,
+            height: 'auto',
+            eventClick: function(info) {
+                const r = info.event.extendedProps.row;
+                document.getElementById('orderModal').style.display = 'block';
+                document.getElementById('modalTitle').innerText = `Order #${r[0]}`;
+                document.getElementById('modalBody').innerHTML = `
+                    <div style="margin-bottom:15px;">生產狀態：<span class="status-tag status-${r[9].trim()}">${r[9]}</span></div>
+                    <div style="margin-bottom:15px;">預計交期：<b>${r[2].split('T')[0]}</b></div>
+                    <hr style="border:none; border-top:1px dashed var(--brand-grey-base); margin:15px 0;">
+                    <div style="font-size:0.95rem;">
+                        <b>①</b> ${r[3]} <span class="size-tag">${r[5]}</span><br>
+                        ${r[6] ? '<b>②</b> ' + r[6] + ' <span class="size-tag">' + r[8] + '</span>' : ''}
+                    </div>
+                `;
+            }
+        });
+        calendar.render();
     }
 
     function renderStatistics() {
@@ -213,7 +257,6 @@
     }
 
     function loadOrders() { fetch(`${scriptUrl}?action=getOrders`).then(res => res.json()).then(data => { allOrders = data.slice(1); if(document.getElementById('adminTab').classList.contains('active')) renderOrders(allOrders.slice().reverse()); }); }
-    function renderCalendar() { if (calendar) calendar.destroy(); const events = allOrders.map(row => { const status = (row[9] || "新訂單").trim(); let rawDate = row[2] ? row[2].toString().split('T')[0].trim() : ''; if(!rawDate || rawDate === '-') return null; let color = '#25282a'; if(status==='車縫中') color='#003b5c'; if(status==='已寄回') color='rgb(149, 134, 111)'; return { title: `#${row[0]}`, start: rawDate.replace(/\//g, '-'), backgroundColor: color, borderColor: color }; }).filter(e => e !== null); calendar = new FullCalendar.Calendar(document.getElementById('calendar'), { initialView: 'dayGridMonth', events: events, height: 'auto' }); calendar.render(); }
     function calculateExpectedDate(v) { if(!v) return ""; const d = new Date(v); d.setDate(d.getDate()+42); const res = `${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')}`; document.getElementById('expectedHint').innerText = `⮕ ${res}`; return res; }
     function closeModal() { document.getElementById('orderModal').style.display='none'; }
     function updateStatus(id, s) { if(!s) return; fetch(scriptUrl, { method: "POST", mode: "no-cors", body: JSON.stringify({action:'updateStatus', id:id, status:s}) }).then(() => loadOrders()); }
