@@ -18,22 +18,19 @@
             --brand-grey-base: #d0d0ce; 
             --off-white: #eff0f1;       
             --text-light: #999;
-            /* 狀態配色系統 */
-            --st-new: #25282a;       /* 新訂單 */
-            --st-material: #8e8e8e;  /* 備料中 */
-            --st-sewing: #003b5c;    /* 車縫中 */
-            --st-sent: #95866f;      /* 已寄回 */
-            --st-done: #d0d0ce;      /* 出貨完畢 */
+            /* 沉穩狀態配色 */
+            --st-new: #25282a;
+            --st-material: #8e8e8e;
+            --st-sewing: #003b5c;
+            --st-sent: #95866f;
+            --st-done: #d0d0ce;
         }
 
         body { 
             font-family: "Helvetica Neue", "PingFang TC", sans-serif; 
-            background: var(--off-white); 
-            color: var(--brand-dark); 
-            padding: 20px; margin: 0; 
-            -webkit-font-smoothing: antialiased;
-            min-height: 100vh;
-            display: flex; flex-direction: column;
+            background: var(--off-white); color: var(--brand-dark); 
+            padding: 20px; margin: 0; min-height: 100vh;
+            display: flex; flex-direction: column; -webkit-font-smoothing: antialiased;
         }
 
         .brand-header { text-align: center; padding: 30px 0 10px 0; }
@@ -48,36 +45,28 @@
         #adminTab, #calendarTab, #statsTab { max-width: 900px; }
         .active { display: block; }
 
+        /* 標題 */
         .title-group { text-align: center; margin-bottom: 50px; }
         h2 { font-weight: 300; letter-spacing: 8px; margin: 0; font-size: 1.2rem; }
         .sub-title { font-size: 0.7rem; color: var(--brand-taupe); margin-top: 8px; letter-spacing: 2px; font-weight: bold; }
 
-        /* 精緻下拉選單與輸入框 */
+        /* 表單元素 */
         .form-group { margin-bottom: 30px; }
         label { display: block; font-size: 0.6rem; color: #bbb; letter-spacing: 1.5px; margin-bottom: 8px; font-weight: 600; text-transform: uppercase; }
+        input { padding: 12px 0; border: none; border-bottom: 0.5px solid #eee !important; font-size: 0.9rem; width: 100%; background: transparent !important; color: var(--brand-dark); }
         
-        input { padding: 12px 0; border: none; border-bottom: 0.5px solid #eee !important; font-size: 0.9rem; width: 100%; background: transparent !important; color: var(--brand-dark); letter-spacing: 0.5px; }
-        input:focus { border-bottom: 0.5px solid var(--brand-taupe) !important; outline: none; }
-        
-        /* Choices.js 質感美化 */
-        .choices__inner { 
-            background-color: transparent !important; 
-            border: none !important; 
-            border-bottom: 0.5px solid #eee !important; 
-            padding: 8px 0 !important; 
-            font-size: 0.9rem !important;
-            transition: 0.3s;
-        }
-        .choices__list--single { padding-left: 0 !important; }
-        .choices[data-type*="select-one"]:after { border-color: #ccc transparent transparent transparent; right: 0; }
-        .is-focused .choices__inner { border-bottom: 0.5px solid var(--brand-taupe) !important; }
+        .choices__inner { background-color: transparent !important; border: none !important; border-bottom: 0.5px solid #eee !important; padding: 8px 0 !important; font-size: 0.9rem !important; }
 
-        /* 按鈕 */
-        .btn-submit { background: var(--brand-dark); color: white; border: none; padding: 20px; width: 100%; margin-top: 40px; cursor: pointer; letter-spacing: 4px; font-size: 0.8rem; border-radius: 6px; font-weight: bold; transition: 0.3s; }
-        .btn-submit:hover { opacity: 0.9; transform: translateY(-1px); }
+        /* 尺寸標籤修正：更明顯的品牌棕底色 */
+        .size-tag { background: var(--brand-taupe); color: #fff; padding: 2px 8px; border-radius: 4px; font-weight: bold; font-size: 0.7rem; margin-left: 6px; letter-spacing: 0.5px; }
 
-        /* Status 列表與標籤 */
-        .order-item { border-bottom: 0.5px solid #f7f7f7; padding: 30px 0; }
+        /* 倒數色塊：調低飽和度（莫蘭迪色） */
+        .deadline-box { font-size: 0.65rem; font-weight: bold; letter-spacing: 1px; padding: 4px 10px; border-radius: 4px; display: inline-block; margin: 8px 0; }
+        .time-urgent { background: #f2e8e8; color: #a67373; } /* 7天內 柔和紅 */
+        .time-warning { background: #f2ede4; color: #b39b7d; } /* 14天內 柔和金 */
+        .time-normal { background: #e8ecef; color: #7d8c97; }  /* 21天內 柔和藍灰 */
+        .time-safe { background: #edf2f0; color: #82968f; }    /* 安全 柔和綠灰 */
+
         .status-tag { padding: 5px 12px; border-radius: 50px; font-size: 0.65rem; color: white; font-weight: bold; letter-spacing: 1px; display: inline-block; }
         .status-新訂單 { background-color: var(--st-new); }
         .status-備料中 { background-color: var(--st-material); }
@@ -85,21 +74,20 @@
         .status-已寄回 { background-color: var(--st-sent); }
         .status-出貨完畢 { background-color: var(--st-done); color: var(--brand-dark); }
 
-        /* 倒數色塊 */
-        .deadline-box { font-size: 0.65rem; font-weight: bold; letter-spacing: 1px; padding: 3px 8px; border-radius: 4px; display: inline-block; margin: 8px 0; }
-        .time-urgent { background: #fff1f0; color: #cf1322; } /* 7天內 紅 */
-        .time-normal { background: #fffbe6; color: #d48806; } /* 14天內 橘 */
-        .time-safe { background: #f6ffed; color: #389e0d; }   /* 安全 綠 */
+        /* 懸浮視窗樣式 (Pop-up Modal) */
+        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.1); backdrop-filter: blur(4px); }
+        .modal-content { 
+            background: white; margin: 15% auto; padding: 35px; border-radius: 16px; 
+            width: 85%; max-width: 380px; position: relative; 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.12); border: 1px solid rgba(255,255,255,0.3);
+        }
 
-        /* 統計卡片 */
         .stats-summary { background: #fafafa; padding: 20px; border-radius: 8px; text-align: center; margin-bottom: 30px; }
         .stats-total-num { font-size: 2rem; font-weight: 300; color: var(--brand-blue); display: block; margin-top: 5px; }
 
         .footer-copyright { text-align: center; padding: 40px 0 30px 0; font-size: 0.6rem; color: rgba(149, 134, 111, 0.4); letter-spacing: 2px; text-transform: uppercase; }
         
-        /* 日曆小優化 */
-        .fc { --fc-border-color: #f0f0f0; font-size: 0.85rem; }
-        .fc-day-today { background: rgba(149, 134, 111, 0.05) !important; }
+        #statsTableBody tr:nth-child(even) { background-color: rgba(149, 134, 111, 0.03); }
     </style>
 </head>
 <body>
@@ -145,12 +133,7 @@
 
     <div id="statsTab" class="page-container">
         <div class="title-group"><h2>STATISTICS</h2><div class="sub-title">款式統計彙整</div></div>
-        
-        <div class="stats-summary">
-            <label>Total Pieces in Production</label>
-            <span class="stats-total-num" id="totalPieces">0</span>
-        </div>
-
+        <div class="stats-summary"><label>Total Pieces in Production</label><span class="stats-total-num" id="totalPieces">0</span></div>
         <div class="filter-bar" style="display:flex; gap:15px; margin-bottom:30px;">
             <div style="flex:1"><label>Category</label><select id="filterCat" onchange="renderStatistics()"><option value="">ALL</option><option value="TOP">TOP</option><option value="BOTTOM">BOTTOM</option><option value="ONEPIECE">ONEPIECE</option></select></div>
             <div style="flex:1"><label>Style</label><select id="filterStyle" onchange="renderStatistics()"></select></div>
@@ -162,11 +145,11 @@
 
 <div class="footer-copyright">Copyright for Internal Use Only © Timu International Ltd.</div>
 
-<div id="orderModal" class="modal">
+<div id="orderModal" class="modal" onclick="closeModalOutside(event)">
     <div class="modal-content">
-        <span style="position:absolute; right:20px; top:15px; cursor:pointer; color:#ccc;" onclick="closeModal()">&times;</span>
-        <div id="modalTitle" style="font-weight:bold; border-bottom:0.5px solid #eee; padding-bottom:15px; margin-bottom:20px; font-size:1.1rem;"></div>
-        <div id="modalBody"></div>
+        <span style="position:absolute; right:20px; top:15px; cursor:pointer; color:#ccc; font-size:1.2rem;" onclick="closeModal()">&times;</span>
+        <div id="modalTitle" style="font-weight:bold; border-bottom:0.5px solid #eee; padding-bottom:15px; margin-bottom:20px; font-size:1.1rem; letter-spacing:1px;"></div>
+        <div id="modalBody" style="line-height:1.8;"></div>
     </div>
 </div>
 
@@ -175,15 +158,7 @@
     let allOrders = [];
     let calendar;
     let choiceInstances = {};
-
-    // 狀態顏色映射表 (同步給日曆使用)
-    const statusColors = {
-        "新訂單": "#25282a",
-        "備料中": "#8e8e8e",
-        "車縫中": "#003b5c",
-        "已寄回": "#95866f",
-        "出貨完畢": "#d0d0ce"
-    };
+    const statusColors = { "新訂單": "#25282a", "備料中": "#8e8e8e", "車縫中": "#003b5c", "已寄回": "#95866f", "出貨完畢": "#d0d0ce" };
 
     function showTab(t) {
         document.querySelectorAll('.page-container').forEach(e => e.classList.remove('active'));
@@ -201,40 +176,29 @@
         orders.forEach(row => {
             const status = (row[9] || "新訂單").trim();
             const expDateStr = row[2] ? row[2].split('T')[0] : '';
-            const expDate = new Date(expDateStr);
-            const today = new Date();
-            today.setHours(0,0,0,0);
-            const diffTime = expDate - today;
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            const diffDays = Math.ceil((new Date(expDateStr) - new Date().setHours(0,0,0,0)) / 86400000);
             
+            // 四段式時間顏色邏輯
             let deadlineClass = 'time-safe';
             if (diffDays <= 7) deadlineClass = 'time-urgent';
-            else if (diffDays <= 14) deadlineClass = 'time-normal';
+            else if (diffDays <= 14) deadlineClass = 'time-warning';
+            else if (diffDays <= 21) deadlineClass = 'time-normal';
 
             html += `
             <div class="order-item">
                 <div style="display:flex; justify-content:space-between; align-items:flex-start;">
                     <div>
                         <div style="font-weight:bold; font-size:1rem; letter-spacing:1px;">#${row[0]}</div>
-                        <div style="font-size:0.7rem; color:#aaa; margin-top:4px;">EXPECTED: ${expDateStr.replace(/-/g,'/')}</div>
+                        <div style="font-size:0.7rem; color:#aaa; margin-top:4px;">EXP: ${expDateStr.replace(/-/g,'/')}</div>
                         <div class="deadline-box ${deadlineClass}">${diffDays} DAYS LEFT</div>
-                        <div style="margin-top:15px; font-size:0.85rem; line-height:1.6;">
-                            <b>①</b> ${row[3]} <span style="font-weight:900; color:var(--brand-taupe); margin-left:5px;">${row[5]}</span><br>
-                            ${row[6] ? `<b>②</b> ${row[6]} <span style="font-weight:900; color:var(--brand-taupe); margin-left:5px;">${row[8]}</span>` : ''}
+                        <div style="margin-top:15px; font-size:0.85rem; line-height:2.2;">
+                            <b>①</b> ${row[3]} <span class="size-tag">${row[5]}</span><br>
+                            ${row[6] ? `<b>②</b> ${row[6]} <span class="size-tag">${row[8]}</span>` : ''}
                         </div>
                     </div>
                     <div style="text-align:right;">
                         <span class="status-tag status-${status}">${status}</span>
-                        <div style="margin-top:12px;">
-                            <select onchange="updateStatus('${row[0]}', this.value)" style="font-size:0.65rem; border:0.5px solid #eee; padding:5px; border-radius:4px; color:#888;">
-                                <option value="">變更狀態</option>
-                                <option value="新訂單">新訂單</option>
-                                <option value="備料中">備料中</option>
-                                <option value="車縫中">車縫中</option>
-                                <option value="已寄回">已寄回</option>
-                                <option value="出貨完畢">出貨完畢</option>
-                            </select>
-                        </div>
+                        <div style="margin-top:15px;"><select onchange="updateStatus('${row[0]}', this.value)" style="font-size:0.65rem; border:0.5px solid #eee; padding:5px; border-radius:4px; color:#888;"><option value="">CHANGE</option><option value="新訂單">新訂單</option><option value="備料中">備料中</option><option value="車縫中">車縫中</option><option value="已寄回">已寄回</option><option value="出貨完畢">出貨完畢</option></select></div>
                     </div>
                 </div>
             </div>`;
@@ -248,14 +212,7 @@
             const status = (row[9] || "新訂單").trim();
             let rawDate = row[2] ? row[2].toString().split('T')[0].trim() : '';
             if(!rawDate || rawDate === '-') return null;
-            
-            return { 
-                title: `#${row[0]}`, 
-                start: rawDate.replace(/\//g, '-'), 
-                backgroundColor: statusColors[status] || '#25282a', 
-                borderColor: statusColors[status] || '#25282a', 
-                extendedProps: {row} 
-            };
+            return { title: `#${row[0]}`, start: rawDate.replace(/\//g, '-'), backgroundColor: statusColors[status] || '#25282a', borderColor: 'transparent', extendedProps: {row} };
         }).filter(e => e !== null);
 
         calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
@@ -269,11 +226,11 @@
                 document.getElementById('orderModal').style.display = 'block';
                 document.getElementById('modalTitle').innerText = `Order #${r[0]}`;
                 document.getElementById('modalBody').innerHTML = `
-                    <div style="margin-bottom:15px;"><span class="status-tag status-${status}">${status}</span></div>
-                    <div style="font-size:0.85rem; line-height:1.8;">
-                        交期：<b>${r[2].split('T')[0]}</b><br>
-                        款式①：${r[3]} (${r[5]})<br>
-                        ${r[6] ? '款式②：' + r[6] + ' (' + r[8] + ')' : ''}
+                    <div style="margin-bottom:20px;"><span class="status-tag status-${status}">${status}</span></div>
+                    <div style="font-size:0.85rem; line-height:2;">
+                        交期：<b style="color:var(--brand-blue)">${r[2].split('T')[0]}</b><br>
+                        款式①：${r[3]} <span class="size-tag">${r[5]}</span><br>
+                        ${r[6] ? '款式②：' + r[6] + ' <span class="size-tag">' + r[8] + '</span>' : ''}
                     </div>
                 `;
             }
@@ -286,13 +243,11 @@
         const fCat = document.getElementById('filterCat').value, fStyle = document.getElementById('filterStyle').value, fColor = document.getElementById('filterColor').value;
         const statsMap = {}, activeStyles = new Set(), activeColors = new Set();
         let totalCount = 0;
-
         allOrders.filter(row => !["已寄回", "出貨完畢"].includes((row[9]||"").trim())).forEach(row => {
             [[row[3], row[4], row[5]], [row[6], row[7], row[8]]].forEach(it => {
                 if (!it[0]) return;
                 activeStyles.add(it[0]); activeColors.add(it[1]);
                 let cat = it[0].includes("上衣")||it[0].includes("BRA")?"TOP":(it[0].includes("褲")||it[0].includes("LEGGING")?"BOTTOM":"ONEPIECE");
-                
                 if ((fCat === "" || cat === fCat) && (fStyle === "" || it[0] === fStyle) && (fColor === "" || it[1] === fColor)) {
                     const key = `${it[0]} / ${it[1]} / ${it[2]}`;
                     statsMap[key] = (statsMap[key] || 0) + 1;
@@ -300,20 +255,17 @@
                 }
             });
         });
-
         document.getElementById('totalPieces').innerText = totalCount;
-
         if (!choiceInstances['filterStyle']) {
             choiceInstances['filterStyle'] = setupSelect('filterStyle', [...activeStyles].sort(), "STYLE...");
             choiceInstances['filterColor'] = setupSelect('filterColor', [...activeColors].sort(), "COLOR...");
             setupSelect('filterCat', [], "CAT..."); 
         }
-
         let html = '';
         Object.keys(statsMap).sort().forEach(key => {
             html += `<tr><td style="padding:15px 0; border-bottom:0.5px solid #f7f7f7; font-size:0.8rem; letter-spacing:0.5px;">${key}</td><td style="text-align:right; border-bottom:0.5px solid #f7f7f7; font-weight:bold; font-size:0.9rem;">${statsMap[key]} <span style="font-size:0.6rem; color:#ccc;">PCS</span></td></tr>`;
         });
-        tbody.innerHTML = html || '<tr><td colspan="2" style="text-align:center; padding:50px; color:#ccc; font-size:0.8rem;">NO DATA</td></tr>';
+        tbody.innerHTML = html || '<tr><td colspan="2" style="text-align:center; padding:50px; color:#ccc;">NO DATA</td></tr>';
     }
 
     function setupSelect(id, list, p) {
@@ -348,6 +300,7 @@
     function loadOrders() { fetch(`${scriptUrl}?action=getOrders`).then(res => res.json()).then(data => { allOrders = data.slice(1); if(document.getElementById('adminTab').classList.contains('active')) renderOrders(allOrders.slice().reverse()); }); }
     function calculateExpectedDate(v) { if(!v) return ""; const d = new Date(v); d.setDate(d.getDate()+42); const res = `${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')}`; document.getElementById('expectedHint').innerText = `⮕ ${res}`; return res; }
     function closeModal() { document.getElementById('orderModal').style.display='none'; }
+    function closeModalOutside(e) { if(e.target.id === 'orderModal') closeModal(); }
     function updateStatus(id, s) { if(!s) return; fetch(scriptUrl, { method: "POST", mode: "no-cors", body: JSON.stringify({action:'updateStatus', id:id, status:s}) }).then(() => loadOrders()); }
 </script>
 </body>
