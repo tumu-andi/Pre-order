@@ -26,7 +26,7 @@
         .nav button { background: transparent; border: none; color: var(--text-light); padding: 10px 15px; cursor: pointer; letter-spacing: 1.5px; font-size: 0.7rem; font-weight: 500; }
         .nav button.active-btn { color: var(--brand-dark); border-bottom: 2px solid var(--brand-dark); }
 
-        .page-container { display: none; background: white; margin: 0 auto 40px auto; padding: 30px 20px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); width: calc(100% - 40px); box-sizing: border-box; }
+        .page-container { display: none; background: white; margin: 0 auto 40px auto; padding: 25px 20px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); width: calc(100% - 40px); box-sizing: border-box; }
         .active { display: block; }
         #formTab { max-width: 550px; }
         #adminTab, #calendarTab, #statsTab { max-width: 900px; }
@@ -41,12 +41,12 @@
         input { padding: 8px 0; border: none !important; border-bottom: 1px solid #eee !important; font-size: 0.85rem; width: 100%; background: transparent !important; color: #555; outline: none; border-radius: 0; }
         .choices__inner { border: none !important; border-bottom: 1px solid #eee !important; background: transparent !important; padding: 4px 0 !important; min-height: 35px !important; font-size: 0.85rem; }
 
-        .order-card { padding: 25px 0; border-bottom: 1px solid #f7f7f7; display: flex; flex-direction: column; gap: 15px; }
+        .order-card { padding: 20px 0; border-bottom: 1px solid #f7f7f7; display: flex; flex-direction: column; gap: 12px; }
         @media (min-width: 600px) { .order-card { flex-direction: row; justify-content: space-between; } }
-        .countdown-label { font-size: 0.6rem; font-weight: bold; padding: 3px 10px; border-radius: 20px; display: inline-block; margin-bottom: 5px; letter-spacing: 1px; }
+        .countdown-label { font-size: 0.55rem; font-weight: bold; padding: 2px 8px; border-radius: 20px; display: inline-block; margin-bottom: 5px; letter-spacing: 1px; }
         .bg-urgent { background: #fee2e2; color: #dc2626; }
         .bg-normal { background: #f3f4f6; color: var(--brand-taupe); }
-        .size-tag { background: #f0f0f0; color: #888; padding: 1px 6px; border-radius: 4px; font-size: 0.65rem; font-weight: bold; margin-left: 5px; }
+        .size-tag { background: #f0f0f0; color: #888; padding: 1px 6px; border-radius: 4px; font-size: 0.6rem; font-weight: bold; margin-left: 5px; }
         .status-tag { padding: 4px 10px; border-radius: 4px; font-size: 0.6rem; color: white; font-weight: bold; display: inline-block; }
         .status-新訂單 { background: var(--st-new); }
         .status-備料中 { background: var(--st-material); }
@@ -57,19 +57,19 @@
         .fc-theme-standard td, .fc-theme-standard th { border: 1px solid #f2f2f2 !important; }
         .fc-day-today { background: rgba(149, 134, 111, 0.18) !important; }
         .fc-day-today .fc-daygrid-day-number { color: var(--brand-taupe) !important; font-weight: bold; }
-        .fc-daygrid-day-number { font-size: 0.7rem !important; padding: 5px !important; color: #bbb; }
-        .fc-col-header-cell-cushion { font-size: 0.6rem !important; color: #ccc !important; text-transform: uppercase; letter-spacing: 1px; }
+        .fc-daygrid-day-number { font-size: 0.65rem !important; padding: 4px !important; color: #bbb; }
+        .fc-col-header-cell-cushion { font-size: 0.55rem !important; color: #ccc !important; text-transform: uppercase; letter-spacing: 1px; text-decoration: none !important; }
 
-        .stats-summary #totalPieces { font-size: 1.6rem !important; }
-        .stats-row { display: flex; justify-content: space-between; align-items: flex-start; padding: 12px 0; border-bottom: 1px solid #f9f9f9; font-size: 0.7rem; color: #555; gap: 15px; }
+        .stats-summary #totalPieces { font-size: 1.5rem !important; }
+        .stats-row { display: flex; justify-content: space-between; align-items: flex-start; padding: 10px 0; border-bottom: 1px solid #f9f9f9; font-size: 0.7rem; color: #555; gap: 15px; }
         .stats-name { flex: 1; line-height: 1.4; }
-        .stats-count { font-weight: bold; white-space: nowrap; }
+        .stats-count { font-weight: bold; white-space: nowrap; margin-left: 10px; }
 
         #custom-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.7); backdrop-filter: blur(10px); z-index: 2000; justify-content: center; align-items: center; }
         .modal-content { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.05); text-align: center; max-width: 300px; width: 85%; }
         
         .btn-submit { background: var(--brand-dark); color: white; border: none; padding: 16px; width: 100%; margin-top: 30px; cursor: pointer; letter-spacing: 3px; font-size: 0.7rem; border-radius: 6px; font-weight: bold; }
-        .footer-copyright { text-align: center; padding: 30px 0; font-size: 0.55rem; color: rgba(149, 134, 111, 0.4); letter-spacing: 1px; }
+        .footer-copyright { text-align: center; padding: 30px 0; font-size: 0.5rem; color: rgba(149, 134, 111, 0.3); letter-spacing: 1px; }
     </style>
 </head>
 <body>
@@ -97,15 +97,18 @@
         <div class="title-group"><h2>NEW ORDER</h2><div class="sub-title">建立新訂製單</div></div>
         <div class="form-group"><label>Order ID</label><input type="text" id="orderId" placeholder="SL-0000"></div>
         <div class="form-group"><label>Order Date</label><input type="date" id="orderDate" onchange="updateExpectedDate(this.value)"></div>
-        <div id="expectedHint" style="font-size:0.6rem; color:var(--brand-taupe); margin:-15px 0 10px 0; font-weight:bold;"></div>
+        <div id="expectedHint" style="font-size:0.55rem; color:var(--brand-taupe); margin:-15px 0 10px 0; font-weight:bold;"></div>
+        
         <span class="item-header">ITEM 01 內容詳情</span>
         <div class="form-group"><label>Style</label><select id="style1"></select></div>
         <div class="form-group"><label>Color</label><select id="color1"></select></div>
         <div class="form-group"><label>Size</label><select id="size1"></select></div>
+        
         <span class="item-header">ITEM 02 內容詳情</span>
         <div class="form-group"><label>Style</label><select id="style2"></select></div>
         <div class="form-group"><label>Color</label><select id="color2"></select></div>
         <div class="form-group"><label>Size</label><select id="size2"></select></div>
+        
         <button id="submitBtn" class="btn-submit" onclick="submitOrder()">CREATE ORDER</button>
     </div>
 
@@ -123,7 +126,7 @@
         <div class="title-group"><h2>STATISTICS</h2><div class="sub-title">生產數據看板</div></div>
         <div class="stats-summary" style="text-align:center; padding-bottom:20px;">
             <label style="font-size: 0.5rem; color: var(--brand-taupe); letter-spacing: 2px;">TOTAL PIECES</label>
-            <div id="totalPieces" style="font-size: 1.6rem; font-weight: 200; color: #555;">0</div>
+            <div id="totalPieces" style="font-size: 1.5rem; font-weight: 200; color: #555;">0</div>
         </div>
         <div style="display:flex; flex-direction:column; gap:12px; margin-bottom:25px;">
             <div><label>Category</label><select id="filterCat"></select></div>
@@ -142,7 +145,7 @@
     let choicesInstances = {};
     const statusColors = { "新訂單": "#373a3c", "備料中": "#8e8e8e", "車縫中": "#003b5c", "已寄回": "#95866f", "出貨完畢": "#d0d0ce" };
 
-    // --- 核心提交功能 ---
+    // --- 核心提交功能：精確對接妳的後端 doPost 結構 ---
     async function submitOrder() {
         const btn = document.getElementById('submitBtn');
         const orderId = document.getElementById('orderId').value;
@@ -153,41 +156,62 @@
         btn.innerText = "SENDING...";
         btn.disabled = true;
 
-        const formData = new URLSearchParams();
-        formData.append('action', 'addOrder');
-        formData.append('orderId', orderId);
-        formData.append('orderDate', orderDate);
-        formData.append('style1', document.getElementById('style1').value);
-        formData.append('color1', document.getElementById('color1').value);
-        formData.append('size1', document.getElementById('size1').value);
-        formData.append('style2', document.getElementById('style2').value);
-        formData.append('color2', document.getElementById('color2').value);
-        formData.append('size2', document.getElementById('size2').value);
+        // 計算交期
+        let exp = new Date(orderDate);
+        exp.setDate(exp.getDate() + 42);
+        const expectedDateStr = exp.toISOString().split('T')[0];
+
+        // 構建與妳後端腳本完全一致的 JSON
+        const payload = {
+            action: 'addOrder',
+            data: {
+                id: orderId,
+                deadline: orderDate,
+                expectedDate: expectedDateStr,
+                s1: document.getElementById('style1').value,
+                c1: document.getElementById('color1').value,
+                z1: document.getElementById('size1').value,
+                s2: document.getElementById('style2').value,
+                c2: document.getElementById('color2').value,
+                z2: document.getElementById('size2').value,
+                hasStock: false
+            }
+        };
 
         try {
             await fetch(scriptUrl, {
                 method: "POST",
-                mode: "no-cors",
-                headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                body: formData.toString()
+                mode: "no-cors", 
+                body: JSON.stringify(payload)
             });
 
+            // 清空表單
             document.getElementById('orderId').value = '';
             ['style1','color1','size1','style2','color2','size2'].forEach(id => {
                 if(choicesInstances[id]) choicesInstances[id].setChoiceByValue('');
             });
             
-            alert("訂單已送出！");
+            alert("訂單已成功送至後台！");
             btn.innerText = "CREATE ORDER";
             btn.disabled = false;
             
-            allOrders = null; // 強制下次載入新資料
+            allOrders = null; 
             showTab('admin');
         } catch (e) {
-            alert("傳送出錯，請檢查連線");
+            alert("提交失敗，請檢查網路連線");
             btn.disabled = false;
             btn.innerText = "CREATE ORDER";
         }
+    }
+
+    // --- 狀態更新 ---
+    async function updateStatus(id, s) {
+        if(!s) return;
+        const payload = { action: 'updateStatus', id: id, status: s };
+        await fetch(scriptUrl, { method: "POST", mode: "no-cors", body: JSON.stringify(payload) });
+        allOrders = null;
+        await loadOrders(); 
+        renderOrders(allOrders.slice().reverse()); 
     }
 
     async function showTab(t) {
@@ -202,34 +226,36 @@
     }
 
     async function loadOrders() {
-        const res = await fetch(`${scriptUrl}?action=getOrders`);
-        allOrders = (await res.json()).slice(1);
+        try {
+            const res = await fetch(`${scriptUrl}?action=getOrders`);
+            allOrders = (await res.json()).slice(1);
+        } catch (e) { console.error("資料載入失敗", e); }
     }
 
     function renderOrders(orders) {
         const today = new Date().setHours(0,0,0,0);
         let html = '';
         orders.forEach(r => {
-            const expDate = r[2] ? r[2].split('T')[0] : '';
+            const expDate = r[2] ? r[2].toString().split('T')[0] : '';
             const diff = expDate ? Math.ceil((new Date(expDate) - today) / 86400000) : '--';
             const status = (r[9] || "新訂單").trim();
             html += `<div class="order-card">
                 <div>
                     <div class="countdown-label ${diff <= 7 ? 'bg-urgent' : 'bg-normal'}">${diff} DAYS LEFT</div>
-                    <div style="font-size:0.55rem; color:#bbb; margin-bottom:8px;">EXP: ${expDate}</div>
-                    <b style="font-size:0.9rem; color:#555; letter-spacing:1px;">#${r[0]}</b>
-                    <div style="margin-top:10px; font-size:0.75rem; line-height:1.8; color:#777;">
+                    <div style="font-size:0.55rem; color:#bbb; margin-bottom:5px;">EXP: ${expDate}</div>
+                    <b style="font-size:0.85rem; color:#555; letter-spacing:1px;">#${r[0]}</b>
+                    <div style="margin-top:8px; font-size:0.75rem; line-height:1.6; color:#777;">
                         ● ${r[3]} / ${r[4]} <span class="size-tag">${r[5]}</span><br>
                         ${r[6] ? `● ${r[6]} / ${r[7]} <span class="size-tag">${r[8]}</span>` : ''}
                     </div>
                 </div>
-                <div style="text-align:left;">
+                <div>
                     <span class="status-tag status-${status}">${status}</span>
-                    <div style="margin-top:10px;"><select onchange="updateStatus('${r[0]}', this.value)" style="border:none; border-bottom:1px solid #eee; font-size:0.65rem; padding:4px; color:#999; width:100px;"><option value="">CHANGE</option><option value="備料中">備料中</option><option value="車縫中">車縫中</option><option value="已寄回">已寄回</option><option value="出貨完畢">出貨完畢</option></select></div>
+                    <div style="margin-top:10px;"><select onchange="updateStatus('${r[0]}', this.value)" style="border:none; border-bottom:1px solid #eee; font-size:0.6rem; padding:4px; color:#999; width:90px;"><option value="">CHANGE</option><option value="備料中">備料中</option><option value="車縫中">車縫中</option><option value="已寄回">已寄回</option><option value="出貨完畢">出貨完畢</option></select></div>
                 </div>
             </div>`;
         });
-        document.getElementById('orderList').innerHTML = html || "尚無訂單資料";
+        document.getElementById('orderList').innerHTML = html || "目前無訂單資料";
     }
 
     function renderCalendar() {
@@ -239,7 +265,7 @@
             dayHeaderFormat: { weekday: 'short' },
             events: allOrders.map(r => ({
                 title: `#${r[0]}`,
-                start: r[2] ? r[2].split('T')[0] : '',
+                start: r[2] ? r[2].toString().split('T')[0] : '',
                 backgroundColor: statusColors[r[9]?.trim()] || "#373a3c",
                 borderColor: 'transparent',
                 extendedProps: { r: r }
@@ -259,14 +285,6 @@
     function openModal(content) { document.getElementById('modal-body').innerHTML = content; document.getElementById('custom-modal').style.display = 'flex'; }
     function closeModal() { document.getElementById('custom-modal').style.display = 'none'; }
 
-    async function updateStatus(id, s) {
-        if(!s) return;
-        await fetch(scriptUrl, { method: "POST", mode: "no-cors", body: new URLSearchParams({action:'updateStatus', id:id, status:s}).toString() });
-        allOrders = null;
-        await loadOrders(); 
-        renderOrders(allOrders.slice().reverse()); 
-    }
-
     function initChoice(id, list, placeholder, changeFn) {
         const el = document.getElementById(id);
         el.innerHTML = `<option value="">${placeholder}</option>`;
@@ -281,15 +299,17 @@
         const today = new Date().toISOString().split('T')[0];
         document.getElementById('orderDate').value = today;
         updateExpectedDate(today);
-        const res = await fetch(`${scriptUrl}?action=getStyles`);
-        const data = (await res.json()).slice(1);
-        const styles = [...new Set(data.map(i => i[0]))].filter(String).sort();
-        const colors = [...new Set(data.map(i => i[1]))].filter(String).sort();
-        ['style1', 'style2', 'filterStyle'].forEach(id => initChoice(id, styles, "STYLE...", id.includes('filter') ? renderStatistics : null));
-        ['color1', 'color2', 'filterColor'].forEach(id => initChoice(id, colors, "COLOR...", id.includes('filter') ? renderStatistics : null));
-        ['size1', 'size2'].forEach(id => initChoice(id, ["XS", "S", "M", "L", "XL"], "SIZE..."));
-        initChoice('filterCat', ["TOP", "BOTTOM", "ONEPIECE"], "CATEGORY...", renderStatistics);
-        loadOrders();
+        try {
+            const res = await fetch(`${scriptUrl}?action=getStyles`);
+            const data = (await res.json()).slice(1);
+            const styles = [...new Set(data.map(i => i[0]))].filter(String).sort();
+            const colors = [...new Set(data.map(i => i[1]))].filter(String).sort();
+            ['style1', 'style2', 'filterStyle'].forEach(id => initChoice(id, styles, "STYLE...", id.includes('filter') ? renderStatistics : null));
+            ['color1', 'color2', 'filterColor'].forEach(id => initChoice(id, colors, "COLOR...", id.includes('filter') ? renderStatistics : null));
+            ['size1', 'size2'].forEach(id => initChoice(id, ["XS", "S", "M", "L", "XL"], "SIZE..."));
+            initChoice('filterCat', ["TOP", "BOTTOM", "ONEPIECE"], "CATEGORY...", renderStatistics);
+            loadOrders();
+        } catch (e) { console.error("初始化失敗", e); }
     };
 
     function updateExpectedDate(v) {
@@ -298,6 +318,7 @@
     }
 
     function renderStatistics() {
+        if(!allOrders) return;
         const fCat = document.getElementById('filterCat').value;
         const fStyle = document.getElementById('filterStyle').value;
         const fColor = document.getElementById('filterColor').value;
