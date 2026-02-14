@@ -28,7 +28,7 @@
         .nav button.active-btn { color: var(--brand-dark); border-bottom: 2px solid var(--brand-dark); font-weight: bold; }
 
         /* 容器 */
-        .page-container { display: none; background: white; margin: 0 auto 50px auto; padding: 45px; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.02); }
+        .page-container { display: none; background: white; margin: 0 auto 50px auto; padding: 45px; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.02); position: relative; }
         #formTab { max-width: 600px; }
         #adminTab, #calendarTab, #statsTab { max-width: 950px; }
         .active { display: block; }
@@ -77,6 +77,9 @@
 
         /* STATISTICS 列表底色 */
         #statsTableBody tr:nth-child(even) { background-color: rgba(149, 134, 111, 0.05); }
+
+        /* 底部版權樣式 */
+        .internal-copyright { text-align: center; margin-top: 60px; font-size: 0.65rem; color: rgba(149, 134, 111, 0.4); letter-spacing: 1.5px; text-transform: uppercase; font-weight: 300; }
     </style>
 </head>
 <body>
@@ -104,16 +107,19 @@
     <div class="form-group"><label>Size</label><select id="size2"></select></div>
     
     <button id="submitBtn" class="btn-submit" onclick="submitOrder()">CREATE ORDER</button>
+    <div class="internal-copyright">Copyright for Internal Use Only © Timu International Ltd.</div>
 </div>
 
 <div id="adminTab" class="page-container">
     <div class="title-group"><h2>STATUS</h2><div class="sub-title">生產進度管理</div></div>
     <div id="orderList">LOADING...</div>
+    <div class="internal-copyright">Copyright for Internal Use Only © Timu International Ltd.</div>
 </div>
 
 <div id="calendarTab" class="page-container">
     <div class="title-group"><h2>CALENDAR</h2><div class="sub-title">預計交期日曆</div></div>
     <div id="calendar"></div>
+    <div class="internal-copyright" style="margin-top: 30px;">Copyright for Internal Use Only © Timu International Ltd.</div>
 </div>
 
 <div id="statsTab" class="page-container">
@@ -124,6 +130,7 @@
         <div class="form-group" style="flex:1"><label>Color</label><select id="filterColor" onchange="renderStatistics()"><option value="">ALL COLOR</option></select></div>
     </div>
     <table style="width:100%; border-collapse:collapse; margin-top:20px;"><tbody id="statsTableBody"></tbody></table>
+    <div class="internal-copyright">Copyright for Internal Use Only © Timu International Ltd.</div>
 </div>
 
 <div id="orderModal" class="modal">
@@ -135,6 +142,7 @@
 </div>
 
 <script>
+    // [Script 邏輯完全保持不變，包含妳要求的日曆彈窗 eventClick 邏輯]
     const scriptUrl = "https://script.google.com/macros/s/AKfycbyi0WHv5eEFxL5XVKiPsr_iU6Ipoa0OxJJQvTjmjzicQTrNRK16fTUqD2_qeskcoXVcZg/exec";
     let allOrders = [];
     let calendar;
