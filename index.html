@@ -35,14 +35,12 @@
         h2 { font-weight: 300; letter-spacing: 6px; font-size: 1rem; color: var(--brand-dark); margin: 0; }
         .sub-title { font-size: 0.6rem; color: var(--brand-taupe); margin-top: 8px; letter-spacing: 2px; font-weight: bold; }
 
-        /* NEW ORDER CSS */
         .item-header { font-size: 0.75rem; font-weight: bold; letter-spacing: 2px; color: var(--brand-taupe); margin: 35px 0 15px 0; padding-bottom: 5px; border-bottom: 1.5px solid #f0f0f0; display: block; }
         .form-group { margin-bottom: 20px; }
         label { display: block; font-size: 0.55rem; color: #bbb; letter-spacing: 1px; margin-bottom: 6px; font-weight: 600; text-transform: uppercase; }
         input { padding: 8px 0; border: none !important; border-bottom: 1px solid #eee !important; font-size: 0.85rem; width: 100%; background: transparent !important; color: #555; outline: none; border-radius: 0; }
         .choices__inner { border: none !important; border-bottom: 1px solid #eee !important; background: transparent !important; padding: 4px 0 !important; min-height: 35px !important; font-size: 0.85rem; }
 
-        /* STATUS CSS */
         .order-card { padding: 25px 0; border-bottom: 1px solid #f7f7f7; display: flex; flex-direction: column; gap: 15px; }
         @media (min-width: 600px) { .order-card { flex-direction: row; justify-content: space-between; } }
         .countdown-label { font-size: 0.6rem; font-weight: bold; padding: 3px 10px; border-radius: 20px; display: inline-block; margin-bottom: 5px; letter-spacing: 1px; }
@@ -56,20 +54,17 @@
         .status-已寄回 { background: var(--st-sent); }
         .status-出貨完畢 { background: var(--st-done); color: var(--brand-dark); }
 
-        /* CALENDAR CSS */
         .fc-theme-standard td, .fc-theme-standard th { border: 1px solid #f2f2f2 !important; }
         .fc-day-today { background: rgba(149, 134, 111, 0.18) !important; }
         .fc-day-today .fc-daygrid-day-number { color: var(--brand-taupe) !important; font-weight: bold; }
         .fc-daygrid-day-number { font-size: 0.7rem !important; padding: 5px !important; color: #bbb; }
         .fc-col-header-cell-cushion { font-size: 0.6rem !important; color: #ccc !important; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* STATISTICS 手機字體縮小 */
         .stats-summary #totalPieces { font-size: 1.6rem !important; }
         .stats-row { display: flex; justify-content: space-between; align-items: flex-start; padding: 12px 0; border-bottom: 1px solid #f9f9f9; font-size: 0.7rem; color: #555; gap: 15px; }
         .stats-name { flex: 1; line-height: 1.4; }
         .stats-count { font-weight: bold; white-space: nowrap; }
 
-        /* 霧化浮窗 */
         #custom-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.7); backdrop-filter: blur(10px); z-index: 2000; justify-content: center; align-items: center; }
         .modal-content { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.05); text-align: center; max-width: 300px; width: 85%; }
         
@@ -144,7 +139,43 @@
 <script>
     const scriptUrl = "https://script.google.com/macros/s/AKfycbyi0WHv5eEFxL5XVKiPsr_iU6Ipoa0OxJJQvTjmjzicQTrNRK16fTUqD2_qeskcoXVcZg/exec";
     let allOrders = null;
+    let choicesInstances = {};
+
     const statusColors = { "新訂單": "#373a3c", "備料中": "#8e8e8e", "車縫中": "#003b5c", "已寄回": "#95866f", "出貨完畢": "#d0d0ce" };
+
+    // --- 新增：提交訂單功能 ---
+    async function submitOrder() {
+        const btn = document.getElementById('submitBtn');
+        const data = {
+            action: 'addOrder',
+            orderId: document.getElementById('orderId').value,
+            orderDate: document.getElementById('orderDate').value,
+            style1: document.getElementById('style1').value,
+            color1: document.getElementById('color1').value,
+            size1: document.getElementById('size1').value,
+            style2: document.getElementById('style2').value,
+            color2: document.getElementById('color2').value,
+            size2: document.getElementById('size2').value
+        };
+
+        if(!data.orderId) { alert("請填寫 Order ID"); return; }
+        
+        btn.innerText = "SENDING...";
+        btn.disabled = true;
+
+        await fetch(scriptUrl, { method: "POST", mode: "no-cors", body: JSON.stringify(data) });
+        
+        // 重置表單
+        document.getElementById('orderId').value = '';
+        Object.values(choicesInstances).forEach(c => c.setChoiceByValue(''));
+        
+        alert("訂單已建立！");
+        btn.innerText = "CREATE ORDER";
+        btn.disabled = false;
+        
+        await loadOrders();
+        showTab('admin');
+    }
 
     async function showTab(t) {
         document.querySelectorAll('.page-container').forEach(e => e.classList.remove('active'));
@@ -192,7 +223,7 @@
         const calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
             initialView: 'dayGridMonth',
             height: 'auto',
-            dayHeaderFormat: { weekday: 'short' }, // 強制顯示英文縮寫
+            dayHeaderFormat: { weekday: 'short' },
             events: allOrders.map(r => ({
                 title: `#${r[0]}`,
                 start: r[2] ? r[2].split('T')[0] : '',
@@ -228,6 +259,7 @@
         list.forEach(i => el.add(new Option(i, i)));
         const c = new Choices(el, { searchEnabled: true, itemSelectText: '', shouldSort: false });
         if(changeFn) el.addEventListener('change', changeFn);
+        choicesInstances[id] = c;
         return c;
     }
 
