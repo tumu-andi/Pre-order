@@ -14,75 +14,40 @@
         :root { 
             --brand-taupe: rgb(149, 134, 111); 
             --brand-dark: #373a3c;
-            --brand-blue: #003b5c; 
             --off-white: #eff0f1; --text-light: #999;
             --st-new: #373a3c; --st-material: #8e8e8e; --st-sewing: #003b5c; --st-sent: #95866f; --st-done: #d0d0ce;
         }
         
-        body { 
-            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; 
-            background: var(--off-white); 
-            color: var(--brand-dark); 
-            padding: 20px 10px; 
-            margin: 0; 
-            min-height: 100vh; 
-            -webkit-font-smoothing: antialiased; 
-            font-size: 16px; 
-        }
-        
+        body { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; background: var(--off-white); color: var(--brand-dark); padding: 20px 10px; margin: 0; min-height: 100vh; font-size: 16px; }
         .brand-header { text-align: center; padding: 40px 0; }
         .brand-logo { width: 240px; height: auto; max-width: 80%; }
-
         .nav { text-align: center; margin-bottom: 30px; position: sticky; top: 0; z-index: 1000; background: var(--off-white); padding: 15px 0; overflow-x: auto; white-space: nowrap; }
         .nav button { background: transparent; border: none; color: var(--text-light); padding: 10px 20px; cursor: pointer; letter-spacing: 2px; font-size: 0.8rem; font-weight: 500; transition: 0.3s; }
         .nav button.active-btn { color: var(--brand-dark); border-bottom: 2px solid var(--brand-dark); }
-
         .page-container { display: none; background: white; margin: 0 auto 40px auto; padding: 40px 30px; border-radius: 12px; box-shadow: 0 4px 25px rgba(0,0,0,0.04); width: 95%; max-width: 1000px; box-sizing: border-box; }
         .active { display: block; }
         #formTab { max-width: 650px; }
-
         .title-group { text-align: center; margin-bottom: 40px; }
         h2 { font-weight: 300; letter-spacing: 8px; font-size: 1.4rem; color: var(--brand-dark); margin: 0; }
         .sub-title { font-size: 0.75rem; color: var(--brand-taupe); margin-top: 10px; letter-spacing: 3px; font-weight: bold; }
-
         .item-header { font-size: 0.9rem; font-weight: bold; letter-spacing: 2px; color: var(--brand-taupe); margin: 45px 0 20px 0; padding-bottom: 8px; border-bottom: 1.5px solid #f0f0f0; display: block; }
         .form-group { margin-bottom: 25px; }
         label { display: block; font-size: 0.65rem; color: #bbb; letter-spacing: 1px; margin-bottom: 8px; font-weight: 600; text-transform: uppercase; }
         input { padding: 10px 0; border: none !important; border-bottom: 1px solid #eee !important; font-size: 1rem; width: 100%; background: transparent !important; color: #555; outline: none; border-radius: 0; }
-        
-        .choices__inner { 
-            border: none !important; 
-            border-bottom: 1px solid #eee !important; 
-            background: transparent !important; 
-            padding: 2px 8px !important; 
-            min-height: 45px !important; 
-            display: flex;
-            align-items: center;
-            font-size: 1rem; 
-        }
-        .choices__list--dropdown { z-index: 5000 !important; }
-
-        .filter-container { 
-            display: flex; 
-            flex-direction: row; 
-            align-items: flex-end; 
-            gap: 15px; 
-            margin-bottom: 35px; 
-            width: 100%;
-        }
+        .choices__inner { border: none !important; border-bottom: 1px solid #eee !important; background: transparent !important; padding: 2px 8px !important; min-height: 45px !important; display: flex; align-items: center; font-size: 1rem; }
+        .filter-container { display: flex; flex-direction: row; align-items: flex-end; gap: 15px; margin-bottom: 35px; width: 100%; }
         .filter-container > div { flex: 1; min-width: 0; }
-        @media (max-width: 600px) {
-            .filter-container { flex-direction: column; align-items: stretch; }
-        }
+        @media (max-width: 600px) { .filter-container { flex-direction: column; align-items: stretch; } }
+
+        /* STATUS 四階顏色提醒 */
+        .countdown-label { font-size: 0.65rem; font-weight: bold; padding: 4px 12px; border-radius: 20px; display: inline-block; margin-bottom: 5px; letter-spacing: 1px; }
+        .lv-urgent { background: #fee2e2; color: #dc2626; } /* 7天內 紅 */
+        .lv-tight { background: #fef3c7; color: #b45309; }  /* 14天內 橘 */
+        .lv-normal { background: #f3f4f6; color: var(--brand-taupe); } /* 28天內 灰 */
+        .lv-relax { background: #eff6ff; color: #1e40af; }  /* 28天以上 藍 */
 
         .order-card { padding: 25px 0; border-bottom: 1px solid #f7f7f7; display: flex; flex-direction: column; gap: 15px; }
         @media (min-width: 600px) { .order-card { flex-direction: row; justify-content: space-between; } }
-        
-        .countdown-label { font-size: 0.65rem; font-weight: bold; padding: 4px 12px; border-radius: 20px; display: inline-block; margin-bottom: 5px; letter-spacing: 1px; }
-        .bg-urgent { background: #fee2e2; color: #dc2626; }
-        .bg-normal { background: #f3f4f6; color: var(--brand-taupe); }
-        
-        .size-tag { background: #f0f0f0; color: #888; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; margin-left: 5px; }
         .status-tag { padding: 5px 12px; border-radius: 4px; font-size: 0.7rem; color: white; font-weight: bold; display: inline-block; }
         .status-新訂單 { background: var(--st-new); }
         .status-備料中 { background: var(--st-material); }
@@ -90,20 +55,13 @@
         .status-已寄回 { background: var(--st-sent); }
         .status-出貨完畢 { background: var(--st-done); color: var(--brand-dark); }
 
-        .stats-row { display: flex; justify-content: space-between; align-items: flex-start; padding: 20px 0; border-bottom: 1px solid #f9f9f9; font-size: 0.9rem; color: #555; gap: 20px; }
-        .stats-name { flex: 1; line-height: 1.5; }
-        .stats-count { font-weight: bold; color: var(--brand-dark); white-space: nowrap; }
-
-        /* 日曆美化與去除黃色 */
+        /* 日曆與浮窗樣式 */
         .fc-day-today { background: transparent !important; }
         .fc-day-today .fc-daygrid-day-number { color: var(--brand-taupe) !important; font-weight: bold; border-bottom: 2px solid var(--brand-taupe); }
         .modal-detail-row { text-align: left; font-size: 0.9rem; color: #555; line-height: 2; border-top: 1px solid #eee; padding-top: 15px; margin-top: 15px; }
-
         #custom-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.7); backdrop-filter: blur(10px); z-index: 2000; justify-content: center; align-items: center; }
         .modal-content { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.05); text-align: center; max-width: 400px; width: 85%; }
-        
         .btn-submit { background: var(--brand-dark); color: white; border: none; padding: 20px; width: 100%; margin-top: 40px; cursor: pointer; letter-spacing: 4px; font-size: 0.85rem; border-radius: 6px; font-weight: bold; transition: 0.3s; }
-        .footer-copyright { text-align: center; padding: 40px 0; font-size: 0.65rem; color: rgba(149, 134, 111, 0.4); letter-spacing: 1px; }
     </style>
 </head>
 <body>
@@ -150,7 +108,7 @@
     </div>
 
     <div id="calendarTab" class="page-container">
-        <div class="title-group"><h2>CALENDAR</h2><div class="sub-title">交期視覺日曆</div></div>
+        <div class="title-group"><h2>CALENDAR</h2><div class="sub-title">預計交件看板</div></div>
         <div id="calendar"></div>
     </div>
 
@@ -161,15 +119,13 @@
             <div id="totalPieces" style="font-size: 2.5rem; font-weight: 200; color: #555;">0</div>
         </div>
         <div class="filter-container">
-            <div><label>Category</label><select id="filterCat"></select></div>
+            <div><label>Category (A/B/C)</label><select id="filterCat"></select></div>
             <div><label>Style</label><select id="filterStyle"></select></div>
             <div><label>Color</label><select id="filterColor"></select></div>
         </div>
         <div id="statsTableBody"></div>
     </div>
 </div>
-
-<div class="footer-copyright">Copyright for Internal Use Only © Timu International Ltd.</div>
 
 <script>
     const scriptUrl = "https://script.google.com/macros/s/AKfycbyi0WHv5eEFxL5XVKiPsr_iU6Ipoa0OxJJQvTjmjzicQTrNRK16fTUqD2_qeskcoXVcZg/exec";
@@ -183,9 +139,7 @@
         document.querySelectorAll('.nav button').forEach(e => e.classList.remove('active-btn'));
         document.getElementById(t + 'Tab').classList.add('active');
         document.getElementById('btn' + t.charAt(0).toUpperCase() + t.slice(1)).classList.add('active-btn');
-        
-        await loadOrders(); // 每次切換都確保資料最新
-        
+        await loadOrders(); 
         if (t === 'admin') renderOrders(allOrders.slice().reverse());
         if (t === 'stats') renderStatistics();
         if (t === 'calendar') setTimeout(renderCalendar, 100);
@@ -196,19 +150,26 @@
         allOrders = (await res.json()).slice(1);
     }
 
-    // 修復：STATUS 頁面天數標籤與狀態修改
+    // STATUS 顯示訂單日與四階顏色提醒
     function renderOrders(orders) {
         const today = new Date().setHours(0,0,0,0);
         let html = '';
         orders.forEach(r => {
+            const orderDate = r[10] ? new Date(r[10]).toISOString().split('T')[0] : '--';
             const expDate = r[2] ? r[2].split('T')[0] : '';
-            const diff = expDate ? Math.ceil((new Date(expDate) - today) / 86400000) : '--';
+            const diff = expDate ? Math.ceil((new Date(expDate) - today) / 86400000) : 999;
+            
+            let colorClass = 'lv-relax';
+            if (diff <= 7) colorClass = 'lv-urgent';
+            else if (diff <= 14) colorClass = 'lv-tight';
+            else if (diff <= 28) colorClass = 'lv-normal';
+
             const status = (r[9] || "新訂單").trim();
             
             html += `<div class="order-card">
                 <div>
-                    <div class="countdown-label ${diff <= 7 ? 'bg-urgent' : 'bg-normal'}">${diff} DAYS LEFT</div>
-                    <div style="font-size:0.7rem; color:#bbb; margin-bottom:8px;">EXP: ${expDate}</div>
+                    <div class="countdown-label ${colorClass}">${diff} DAYS LEFT</div>
+                    <div style="font-size:0.7rem; color:#bbb; margin-bottom:8px;">ORDERED: ${orderDate} | EXP: ${expDate}</div>
                     <b style="font-size:1.1rem; color:#555;">#${r[0]}</b>
                     <div style="margin-top:10px; font-size:0.85rem; color:#777;">
                         ● ${r[3]} / ${r[4]} <span class="size-tag">${r[5]}</span><br>
@@ -232,34 +193,20 @@
         document.getElementById('orderList').innerHTML = html;
     }
 
-    async function updateStatus(id, newStatus) {
-        if (!newStatus) return;
-        try {
-            await fetch(scriptUrl, {
-                method: "POST",
-                mode: "no-cors",
-                body: JSON.stringify({ action: 'updateStatus', id: id, status: newStatus })
-            });
-            openModal('<h3 style="color:var(--brand-taupe);">SUCCESS</h3><p>狀態已更新</p>');
-            await loadOrders();
-            renderOrders(allOrders.slice().reverse());
-        } catch (e) { alert("更新失敗"); }
-    }
-
     async function submitOrder() {
         const btn = document.getElementById('submitBtn');
         btn.innerText = "SENDING...";
         btn.disabled = true;
 
         let dDate = new Date(document.getElementById('orderDate').value);
-        dDate.setDate(dDate.getDate() + 42);
+        dDate.setDate(dDate.getDate() + 42); // 預設交期六週
         const deadline = dDate.toISOString().split('T')[0];
 
         const payload = {
             action: 'addOrder',
             data: {
                 id: document.getElementById('orderId').value,
-                deadline: deadline,
+                deadline: deadline, // 這會寫入 C 欄
                 s1: document.getElementById('style1').value,
                 c1: document.getElementById('color1').value,
                 z1: document.getElementById('size1').value,
@@ -271,40 +218,18 @@
 
         try {
             await fetch(scriptUrl, { method: "POST", mode: "no-cors", body: JSON.stringify(payload) });
-            openModal('<h3 style="color:var(--brand-taupe);">SUCCESS</h3><p>訂單已送往資料庫</p>');
+            openModal('<h3 style="color:var(--brand-taupe);">SUCCESS</h3><p>訂單與交期已同步寫入</p>');
             document.getElementById('orderId').value = '';
             allOrders = null; 
         } catch (e) { alert("Error: " + e); } 
         finally { btn.innerText = "CREATE ORDER"; btn.disabled = false; }
     }
 
-    function initChoice(id, list, placeholder, changeFn) {
-        const el = document.getElementById(id);
-        el.innerHTML = `<option value="">${placeholder}</option>`;
-        list.forEach(i => el.add(new Option(i, i)));
-        const c = new Choices(el, { searchEnabled: true, itemSelectText: '', shouldSort: false });
-        if(changeFn) el.addEventListener('change', changeFn);
-        choiceInstances[id] = c;
-        return c;
-    }
-
-    function updateColorOptions(styleId, colorId) {
-        const selectedStyleText = document.getElementById(styleId).value.trim();
-        const colorChoice = choiceInstances[colorId];
-        const allAvailableColors = [...new Set(masterData.map(i => i[1]))].filter(String);
-        colorChoice.clearStore();
-        let matchedColors = allAvailableColors.filter(c => selectedStyleText.includes(c));
-        const displayList = matchedColors.length > 0 ? matchedColors : allAvailableColors; 
-        const finalOpts = displayList.map(c => ({ value: c, label: c, selected: false }));
-        colorChoice.setChoices([{ value: '', label: 'COLOR...', selected: true }].concat(finalOpts), 'value', 'label', true);
-    }
-
-    // 修復：STATISTICS 邏輯與動態下拉選單
+    // STATISTICS 改用 A/B/C 首碼判讀
     function renderStatistics() {
         const fCat = document.getElementById('filterCat').value;
         const fStyle = document.getElementById('filterStyle').value;
         const fColor = document.getElementById('filterColor').value;
-        
         let count = 0, map = {};
         let activeStyles = new Set(), activeColors = new Set();
 
@@ -312,10 +237,12 @@
             [[r[3], r[4], r[5]], [r[6], r[7], r[8]]].forEach(it => {
                 if (!it[0]) return;
                 
-                const name = it[0].toUpperCase();
+                // 判讀 A/B/C
+                const firstChar = it[0].trim().charAt(0).toUpperCase();
                 let cat = "ONEPIECE";
-                if (name.includes("BRA") || name.includes("上衣") || name.includes("TOP")) cat = "TOP";
-                else if (name.includes("褲") || name.includes("LEGGING") || name.includes("BOTTOM")) cat = "BOTTOM";
+                if (firstChar === 'A') cat = "TOP";
+                else if (firstChar === 'B') cat = "BOTTOM";
+                else if (firstChar === 'C') cat = "ONEPIECE";
 
                 activeStyles.add(it[0]);
                 activeColors.add(it[1]);
@@ -327,7 +254,6 @@
             });
         });
 
-        // 僅當過濾器為空時，才重新同步統計頁面的 Style/Color 選項 (避免遞迴觸發)
         if (!fStyle && !fColor && !fCat) {
             updateChoiceList('filterStyle', Array.from(activeStyles), "STYLE...");
             updateChoiceList('filterColor', Array.from(activeColors), "COLOR...");
@@ -341,15 +267,7 @@
         document.getElementById('statsTableBody').innerHTML = html || '<div style="text-align:center; padding:20px; color:#ccc;">No Active Orders</div>';
     }
 
-    function updateChoiceList(id, list, placeholder) {
-        const c = choiceInstances[id];
-        if (!c) return;
-        c.clearStore();
-        const opts = list.map(i => ({ value: i, label: i, selected: false }));
-        c.setChoices([{ value: '', label: placeholder, selected: true }].concat(opts), 'value', 'label', true);
-    }
-
-    // 修復：CALENDAR 浮窗詳情
+    // CALENDAR 抓 Deadline 與進度顏色
     function renderCalendar() {
         const calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
             initialView: 'dayGridMonth',
@@ -357,7 +275,7 @@
             locale: 'en', 
             events: allOrders.map(r => ({
                 title: `#${r[0]}`,
-                start: r[2] ? r[2].split('T')[0] : '',
+                start: r[2] ? r[2].split('T')[0] : '', // 抓 C 欄 Deadline
                 backgroundColor: statusColors[r[9]?.trim()] || "#373a3c",
                 extendedProps: { details: r }
             })),
@@ -369,7 +287,7 @@
                     <div class="modal-detail-row">
                         <b>ITEM 01:</b> ${r[3]} / ${r[4]} / ${r[5]}<br>
                         ${r[6] ? `<b>ITEM 02:</b> ${r[6]} / ${r[7]} / ${r[8]}` : ''}
-                        <div style="margin-top:10px; color:#bbb; font-size:0.7rem;">EXPECTED: ${r[2].split('T')[0]}</div>
+                        <div style="margin-top:10px; color:#bbb; font-size:0.7rem;">DEADLINE: ${r[2].split('T')[0]}</div>
                     </div>
                 `);
             }
@@ -377,17 +295,56 @@
         calendar.render();
     }
 
+    async function updateStatus(id, newStatus) {
+        if (!newStatus) return;
+        try {
+            await fetch(scriptUrl, {
+                method: "POST",
+                mode: "no-cors",
+                body: JSON.stringify({ action: 'updateStatus', id: id, status: newStatus })
+            });
+            openModal('<h3 style="color:var(--brand-taupe);">SUCCESS</h3><p>狀態更新成功</p>');
+            await loadOrders();
+            renderOrders(allOrders.slice().reverse());
+        } catch (e) { alert("更新失敗"); }
+    }
+
+    function initChoice(id, list, placeholder, changeFn) {
+        const el = document.getElementById(id);
+        el.innerHTML = `<option value="">${placeholder}</option>`;
+        list.forEach(i => el.add(new Option(i, i)));
+        const c = new Choices(el, { searchEnabled: true, itemSelectText: '', shouldSort: false });
+        if(changeFn) el.addEventListener('change', changeFn);
+        choiceInstances[id] = c;
+        return c;
+    }
+
+    function updateChoiceList(id, list, placeholder) {
+        const c = choiceInstances[id]; if (!c) return;
+        c.clearStore();
+        const opts = list.map(i => ({ value: i, label: i, selected: false }));
+        c.setChoices([{ value: '', label: placeholder, selected: true }].concat(opts), 'value', 'label', true);
+    }
+
+    function updateColorOptions(styleId, colorId) {
+        const selectedStyleText = document.getElementById(styleId).value.trim();
+        const colorChoice = choiceInstances[colorId];
+        const allAvailableColors = [...new Set(masterData.map(i => i[1]))].filter(String);
+        colorChoice.clearStore();
+        let matchedColors = allAvailableColors.filter(c => selectedStyleText.includes(c));
+        const displayList = matchedColors.length > 0 ? matchedColors : allAvailableColors; 
+        const finalOpts = displayList.map(c => ({ value: c, label: c, selected: false }));
+        colorChoice.setChoices([{ value: '', label: 'COLOR...', selected: true }].concat(finalOpts), 'value', 'label', true);
+    }
+
     window.onload = async function() {
         const today = new Date().toISOString().split('T')[0];
         document.getElementById('orderDate').value = today;
         updateExpectedDate(today);
-
         const res = await fetch(`${scriptUrl}?action=getStyles`);
         masterData = (await res.json()).slice(1);
-        
         const styles = [...new Set(masterData.map(i => i[0]))].filter(String);
         const colors = [...new Set(masterData.map(i => i[1]))].filter(String);
-        
         initChoice('style1', styles, "STYLE...", () => updateColorOptions('style1', 'color1'));
         initChoice('style2', styles, "STYLE...", () => updateColorOptions('style2', 'color2'));
         initChoice('filterStyle', [], "STYLE...", renderStatistics);
@@ -396,7 +353,6 @@
         initChoice('filterColor', [], "COLOR...", renderStatistics);
         ['size1', 'size2'].forEach(id => initChoice(id, ["XS", "S", "M", "L", "XL"], "SIZE..."));
         initChoice('filterCat', ["TOP", "BOTTOM", "ONEPIECE"], "CATEGORY...", renderStatistics);
-        
         loadOrders();
     };
 
@@ -404,7 +360,6 @@
         let d = new Date(v); d.setDate(d.getDate() + 42);
         document.getElementById('expectedHint').innerText = `⮕ Expected Delivery: ${d.toISOString().split('T')[0]}`;
     }
-
     function openModal(content) { document.getElementById('modal-body').innerHTML = content; document.getElementById('custom-modal').style.display = 'flex'; }
     function closeModal() { document.getElementById('custom-modal').style.display = 'none'; }
 </script>
