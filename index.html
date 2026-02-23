@@ -26,52 +26,39 @@
         .nav button.active-btn { color: var(--brand-dark); border-bottom: 2px solid var(--brand-dark); }
         .page-container { display: none; background: white; margin: 0 auto 40px auto; padding: 40px 30px; border-radius: 12px; box-shadow: 0 4px 25px rgba(0,0,0,0.04); width: 95%; max-width: 1000px; box-sizing: border-box; }
         .active { display: block; }
-        #formTab { max-width: 650px; }
+
         .title-group { text-align: center; margin-bottom: 40px; }
         h2 { font-weight: 300; letter-spacing: 8px; font-size: 1.4rem; color: var(--brand-dark); margin: 0; }
         .sub-title { font-size: 0.75rem; color: var(--brand-taupe); margin-top: 10px; letter-spacing: 3px; font-weight: bold; }
-        .item-header { font-size: 0.9rem; font-weight: bold; letter-spacing: 2px; color: var(--brand-taupe); margin: 45px 0 20px 0; padding-bottom: 8px; border-bottom: 1.5px solid #f0f0f0; display: block; }
-        .form-group { margin-bottom: 25px; }
-        label { display: block; font-size: 0.65rem; color: #bbb; letter-spacing: 1px; margin-bottom: 8px; font-weight: 600; text-transform: uppercase; }
-        input { padding: 10px 0; border: none !important; border-bottom: 1px solid #eee !important; font-size: 1rem; width: 100%; background: transparent !important; color: #555; outline: none; border-radius: 0; }
-        .choices__inner { border: none !important; border-bottom: 1px solid #eee !important; background: transparent !important; padding: 2px 8px !important; min-height: 45px !important; display: flex; align-items: center; font-size: 1rem; }
-        .filter-container { display: flex; flex-direction: row; align-items: flex-end; gap: 15px; margin-bottom: 35px; width: 100%; }
-        .filter-container > div { flex: 1; min-width: 0; }
-        @media (max-width: 600px) { .filter-container { flex-direction: column; align-items: stretch; } }
 
-        /* STATUS 四階顏色提醒 */
-        .countdown-label { font-size: 0.65rem; font-weight: bold; padding: 4px 12px; border-radius: 20px; display: inline-block; margin-bottom: 5px; letter-spacing: 1px; }
-        .lv-urgent { background: #fee2e2; color: #dc2626; } /* 7天內 紅 */
-        .lv-tight { background: #fef3c7; color: #b45309; }  /* 14天內 橘 */
-        .lv-normal { background: #f3f4f6; color: var(--brand-taupe); } /* 28天內 灰 */
-        .lv-relax { background: #eff6ff; color: #1e40af; }  /* 28天以上 藍 */
+        /* 統計頁面精緻化 */
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; margin-top: 20px; }
+        .stats-item-card { background: #fcfcfc; border: 1px solid #f0f0f0; padding: 20px; border-radius: 8px; position: relative; }
+        .stats-item-title { font-size: 0.85rem; font-weight: bold; color: var(--brand-dark); margin-bottom: 5px; line-height: 1.4; }
+        .stats-item-count { position: absolute; top: 15px; right: 15px; font-weight: bold; font-size: 1.1rem; color: var(--brand-taupe); }
+        .stats-item-detail { font-size: 0.75rem; color: #999; letter-spacing: 1px; }
+
+        /* Status 顏色區分 */
+        .lv-urgent { background: #fee2e2; color: #dc2626; }
+        .lv-tight { background: #fef3c7; color: #b45309; }
+        .lv-normal { background: #f3f4f6; color: var(--brand-taupe); }
+        .lv-relax { background: #eff6ff; color: #1e40af; }
 
         .order-card { padding: 25px 0; border-bottom: 1px solid #f7f7f7; display: flex; flex-direction: column; gap: 15px; }
         @media (min-width: 600px) { .order-card { flex-direction: row; justify-content: space-between; } }
         .status-tag { padding: 5px 12px; border-radius: 4px; font-size: 0.7rem; color: white; font-weight: bold; display: inline-block; }
-        .status-新訂單 { background: var(--st-new); }
-        .status-備料中 { background: var(--st-material); }
-        .status-車縫中 { background: var(--st-sewing); }
-        .status-已寄回 { background: var(--st-sent); }
-        .status-出貨完畢 { background: var(--st-done); color: var(--brand-dark); }
+        .countdown-label { font-size: 0.65rem; font-weight: bold; padding: 4px 12px; border-radius: 20px; display: inline-block; margin-bottom: 5px; letter-spacing: 1px; }
+        .size-tag { background: #f0f0f0; color: #888; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; margin-left: 5px; }
 
-        /* 日曆與浮窗樣式 */
-        .fc-day-today { background: transparent !important; }
-        .fc-day-today .fc-daygrid-day-number { color: var(--brand-taupe) !important; font-weight: bold; border-bottom: 2px solid var(--brand-taupe); }
-        .modal-detail-row { text-align: left; font-size: 0.9rem; color: #555; line-height: 2; border-top: 1px solid #eee; padding-top: 15px; margin-top: 15px; }
+        input, .choices__inner { border: none !important; border-bottom: 1px solid #eee !important; background: transparent !important; padding: 10px 0 !important; font-size: 1rem; width: 100%; }
+        .btn-submit { background: var(--brand-dark); color: white; border: none; padding: 20px; width: 100%; margin-top: 40px; cursor: pointer; letter-spacing: 4px; font-size: 0.85rem; border-radius: 6px; font-weight: bold; }
         #custom-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.7); backdrop-filter: blur(10px); z-index: 2000; justify-content: center; align-items: center; }
         .modal-content { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.05); text-align: center; max-width: 400px; width: 85%; }
-        .btn-submit { background: var(--brand-dark); color: white; border: none; padding: 20px; width: 100%; margin-top: 40px; cursor: pointer; letter-spacing: 4px; font-size: 0.85rem; border-radius: 6px; font-weight: bold; transition: 0.3s; }
     </style>
 </head>
 <body>
 
-<div id="custom-modal" onclick="closeModal()">
-    <div class="modal-content" onclick="event.stopPropagation()">
-        <div id="modal-body"></div>
-        <button onclick="closeModal()" style="margin-top:25px; background:var(--brand-dark); color:white; border:none; padding:12px 30px; border-radius:30px; cursor:pointer; font-size:0.75rem; letter-spacing:2px;">CLOSE</button>
-    </div>
-</div>
+<div id="custom-modal" onclick="closeModal()"><div class="modal-content" onclick="event.stopPropagation()"><div id="modal-body"></div><button onclick="closeModal()" style="margin-top:25px; background:var(--brand-dark); color:white; border:none; padding:12px 30px; border-radius:30px; cursor:pointer;">CLOSE</button></div></div>
 
 <div class="brand-header"><img src="https://lh3.googleusercontent.com/d/12yR1r7b4SlVYa9T3quajqKZmqeO7MLPb" alt="TIMU" class="brand-logo"></div>
 
@@ -87,18 +74,13 @@
         <div class="title-group"><h2>NEW ORDER</h2><div class="sub-title">建立新訂製單</div></div>
         <div class="form-group"><label>Order ID</label><input type="text" id="orderId" placeholder="SL-0000"></div>
         <div class="form-group"><label>Order Date</label><input type="date" id="orderDate" onchange="updateExpectedDate(this.value)"></div>
-        <div id="expectedHint" style="font-size:0.75rem; color:var(--brand-taupe); margin:-15px 0 15px 0; font-weight:bold;"></div>
-        
-        <span class="item-header">ITEM 01 內容詳情</span>
-        <div class="form-group"><label>Style</label><select id="style1"></select></div>
-        <div class="form-group"><label>Color</label><select id="color1"></select></div>
-        <div class="form-group"><label>Size</label><select id="size1"></select></div>
-        
-        <span class="item-header">ITEM 02 內容詳情</span>
-        <div class="form-group"><label>Style</label><select id="style2"></select></div>
-        <div class="form-group"><label>Color</label><select id="color2"></select></div>
-        <div class="form-group"><label>Size</label><select id="size2"></select></div>
-        
+        <div id="expectedHint" style="font-size:0.75rem; color:var(--brand-taupe); margin:5px 0 15px 0; font-weight:bold;"></div>
+        <div class="form-group"><label>ITEM 01 Style</label><select id="style1"></select></div>
+        <div class="form-group"><label>ITEM 01 Color</label><select id="color1"></select></div>
+        <div class="form-group"><label>ITEM 01 Size</label><select id="size1"></select></div>
+        <div class="form-group"><label>ITEM 02 Style</label><select id="style2"></select></div>
+        <div class="form-group"><label>ITEM 02 Color</label><select id="color2"></select></div>
+        <div class="form-group"><label>ITEM 02 Size</label><select id="size2"></select></div>
         <button id="submitBtn" class="btn-submit" onclick="submitOrder()">CREATE ORDER</button>
     </div>
 
@@ -108,22 +90,18 @@
     </div>
 
     <div id="calendarTab" class="page-container">
-        <div class="title-group"><h2>CALENDAR</h2><div class="sub-title">預計交件看板</div></div>
         <div id="calendar"></div>
     </div>
 
     <div id="statsTab" class="page-container">
         <div class="title-group"><h2>STATISTICS</h2><div class="sub-title">生產數據看板</div></div>
-        <div class="stats-summary" style="text-align:center; padding-bottom:30px;">
-            <label style="font-size: 0.65rem; color: var(--brand-taupe); letter-spacing: 2px;">TOTAL PIECES</label>
-            <div id="totalPieces" style="font-size: 2.5rem; font-weight: 200; color: #555;">0</div>
-        </div>
+        <div style="text-align:center; padding-bottom:30px;"><label>TOTAL PIECES</label><div id="totalPieces" style="font-size: 2.5rem; font-weight: 200;">0</div></div>
         <div class="filter-container">
-            <div><label>Category (A/B/C)</label><select id="filterCat"></select></div>
+            <div><label>Category</label><select id="filterCat"></select></div>
             <div><label>Style</label><select id="filterStyle"></select></div>
             <div><label>Color</label><select id="filterColor"></select></div>
         </div>
-        <div id="statsTableBody"></div>
+        <div id="statsGrid" class="stats-grid"></div>
     </div>
 </div>
 
@@ -139,7 +117,10 @@
         document.querySelectorAll('.nav button').forEach(e => e.classList.remove('active-btn'));
         document.getElementById(t + 'Tab').classList.add('active');
         document.getElementById('btn' + t.charAt(0).toUpperCase() + t.slice(1)).classList.add('active-btn');
-        await loadOrders(); 
+        
+        // 效能優化：如果已有資料則不重新 load，僅在切換時渲染
+        if (!allOrders) await loadOrders();
+        
         if (t === 'admin') renderOrders(allOrders.slice().reverse());
         if (t === 'stats') renderStatistics();
         if (t === 'calendar') setTimeout(renderCalendar, 100);
@@ -150,43 +131,27 @@
         allOrders = (await res.json()).slice(1);
     }
 
-    // STATUS 顯示訂單日與四階顏色提醒
     function renderOrders(orders) {
         const today = new Date().setHours(0,0,0,0);
         let html = '';
         orders.forEach(r => {
-            const orderDate = r[10] ? new Date(r[10]).toISOString().split('T')[0] : '--';
+            const oDate = r[10] ? r[10].split('T')[0] : '--';
             const expDate = r[2] ? r[2].split('T')[0] : '';
             const diff = expDate ? Math.ceil((new Date(expDate) - today) / 86400000) : 999;
+            let lv = 'lv-relax';
+            if (diff <= 7) lv = 'lv-urgent'; else if (diff <= 14) lv = 'lv-tight'; else if (diff <= 28) lv = 'lv-normal';
             
-            let colorClass = 'lv-relax';
-            if (diff <= 7) colorClass = 'lv-urgent';
-            else if (diff <= 14) colorClass = 'lv-tight';
-            else if (diff <= 28) colorClass = 'lv-normal';
-
-            const status = (r[9] || "新訂單").trim();
-            
+            const st = (r[9] || "新訂單").trim();
             html += `<div class="order-card">
                 <div>
-                    <div class="countdown-label ${colorClass}">${diff} DAYS LEFT</div>
-                    <div style="font-size:0.7rem; color:#bbb; margin-bottom:8px;">ORDERED: ${orderDate} | EXP: ${expDate}</div>
-                    <b style="font-size:1.1rem; color:#555;">#${r[0]}</b>
-                    <div style="margin-top:10px; font-size:0.85rem; color:#777;">
-                        ● ${r[3]} / ${r[4]} <span class="size-tag">${r[5]}</span><br>
-                        ${r[6] ? `● ${r[6]} / ${r[7]} <span class="size-tag">${r[8]}</span>` : ''}
-                    </div>
+                    <div class="countdown-label ${lv}">${diff} DAYS LEFT</div>
+                    <div style="font-size:0.7rem; color:#bbb; margin-bottom:5px;">ORDERED: ${oDate} | EXP: ${expDate}</div>
+                    <b style="font-size:1.1rem;">#${r[0]}</b>
+                    <div style="margin-top:8px; font-size:0.85rem; color:#777;">● ${r[3]} / ${r[4]} <span class="size-tag">${r[5]}</span><br>${r[6] ? `● ${r[6]} / ${r[7]} <span class="size-tag">${r[8]}</span>` : ''}</div>
                 </div>
                 <div style="text-align:right;">
-                    <span class="status-tag status-${status}">${status}</span>
-                    <div style="margin-top:10px;">
-                        <select onchange="updateStatus('${r[0]}', this.value)" style="border:none; border-bottom:1px solid #eee; font-size:0.75rem; color:#999; width:100px; background:transparent;">
-                            <option value="">CHANGE</option>
-                            <option value="備料中">備料中</option>
-                            <option value="車縫中">車縫中</option>
-                            <option value="已寄回">已寄回</option>
-                            <option value="出貨完畢">出貨完畢</option>
-                        </select>
-                    </div>
+                    <span class="status-tag status-${st}">${st}</span>
+                    <div style="margin-top:10px;"><select onchange="updateStatus('${r[0]}', this.value)" style="border:none; font-size:0.75rem; color:#999; width:100px; background:transparent;"><option value="">CHANGE</option><option value="備料中">備料中</option><option value="車縫中">車縫中</option><option value="已寄回">已寄回</option><option value="出貨完畢">出貨完畢</option></select></div>
                 </div>
             </div>`;
         });
@@ -195,37 +160,31 @@
 
     async function submitOrder() {
         const btn = document.getElementById('submitBtn');
-        btn.innerText = "SENDING...";
-        btn.disabled = true;
-
-        let dDate = new Date(document.getElementById('orderDate').value);
-        dDate.setDate(dDate.getDate() + 42); // 預設交期六週
+        btn.innerText = "SENDING..."; btn.disabled = true;
+        
+        const oDateVal = document.getElementById('orderDate').value;
+        let dDate = new Date(oDateVal);
+        dDate.setDate(dDate.getDate() + 42);
         const deadline = dDate.toISOString().split('T')[0];
 
         const payload = {
             action: 'addOrder',
             data: {
                 id: document.getElementById('orderId').value,
-                deadline: deadline, // 這會寫入 C 欄
-                s1: document.getElementById('style1').value,
-                c1: document.getElementById('color1').value,
-                z1: document.getElementById('size1').value,
-                s2: document.getElementById('style2').value,
-                c2: document.getElementById('color2').value,
-                z2: document.getElementById('size2').value
+                orderDate: oDateVal, // 寫入 B 欄
+                deadline: deadline, // 寫入 C 欄
+                s1: document.getElementById('style1').value, c1: document.getElementById('color1').value, z1: document.getElementById('size1').value,
+                s2: document.getElementById('style2').value, c2: document.getElementById('color2').value, z2: document.getElementById('size2').value
             }
         };
 
         try {
             await fetch(scriptUrl, { method: "POST", mode: "no-cors", body: JSON.stringify(payload) });
-            openModal('<h3 style="color:var(--brand-taupe);">SUCCESS</h3><p>訂單與交期已同步寫入</p>');
-            document.getElementById('orderId').value = '';
+            openModal('SUCCESS<br>訂單與交期已同步');
             allOrders = null; 
-        } catch (e) { alert("Error: " + e); } 
-        finally { btn.innerText = "CREATE ORDER"; btn.disabled = false; }
+        } catch (e) { alert(e); } finally { btn.innerText = "CREATE ORDER"; btn.disabled = false; }
     }
 
-    // STATISTICS 改用 A/B/C 首碼判讀
     function renderStatistics() {
         const fCat = document.getElementById('filterCat').value;
         const fStyle = document.getElementById('filterStyle').value;
@@ -236,19 +195,12 @@
         allOrders.filter(r => !["已寄回", "出貨完畢"].includes((r[9]||"").trim())).forEach(r => {
             [[r[3], r[4], r[5]], [r[6], r[7], r[8]]].forEach(it => {
                 if (!it[0]) return;
-                
-                // 判讀 A/B/C
-                const firstChar = it[0].trim().charAt(0).toUpperCase();
-                let cat = "ONEPIECE";
-                if (firstChar === 'A') cat = "TOP";
-                else if (firstChar === 'B') cat = "BOTTOM";
-                else if (firstChar === 'C') cat = "ONEPIECE";
-
-                activeStyles.add(it[0]);
-                activeColors.add(it[1]);
+                const code = it[0].trim().charAt(0).toUpperCase();
+                let cat = (code === 'A') ? "TOP" : (code === 'B') ? "BOTTOM" : "ONEPIECE";
+                activeStyles.add(it[0]); activeColors.add(it[1]);
 
                 if ((fCat==="" || cat===fCat) && (fStyle==="" || it[0]===fStyle) && (fColor==="" || it[1]===fColor)) {
-                    const k = `${it[0]} / ${it[1]} / ${it[2]}`;
+                    const k = `${it[0]}||${it[1]}||${it[2]}`;
                     map[k] = (map[k] || 0) + 1; count++;
                 }
             });
@@ -262,51 +214,29 @@
         document.getElementById('totalPieces').innerText = count;
         let html = '';
         Object.keys(map).forEach(k => {
-            html += `<div class="stats-row"><div class="stats-name">${k}</div><div class="stats-count">${map[k]} PCS</div></div>`;
+            const [s, c, z] = k.split('||');
+            html += `<div class="stats-item-card"><div class="stats-item-title">${s}</div><div class="stats-item-count">${map[k]}</div><div class="stats-item-detail">${c} / Size: ${z}</div></div>`;
         });
-        document.getElementById('statsTableBody').innerHTML = html || '<div style="text-align:center; padding:20px; color:#ccc;">No Active Orders</div>';
+        document.getElementById('statsGrid').innerHTML = html || 'No Data';
     }
 
-    // CALENDAR 抓 Deadline 與進度顏色
     function renderCalendar() {
-        const calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
-            initialView: 'dayGridMonth',
-            height: 'auto',
-            locale: 'en', 
+        new FullCalendar.Calendar(document.getElementById('calendar'), {
+            initialView: 'dayGridMonth', height: 'auto', locale: 'en', 
             events: allOrders.map(r => ({
-                title: `#${r[0]}`,
-                start: r[2] ? r[2].split('T')[0] : '', // 抓 C 欄 Deadline
-                backgroundColor: statusColors[r[9]?.trim()] || "#373a3c",
-                extendedProps: { details: r }
+                title: `#${r[0]}`, start: r[2] ? r[2].split('T')[0] : '', backgroundColor: statusColors[r[9]?.trim()] || "#373a3c", extendedProps: { details: r }
             })),
             eventClick: function(info) {
                 const r = info.event.extendedProps.details;
-                openModal(`
-                    <h3 style="letter-spacing:4px; font-weight:300; margin-bottom:5px;">ORDER #${r[0]}</h3>
-                    <span class="status-tag status-${r[9].trim()}">${r[9]}</span>
-                    <div class="modal-detail-row">
-                        <b>ITEM 01:</b> ${r[3]} / ${r[4]} / ${r[5]}<br>
-                        ${r[6] ? `<b>ITEM 02:</b> ${r[6]} / ${r[7]} / ${r[8]}` : ''}
-                        <div style="margin-top:10px; color:#bbb; font-size:0.7rem;">DEADLINE: ${r[2].split('T')[0]}</div>
-                    </div>
-                `);
+                openModal(`<b>ORDER #${r[0]}</b><br><div style="text-align:left; font-size:0.8rem; margin-top:15px; border-top:1px solid #eee; padding-top:10px;">${r[3]} / ${r[4]} / ${r[5]}<br>DEADLINE: ${r[2].split('T')[0]}</div>`);
             }
-        });
-        calendar.render();
+        }).render();
     }
 
-    async function updateStatus(id, newStatus) {
-        if (!newStatus) return;
-        try {
-            await fetch(scriptUrl, {
-                method: "POST",
-                mode: "no-cors",
-                body: JSON.stringify({ action: 'updateStatus', id: id, status: newStatus })
-            });
-            openModal('<h3 style="color:var(--brand-taupe);">SUCCESS</h3><p>狀態更新成功</p>');
-            await loadOrders();
-            renderOrders(allOrders.slice().reverse());
-        } catch (e) { alert("更新失敗"); }
+    async function updateStatus(id, st) {
+        if (!st) return;
+        await fetch(scriptUrl, { method: "POST", mode: "no-cors", body: JSON.stringify({ action: 'updateStatus', id: id, status: st }) });
+        allOrders = null; await showTab('admin');
     }
 
     function initChoice(id, list, placeholder, changeFn) {
@@ -315,32 +245,18 @@
         list.forEach(i => el.add(new Option(i, i)));
         const c = new Choices(el, { searchEnabled: true, itemSelectText: '', shouldSort: false });
         if(changeFn) el.addEventListener('change', changeFn);
-        choiceInstances[id] = c;
-        return c;
+        choiceInstances[id] = c; return c;
     }
 
     function updateChoiceList(id, list, placeholder) {
         const c = choiceInstances[id]; if (!c) return;
         c.clearStore();
-        const opts = list.map(i => ({ value: i, label: i, selected: false }));
-        c.setChoices([{ value: '', label: placeholder, selected: true }].concat(opts), 'value', 'label', true);
-    }
-
-    function updateColorOptions(styleId, colorId) {
-        const selectedStyleText = document.getElementById(styleId).value.trim();
-        const colorChoice = choiceInstances[colorId];
-        const allAvailableColors = [...new Set(masterData.map(i => i[1]))].filter(String);
-        colorChoice.clearStore();
-        let matchedColors = allAvailableColors.filter(c => selectedStyleText.includes(c));
-        const displayList = matchedColors.length > 0 ? matchedColors : allAvailableColors; 
-        const finalOpts = displayList.map(c => ({ value: c, label: c, selected: false }));
-        colorChoice.setChoices([{ value: '', label: 'COLOR...', selected: true }].concat(finalOpts), 'value', 'label', true);
+        c.setChoices([{ value: '', label: placeholder, selected: true }].concat(list.map(i => ({ value: i, label: i }))), 'value', 'label', true);
     }
 
     window.onload = async function() {
-        const today = new Date().toISOString().split('T')[0];
-        document.getElementById('orderDate').value = today;
-        updateExpectedDate(today);
+        document.getElementById('orderDate').value = new Date().toISOString().split('T')[0];
+        updateExpectedDate(document.getElementById('orderDate').value);
         const res = await fetch(`${scriptUrl}?action=getStyles`);
         masterData = (await res.json()).slice(1);
         const styles = [...new Set(masterData.map(i => i[0]))].filter(String);
@@ -359,6 +275,14 @@
     function updateExpectedDate(v) {
         let d = new Date(v); d.setDate(d.getDate() + 42);
         document.getElementById('expectedHint').innerText = `⮕ Expected Delivery: ${d.toISOString().split('T')[0]}`;
+    }
+    function updateColorOptions(sId, cId) {
+        const sVal = document.getElementById(sId).value;
+        const cChoice = choiceInstances[cId];
+        const allC = [...new Set(masterData.map(i => i[1]))].filter(String);
+        cChoice.clearStore();
+        let matched = allC.filter(c => sVal.includes(c));
+        cChoice.setChoices([{ value: '', label: 'COLOR...', selected: true }].concat((matched.length?matched:allC).map(c => ({ value: c, label: c }))), 'value', 'label', true);
     }
     function openModal(content) { document.getElementById('modal-body').innerHTML = content; document.getElementById('custom-modal').style.display = 'flex'; }
     function closeModal() { document.getElementById('custom-modal').style.display = 'none'; }
