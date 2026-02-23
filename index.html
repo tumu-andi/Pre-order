@@ -142,36 +142,42 @@
         allOrders = (await res.json()).slice(1);
     }
 
-    async function submitOrder() {
-        const btn = document.getElementById('submitBtn');
-        const oDateVal = document.getElementById('orderDate').value;
-        if(!oDateVal) { alert("請填寫日期"); return; }
-        
-        btn.innerText = "SENDING..."; btn.disabled = true;
-        let d = new Date(oDateVal);
-        d.setDate(d.getDate() + 42); 
-        const deadline = d.toISOString().split('T')[0];
+async function submitOrder() {
+    const btn = document.getElementById('submitBtn');
+    const oDateVal = document.getElementById('orderDate').value;
+    if(!oDateVal) { alert("請填寫日期"); return; }
+    
+    btn.innerText = "SENDING..."; btn.disabled = true;
+    let d = new Date(oDateVal);
+    d.setDate(d.getDate() + 42); 
+    const deadline = d.toISOString().split('T')[0];
 
-        const payload = {
-            action: 'addOrder',
-            data: {
-                id: document.getElementById('orderId').value,
-                orderDate: oDateVal, // B 欄
-                deadline: deadline,  // C 欄
-                s1: document.getElementById('style1').value,
-                c1: document.getElementById('color1').value,
-                z1: document.getElementById('size1').value,
-                s2: document.getElementById('style2').value,
-                c2: document.getElementById('color2').value,
-                z2: document.getElementById('size2').value
-            }
-        };
+    const payload = {
+        action: 'addOrder',
+        data: {
+            id: document.getElementById('orderId').value,
+            orderDate: oDateVal,
+            deadline: deadline,
+            s1: document.getElementById('style1').value,
+            c1: document.getElementById('color1').value,
+            z1: document.getElementById('size1').value,
+            s2: document.getElementById('style2').value,
+            c2: document.getElementById('color2').value,
+            z2: document.getElementById('size2').value,
+            // --- 新增這行 ---
+            hasStock: document.getElementById('hasStock').checked 
+        }
+    };
 
-        await fetch(scriptUrl, { method: "POST", mode: "no-cors", body: JSON.stringify(payload) });
-        openModal(`<h3>DONE</h3>日期已同步寫入 B/C 欄`);
-        allOrders = null; // 強制下次切換分頁時刷新
-        btn.innerText = "CREATE ORDER"; btn.disabled = false;
-    }
+    await fetch(scriptUrl, { method: "POST", mode: "no-cors", body: JSON.stringify(payload) });
+    openModal(`<h3>DONE</h3>訂單已建立<br>現貨備註已寫入 K 欄`);
+    
+    // 清除欄位
+    document.getElementById('orderId').value = '';
+    document.getElementById('hasStock').checked = false; // 重設勾選框
+    allOrders = null; 
+    btn.innerText = "CREATE ORDER"; btn.disabled = false;
+}
 
     function renderOrders() {
         const today = new Date().setHours(0,0,0,0);
