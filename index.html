@@ -307,10 +307,19 @@
         calendar.render();
     }
 
+    // --- 修改這裡：加入緩衝時間，確保跳轉正確 ---
     async function updateStatus(id, st) {
         if(!st) return;
+        
+        // 發送更新請求
         await fetch(scriptUrl, { method: "POST", mode: "no-cors", body: JSON.stringify({ action: 'updateStatus', id: id, status: st }) });
-        allOrders = null; await showTab('admin');
+        
+        // 等待 1 秒，確保 Google Sheet 寫入完成
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        // 清空緩存並重新加載管理頁面
+        allOrders = null; 
+        await showTab('admin');
     }
 
     function initChoice(id, list, placeholder, changeFn) {
