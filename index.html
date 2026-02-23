@@ -212,21 +212,36 @@
         btn.innerText = "SENDING...";
         btn.disabled = true;
 
-        const data = {
+        // 1. 在前端先算好交期，對齊妳後端的 d.deadline
+        let dDate = new Date(document.getElementById('orderDate').value);
+        dDate.setDate(dDate.getDate() + 42);
+        const deadline = dDate.toISOString().split('T')[0];
+
+        // 2. 封裝資料，名稱必須與妳後端 GAS 裡的 s1, c1, z1 完全一致
+        const payload = {
             action: 'addOrder',
-            orderId: document.getElementById('orderId').value,
-            orderDate: document.getElementById('orderDate').value,
-            style1: document.getElementById('style1').value,
-            color1: document.getElementById('color1').value,
-            size1: document.getElementById('size1').value,
-            style2: document.getElementById('style2').value,
-            color2: document.getElementById('color2').value,
-            size2: document.getElementById('size2').value
+            data: {
+                id: document.getElementById('orderId').value,
+                deadline: deadline,
+                s1: document.getElementById('style1').value,
+                c1: document.getElementById('color1').value,
+                z1: document.getElementById('size1').value,
+                s2: document.getElementById('style2').value,
+                c2: document.getElementById('color2').value,
+                z2: document.getElementById('size2').value
+            }
         };
 
         try {
-            await fetch(scriptUrl, { method: "POST", mode: "no-cors", body: JSON.stringify(data) });
-            openModal('<h3 style="color:var(--brand-taupe);">SUCCESS</h3><p>訂單已成功建立</p>');
+            // 3. 使用 POST 傳送 JSON 字串
+            await fetch(scriptUrl, {
+                method: "POST",
+                mode: "no-cors",
+                body: JSON.stringify(payload)
+            });
+            
+            // 成功提示與清空
+            openModal('<h3 style="color:var(--brand-taupe);">SUCCESS</h3><p>訂單已送往資料庫</p>');
             document.getElementById('orderId').value = '';
             allOrders = null; 
         } catch (e) {
