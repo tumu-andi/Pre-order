@@ -2,88 +2,124 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TIMU | Production Management</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>TIMU | 生產管理系統</title>
+    
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
     
     <style>
         :root { 
-            --brand-taupe: #95866f; --brand-dark: #373a3c; --off-white: #f8f9fa;
-            --lv-urgent: #fee2e2; --lv-tight: #fef3c7; --lv-normal: #f3f4f6; --lv-relax: #eff6ff;
+            --brand-taupe: rgb(149, 134, 111); 
+            --brand-dark: #373a3c;
+            --off-white: #eff0f1; --text-light: #999;
+            --st-new: #373a3c; --st-material: #8e8e8e; --st-sewing: #003b5c; --st-sent: #95866f; --st-done: #d0d0ce;
         }
-        body { font-family: "Helvetica Neue", sans-serif; background: var(--off-white); margin: 0; padding: 20px; color: var(--brand-dark); }
-        .nav { text-align: center; margin-bottom: 30px; }
-        .nav button { background: none; border: none; padding: 10px 20px; cursor: pointer; color: #999; letter-spacing: 2px; transition: 0.3s; }
-        .nav button.active-btn { color: var(--brand-dark); border-bottom: 2px solid var(--brand-dark); font-weight: bold; }
-        .page-container { display: none; background: white; max-width: 900px; margin: 0 auto; padding: 40px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+        
+        body { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; background: var(--off-white); color: var(--brand-dark); padding: 20px 10px; margin: 0; min-height: 100vh; font-size: 16px; }
+        .brand-header { text-align: center; padding: 40px 0; }
+        .brand-logo { width: 240px; height: auto; max-width: 80%; }
+        
+        .nav { text-align: center; margin-bottom: 30px; position: sticky; top: 0; z-index: 1000; background: var(--off-white); padding: 15px 0; overflow-x: auto; white-space: nowrap; }
+        .nav button { background: transparent; border: none; color: var(--text-light); padding: 10px 20px; cursor: pointer; letter-spacing: 2px; font-size: 0.8rem; font-weight: 500; transition: 0.3s; }
+        .nav button.active-btn { color: var(--brand-dark); border-bottom: 2px solid var(--brand-dark); }
+
+        .page-container { display: none; background: white; margin: 0 auto 40px auto; padding: 40px 30px; border-radius: 12px; box-shadow: 0 4px 25px rgba(0,0,0,0.04); width: 95%; max-width: 1000px; box-sizing: border-box; }
         .active { display: block; }
 
-        /* STATISTICS 漂亮排版 */
-        .stats-summary-card { text-align: center; padding: 30px; border-bottom: 1px solid #eee; margin-bottom: 30px; }
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
-        .stats-card { 
-            background: #fff; border: 1px solid #eaeaea; padding: 20px; border-radius: 10px; 
-            transition: transform 0.2s; position: relative; overflow: hidden;
-        }
-        .stats-card:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
-        .stats-card::before { content: ""; position: absolute; left: 0; top: 0; height: 100%; width: 4px; background: var(--brand-taupe); }
-        .stats-card-title { font-size: 0.8rem; font-weight: bold; color: var(--brand-dark); margin-bottom: 8px; line-height: 1.4; display: block; }
-        .stats-card-info { font-size: 0.75rem; color: #888; letter-spacing: 0.5px; }
-        .stats-card-num { position: absolute; bottom: 15px; right: 20px; font-size: 1.5rem; font-weight: 200; color: var(--brand-taupe); }
-
-        /* Status 顏色 */
-        .order-card { padding: 20px 0; border-bottom: 1px solid #f0f0f0; display: flex; justify-content: space-between; align-items: center; }
-        .countdown-label { font-size: 0.65rem; padding: 3px 10px; border-radius: 12px; font-weight: bold; margin-bottom: 5px; display: inline-block; }
+        .title-group { text-align: center; margin-bottom: 40px; }
+        h2 { font-weight: 300; letter-spacing: 8px; font-size: 1.4rem; color: var(--brand-dark); margin: 0; }
+        .sub-title { font-size: 0.75rem; color: var(--brand-taupe); margin-top: 10px; letter-spacing: 3px; font-weight: bold; }
         
-        .btn-submit { background: var(--brand-dark); color: white; border: none; padding: 15px; width: 100%; border-radius: 6px; cursor: pointer; letter-spacing: 2px; margin-top: 20px; }
+        .item-header { font-size: 0.9rem; font-weight: bold; letter-spacing: 2px; color: var(--brand-taupe); margin: 40px 0 20px 0; padding-bottom: 8px; border-bottom: 1.5px solid #f0f0f0; display: block; }
+        .form-group { margin-bottom: 25px; }
+        label { display: block; font-size: 0.65rem; color: #bbb; letter-spacing: 1px; margin-bottom: 8px; font-weight: 600; text-transform: uppercase; }
+        input { padding: 10px 0; border: none !important; border-bottom: 1px solid #eee !important; font-size: 1rem; width: 100%; background: transparent !important; color: #555; outline: none; border-radius: 0; }
+        .choices__inner { border: none !important; border-bottom: 1px solid #eee !important; background: transparent !important; padding: 2px 8px !important; min-height: 45px !important; display: flex; align-items: center; }
+
+        /* STATUS 樣式 */
+        .order-card { padding: 25px 0; border-bottom: 1px solid #f7f7f7; display: flex; flex-direction: column; gap: 15px; }
+        @media (min-width: 600px) { .order-card { flex-direction: row; justify-content: space-between; align-items: center; } }
+        .countdown-label { font-size: 0.65rem; font-weight: bold; padding: 4px 12px; border-radius: 20px; display: inline-block; margin-bottom: 5px; }
+        .lv-urgent { background: #fee2e2; color: #dc2626; } 
+        .lv-tight { background: #fef3c7; color: #b45309; }
+        .lv-normal { background: #f3f4f6; color: var(--brand-taupe); }
+        .lv-relax { background: #eff6ff; color: #1e40af; }
+        .status-tag { padding: 5px 12px; border-radius: 4px; font-size: 0.7rem; color: white; font-weight: bold; }
+
+        /* STATISTICS 卡片優化 */
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; margin-top: 20px; }
+        .stats-card { background: #fff; border: 1px solid #eee; padding: 20px; border-radius: 10px; position: relative; border-left: 5px solid var(--brand-taupe); }
+        .stats-card-title { font-size: 0.85rem; font-weight: bold; color: var(--brand-dark); display: block; margin-bottom: 5px; }
+        .stats-card-info { font-size: 0.75rem; color: #999; }
+        .stats-card-num { position: absolute; right: 20px; top: 20px; font-size: 1.6rem; font-weight: 200; color: var(--brand-taupe); }
+
+        .btn-submit { background: var(--brand-dark); color: white; border: none; padding: 20px; width: 100%; margin-top: 40px; cursor: pointer; letter-spacing: 4px; font-size: 0.85rem; border-radius: 6px; font-weight: bold; }
+        
+        #custom-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.7); backdrop-filter: blur(10px); z-index: 2000; justify-content: center; align-items: center; }
+        .modal-content { background: white; padding: 40px; border-radius: 20px; text-align: center; max-width: 400px; width: 85%; }
     </style>
 </head>
 <body>
 
+<div id="custom-modal" onclick="closeModal()"><div class="modal-content" onclick="event.stopPropagation()"><div id="modal-body"></div><button onclick="closeModal()" style="margin-top:25px; background:var(--brand-dark); color:white; border:none; padding:12px 30px; border-radius:30px; cursor:pointer;">CLOSE</button></div></div>
+
+<div class="brand-header"><img src="https://lh3.googleusercontent.com/d/12yR1r7b4SlVYa9T3quajqKZmqeO7MLPb" alt="TIMU" class="brand-logo"></div>
+
 <div class="nav">
     <button id="btnForm" class="active-btn" onclick="showTab('form')">NEW ORDER</button>
     <button id="btnAdmin" onclick="showTab('admin')">STATUS</button>
+    <button id="btnCalendar" onclick="showTab('calendar')">CALENDAR</button>
     <button id="btnStats" onclick="showTab('stats')">STATISTICS</button>
 </div>
 
 <div id="formTab" class="page-container active">
-    <div style="text-align:center; margin-bottom:30px;"><h2>NEW ORDER</h2></div>
-    <div class="form-group"><label>Order ID</label><input type="text" id="orderId" placeholder="SL-0000" style="width:100%; padding:10px; margin-bottom:20px;"></div>
-    <div class="form-group"><label>Order Date</label><input type="date" id="orderDate" onchange="updateExpectedDate(this.value)" style="width:100%; padding:10px; margin-bottom:10px;"></div>
-    <div id="expectedHint" style="font-size:0.8rem; color:var(--brand-taupe); font-weight:bold; margin-bottom:20px;"></div>
+    <div class="title-group"><h2>NEW ORDER</h2><div class="sub-title">建立新訂製單</div></div>
+    <div class="form-group"><label>Order ID</label><input type="text" id="orderId" placeholder="SL-0000"></div>
+    <div class="form-group"><label>Order Date</label><input type="date" id="orderDate" onchange="updateExpectedDate(this.value)"></div>
+    <div id="expectedHint" style="font-size:0.75rem; color:var(--brand-taupe); margin:-10px 0 20px 0; font-weight:bold;"></div>
     
-    <div style="background:#f9f9f9; padding:20px; border-radius:8px;">
-        <label>ITEM 01</label>
-        <select id="style1"></select><br>
-        <select id="color1"></select><br>
-        <select id="size1"></select>
-    </div>
+    <span class="item-header">ITEM 01</span>
+    <div class="form-group"><label>Style</label><select id="style1"></select></div>
+    <div class="form-group"><label>Color</label><select id="color1"></select></div>
+    <div class="form-group"><label>Size</label><select id="size1"></select></div>
+    
+    <span class="item-header">ITEM 02</span>
+    <div class="form-group"><label>Style</label><select id="style2"></select></div>
+    <div class="form-group"><label>Color</label><select id="color2"></select></div>
+    <div class="form-group"><label>Size</label><select id="size2"></select></div>
+    
     <button id="submitBtn" class="btn-submit" onclick="submitOrder()">CREATE ORDER</button>
 </div>
 
 <div id="adminTab" class="page-container">
+    <div class="title-group"><h2>STATUS</h2><div class="sub-title">進度與交期管理</div></div>
     <div id="orderList">載入中...</div>
 </div>
 
+<div id="calendarTab" class="page-container">
+    <div id="calendar"></div>
+</div>
+
 <div id="statsTab" class="page-container">
-    <div class="stats-summary-card">
-        <span style="font-size:0.7rem; letter-spacing:2px; color:#999;">TOTAL ACTIVE PIECES</span>
-        <div id="totalPieces" style="font-size:3rem; font-weight:200;">0</div>
-    </div>
-    <div style="display:flex; gap:10px; margin-bottom:30px;">
-        <select id="filterCat"></select>
-        <select id="filterStyle"></select>
+    <div class="title-group"><h2>STATISTICS</h2><div class="sub-title">生產數據看板</div></div>
+    <div style="text-align:center; padding-bottom:30px;"><label>TOTAL PIECES</label><div id="totalPieces" style="font-size: 2.5rem; font-weight: 200;">0</div></div>
+    <div style="display:flex; gap:10px; margin-bottom:20px;">
+        <div style="flex:1;"><label>Category</label><select id="filterCat"></select></div>
+        <div style="flex:1;"><label>Style</label><select id="filterStyle"></select></div>
     </div>
     <div id="statsGrid" class="stats-grid"></div>
 </div>
 
 <script>
-    const scriptUrl = "YOUR_GAS_URL"; // 這裡填入妳的 GAS 連結
+    // ！！！請在此更換為妳最新的 GAS 部署連結！！！
+    const scriptUrl = "YOUR_GAS_URL"; 
+    
     let allOrders = null;
     let masterData = [];
     let choiceInstances = {};
+    const statusColors = { "新訂單": "#373a3c", "備料中": "#8e8e8e", "車縫中": "#003b5c", "已寄回": "#95866f", "出貨完畢": "#d0d0ce" };
 
     async function showTab(t) {
         document.querySelectorAll('.page-container').forEach(e => e.classList.remove('active'));
@@ -91,110 +127,173 @@
         document.getElementById(t + 'Tab').classList.add('active');
         document.getElementById('btn' + t.charAt(0).toUpperCase() + t.slice(1)).classList.add('active-btn');
         
-        // 只有在資料為空時才 fetch，減少等待時間
-        if (!allOrders) {
-            const res = await fetch(`${scriptUrl}?action=getOrders`);
-            allOrders = (await res.json()).slice(1);
+        // 只有在資料為空或是從表單切換出來時才重新讀取，避免卡頓
+        if (!allOrders || t !== 'form') {
+            await loadData();
         }
         
         if (t === 'admin') renderOrders();
         if (t === 'stats') renderStatistics();
+        if (t === 'calendar') setTimeout(renderCalendar, 100);
+    }
+
+    async function loadData() {
+        const res = await fetch(`${scriptUrl}?action=getOrders`);
+        allOrders = (await res.json()).slice(1);
     }
 
     async function submitOrder() {
         const btn = document.getElementById('submitBtn');
+        const oDateVal = document.getElementById('orderDate').value;
+        if(!oDateVal) { alert("請填寫日期"); return; }
+        
         btn.innerText = "SENDING..."; btn.disabled = true;
-
-        const oDate = document.getElementById('orderDate').value;
-        const d = new Date(oDate);
-        d.setDate(d.getDate() + 42); // 六週
+        let d = new Date(oDateVal);
+        d.setDate(d.getDate() + 42); 
         const deadline = d.toISOString().split('T')[0];
 
         const payload = {
             action: 'addOrder',
             data: {
                 id: document.getElementById('orderId').value,
-                orderDate: oDate,  // 對應 B 欄
-                deadline: deadline, // 對應 C 欄
+                orderDate: oDateVal, // B 欄
+                deadline: deadline,  // C 欄
                 s1: document.getElementById('style1').value,
                 c1: document.getElementById('color1').value,
                 z1: document.getElementById('size1').value,
-                s2: "", c2: "", z2: "" // 範例僅單筆，可自行擴充
+                s2: document.getElementById('style2').value,
+                c2: document.getElementById('color2').value,
+                z2: document.getElementById('size2').value
             }
         };
 
         await fetch(scriptUrl, { method: "POST", mode: "no-cors", body: JSON.stringify(payload) });
-        alert("訂單已建立！預計交期：" + deadline);
-        location.reload();
-    }
-
-    function renderStatistics() {
-        const fCat = document.getElementById('filterCat').value;
-        const fStyle = document.getElementById('filterStyle').value;
-        let map = {}; let total = 0;
-
-        allOrders.forEach(r => {
-            const status = (r[9] || "").trim();
-            if (status === "出貨完畢" || status === "已寄回") return;
-
-            // 判讀 A/B/C
-            const style = r[3];
-            if (!style) return;
-            const code = style.trim().charAt(0).toUpperCase();
-            let cat = (code === 'A') ? "TOP" : (code === 'B') ? "BOTTOM" : "ONEPIECE";
-
-            if ((fCat==="" || cat===fCat) && (fStyle==="" || style===fStyle)) {
-                const key = `${style} | ${r[4]} | ${r[5]}`;
-                map[key] = (map[key] || 0) + 1;
-                total++;
-            }
-        });
-
-        document.getElementById('totalPieces').innerText = total;
-        let html = '';
-        for (let k in map) {
-            const parts = k.split(' | ');
-            html += `
-                <div class="stats-card">
-                    <span class="stats-card-title">${parts[0]}</span>
-                    <span class="stats-card-info">${parts[1]} / SIZE: ${parts[2]}</span>
-                    <div class="stats-card-num">${map[k]}</div>
-                </div>`;
-        }
-        document.getElementById('statsGrid').innerHTML = html || "No records found.";
+        openModal(`<h3>DONE</h3>日期已同步寫入 B/C 欄`);
+        allOrders = null; // 強制下次切換分頁時刷新
+        btn.innerText = "CREATE ORDER"; btn.disabled = false;
     }
 
     function renderOrders() {
         const today = new Date().setHours(0,0,0,0);
         let html = '';
         allOrders.slice().reverse().forEach(r => {
-            const deadline = new Date(r[2]);
-            const diff = Math.ceil((deadline - today) / 86400000);
-            let lv = (diff <= 7) ? 'var(--lv-urgent)' : (diff <= 14) ? 'var(--lv-tight)' : 'var(--lv-normal)';
+            const expDate = r[2] ? r[2].split('T')[0] : '';
+            const diff = expDate ? Math.ceil((new Date(expDate) - today) / 86400000) : 999;
+            let lv = (diff <= 7) ? 'lv-urgent' : (diff <= 14) ? 'lv-tight' : (diff <= 28) ? 'lv-normal' : 'lv-relax';
+            const st = (r[9] || "新訂單").trim();
             
             html += `
                 <div class="order-card">
                     <div>
-                        <div class="countdown-label" style="background:${lv}">${diff} DAYS LEFT</div><br>
-                        <b>#${r[0]}</b> <span style="font-size:0.7rem; color:#999;">(EXP: ${r[2]})</span>
-                        <div style="font-size:0.8rem; color:#666; margin-top:5px;">${r[3]} / ${r[4]} / ${r[5]}</div>
+                        <div class="countdown-label ${lv}">${diff} DAYS LEFT</div>
+                        <div style="font-size:0.7rem; color:#bbb; margin-bottom:5px;">Order: ${r[1] ? r[1].split('T')[0] : '--'} | Exp: ${expDate}</div>
+                        <b style="font-size:1.1rem;">#${r[0]}</b>
+                        <div style="font-size:0.8rem; color:#666; margin-top:5px;">● ${r[3]} / ${r[4]} / ${r[5]} ${r[6] ? `<br>● ${r[6]} / ${r[7]} / ${r[8]}` : ''}</div>
                     </div>
-                    <div><span style="font-size:0.75rem; font-weight:bold;">${r[9] || "新訂單"}</span></div>
+                    <div style="text-align:right;">
+                        <span class="status-tag" style="background:${statusColors[st]}">${st}</span>
+                        <div style="margin-top:10px;"><select onchange="updateStatus('${r[0]}', this.value)" style="border:none; font-size:0.75rem; color:#999; background:none;"><option value="">CHANGE</option><option value="備料中">備料中</option><option value="車縫中">車縫中</option><option value="已寄回">已寄回</option><option value="出貨完畢">出貨完畢</option></select></div>
+                    </div>
                 </div>`;
         });
-        document.getElementById('orderList').innerHTML = html;
+        document.getElementById('orderList').innerHTML = html || "No Orders.";
     }
 
-    function updateExpectedDate(v) {
-        let d = new Date(v); d.setDate(d.getDate() + 42);
-        document.getElementById('expectedHint').innerText = `⮕ Expected Delivery: ${d.toISOString().split('T')[0]} (6 weeks)`;
+    function renderStatistics() {
+        const fCat = document.getElementById('filterCat').value;
+        const fStyle = document.getElementById('filterStyle').value;
+        let map = {}; let total = 0; let styleSet = new Set();
+
+        allOrders.forEach(r => {
+            const st = (r[9] || "").trim();
+            if (st === "出貨完畢" || st === "已寄回") return;
+            
+            [[r[3],r[4],r[5]], [r[6],r[7],r[8]]].forEach(it => {
+                if(!it[0]) return;
+                styleSet.add(it[0]);
+                const code = it[0].trim().charAt(0).toUpperCase();
+                let cat = (code==='A')?"TOP":(code==='B')?"BOTTOM":"ONEPIECE";
+                if((fCat==="" || cat===fCat) && (fStyle==="" || it[0]===fStyle)) {
+                    const key = `${it[0]}|${it[1]}|${it[2]}`;
+                    map[key] = (map[key]||0)+1; total++;
+                }
+            });
+        });
+
+        if(!fStyle && !fCat) updateChoiceList('filterStyle', Array.from(styleSet), "STYLE...");
+        document.getElementById('totalPieces').innerText = total;
+        let html = '';
+        for (let k in map) {
+            const p = k.split('|');
+            html += `<div class="stats-card"><span class="stats-card-title">${p[0]}</span><span class="stats-card-info">${p[1]} / Size: ${p[2]}</span><div class="stats-card-num">${map[k]}</div></div>`;
+        }
+        document.getElementById('statsGrid').innerHTML = html;
+    }
+
+    function renderCalendar() {
+        var calendarEl = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            height: 'auto',
+            events: allOrders.map(r => ({
+                title: `#${r[0]}`,
+                start: r[2] ? r[2].split('T')[0] : '', // 以 C 欄交期為準
+                backgroundColor: statusColors[r[9]?.trim()] || "#373a3c",
+                extendedProps: { details: r }
+            })),
+            eventClick: (info) => {
+                const r = info.event.extendedProps.details;
+                openModal(`<b>ORDER #${r[0]}</b><br><div style="text-align:left; font-size:0.8rem; margin-top:15px;">Item: ${r[3]}<br>Deadline: ${r[2].split('T')[0]}</div>`);
+            }
+        });
+        calendar.render();
+    }
+
+    async function updateStatus(id, st) {
+        if(!st) return;
+        await fetch(scriptUrl, { method: "POST", mode: "no-cors", body: JSON.stringify({ action: 'updateStatus', id: id, status: st }) });
+        allOrders = null; await showTab('admin');
+    }
+
+    function initChoice(id, list, placeholder, changeFn) {
+        const el = document.getElementById(id);
+        el.innerHTML = `<option value="">${placeholder}</option>`;
+        list.forEach(i => el.add(new Option(i, i)));
+        const c = new Choices(el, { searchEnabled: true, itemSelectText: '', shouldSort: false });
+        if(changeFn) el.addEventListener('change', changeFn);
+        choiceInstances[id] = c; return c;
+    }
+
+    function updateChoiceList(id, list, placeholder) {
+        const c = choiceInstances[id]; if (!c) return;
+        c.clearStore();
+        c.setChoices([{ value: '', label: placeholder, selected: true }].concat(list.map(i => ({ value: i, label: i }))), 'value', 'label', true);
     }
 
     window.onload = async () => {
         document.getElementById('orderDate').value = new Date().toISOString().split('T')[0];
         updateExpectedDate(document.getElementById('orderDate').value);
-        // 初始化 Select 元件... (其餘 init 代碼)
+        const res = await fetch(`${scriptUrl}?action=getStyles`);
+        masterData = (await res.json()).slice(1);
+        const styles = [...new Set(masterData.map(i => i[0]))].filter(String);
+        const colors = [...new Set(masterData.map(i => i[1]))].filter(String);
+        initChoice('style1', styles, "STYLE...");
+        initChoice('color1', colors, "COLOR...");
+        initChoice('style2', styles, "STYLE...");
+        initChoice('color2', colors, "COLOR...");
+        initChoice('size1', ["XS","S","M","L","XL"], "SIZE...");
+        initChoice('size2', ["XS","S","M","L","XL"], "SIZE...");
+        initChoice('filterCat', ["TOP","BOTTOM","ONEPIECE"], "CATEGORY...", renderStatistics);
+        initChoice('filterStyle', [], "STYLE...", renderStatistics);
+        showTab('form');
+    };
+
+    function updateExpectedDate(v) {
+        let d = new Date(v); d.setDate(d.getDate() + 42);
+        document.getElementById('expectedHint').innerText = `⮕ Expected Delivery: ${d.toISOString().split('T')[0]} (6 weeks)`;
     }
+    function openModal(content) { document.getElementById('modal-body').innerHTML = content; document.getElementById('custom-modal').style.display = 'flex'; }
+    function closeModal() { document.getElementById('custom-modal').style.display = 'none'; }
 </script>
 </body>
 </html>
