@@ -41,11 +41,13 @@
 
         .order-card { padding: 25px 0; border-bottom: 1px solid #f7f7f7; display: flex; flex-direction: column; gap: 15px; }
         @media (min-width: 600px) { .order-card { flex-direction: row; justify-content: space-between; align-items: center; } }
-        .countdown-label { font-size: 0.65rem; font-weight: bold; padding: 4px 12px; border-radius: 20px; display: inline-block; margin-bottom: 5px; }
-        .lv-urgent { background: #fee2e2; color: #dc2626; } 
-        .lv-tight { background: #fef3c7; color: #b45309; }
-        .lv-normal { background: #f3f4f6; color: var(--brand-taupe); }
-        .lv-relax { background: #eff6ff; color: #1e40af; }
+        /* 修改後的倒數標籤顏色：文字改為白色以增加辨識度 */
+         .countdown-label { font-size: 0.65rem; font-weight: bold; padding: 4px 12px; border-radius: 20px; display: inline-block; margin-bottom: 5px; color: white; }
+
+        .lv-urgent { background: #b22222; } /* 磚紅 */
+        .lv-tight { background: #c08e2e; }  /* 琥珀金 */
+        .lv-normal { background: #6b7a8f; } /* 霧藍灰 */
+        .lv-relax { background: #7a8b6e; }  /* 橄欖綠 */
         .status-tag { padding: 5px 12px; border-radius: 4px; font-size: 0.7rem; color: white; font-weight: bold; }
 
         .btn-submit { background: var(--brand-dark); color: white; border: none; padding: 20px; width: 100%; margin-top: 40px; cursor: pointer; letter-spacing: 4px; font-size: 0.85rem; border-radius: 6px; font-weight: bold; }
