@@ -92,6 +92,16 @@
 
 <div id="adminTab" class="page-container">
     <div class="title-group"><h2>STATUS</h2><div class="sub-title">進度與交期管理</div></div>
+    
+    <div style="text-align: right; margin-bottom: 15px; font-size: 0.75rem; color: #999;">
+        SHOW: 
+        <select id="pageSize" onchange="renderOrders()" style="border: none; background: none; color: #373a3c; font-weight: bold; cursor: pointer; outline: none;">
+            <option value="10">10 ITEMS</option>
+            <option value="20">20 ITEMS</option>
+            <option value="999">ALL</option>
+        </select>
+    </div>
+
     <div id="orderList">載入中...</div>
 </div>
 
@@ -195,20 +205,28 @@
 
     function renderOrders() {
         const today = new Date().setHours(0,0,0,0);
+        const limit = parseInt(document.getElementById('pageSize').value) || 10;
         let html = '';
         
-        allOrders.slice().reverse().forEach(r => {
+        const displayList = allOrders.slice().reverse();
+        const finalList = displayList.slice(0, limit);
+
+        finalList.forEach((r, index) => {
             const expDate = r[2] ? r[2].split('T')[0] : '';
             const diff = expDate ? Math.ceil((new Date(expDate) - today) / 86400000) : 999;
-            
             let lv = (diff <= 7) ? 'lv-urgent' : (diff <= 14) ? 'lv-tight' : (diff <= 28) ? 'lv-normal' : 'lv-relax';
             const st = (r[9] || "新訂單").trim();
             const bgColor = statusColors[st] || "#373a3c";
 
+            const orderIdx = displayList.length - index;
+
             html += `
                 <div class="order-card">
                     <div>
-                        <div class="countdown-label ${lv}">${diff} DAYS LEFT</div>
+                        <div style="display:flex; align-items:center; gap:10px; margin-bottom:5px;">
+                            <span style="font-family:monospace; font-size:0.75rem; color:#ccc; font-weight:bold;">#${orderIdx}</span>
+                            <div class="countdown-label ${lv}">${diff} DAYS LEFT</div>
+                        </div>
                         <div style="font-size:0.7rem; color:#bbb; margin-bottom:5px;">
                             Order: ${r[1] ? r[1].split('T')[0] : '--'} | Exp: ${expDate}
                         </div>
@@ -221,7 +239,7 @@
                     <div style="text-align:right;">
                         <span class="status-tag" style="background:${bgColor}">${st}</span>
                         <div style="margin-top:10px;">
-                            <select onchange="updateStatus('${r[0]}', this.value)" style="border:none; font-size:0.75rem; color:#999; background:none;">
+                            <select onchange="updateStatus('${r[0]}', this.value)" style="border:none; font-size:0.75rem; color:#999; background:none; cursor:pointer;">
                                 <option value="">CHANGE</option>
                                 <option value="備料中">備料中</option>
                                 <option value="車縫中">車縫中</option>
@@ -307,17 +325,10 @@
         calendar.render();
     }
 
-    // --- 修改這裡：加入緩衝時間，確保跳轉正確 ---
     async function updateStatus(id, st) {
         if(!st) return;
-        
-        // 發送更新請求
         await fetch(scriptUrl, { method: "POST", mode: "no-cors", body: JSON.stringify({ action: 'updateStatus', id: id, status: st }) });
-        
-        // 等待 1 秒，確保 Google Sheet 寫入完成
         await new Promise(resolve => setTimeout(resolve, 1000));
-        
-        // 清空緩存並重新加載管理頁面
         allOrders = null; 
         await showTab('admin');
     }
