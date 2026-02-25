@@ -120,10 +120,11 @@
     </div>
 
     <div style="display:flex; gap:10px; margin-bottom:20px; flex-wrap: wrap;">
-        <div style="flex:1; min-width: 120px;"><label>Category</label><select id="filterCat"></select></div>
-        <div style="flex:1; min-width: 120px;"><label>Style</label><select id="filterStyle"></select></div>
-        <div style="flex:1; min-width: 120px;"><label>Color</label><select id="filterColor"></select></div>
-    </div>
+    <div style="flex:1; min-width: 120px;"><label>Category</label><select id="filterCat"></select></div>
+    <div style="flex:1; min-width: 120px;"><label>Style</label><select id="filterStyle"></select></div>
+    <div style="flex:1; min-width: 120px;"><label>Color</label><select id="filterColor"></select></div>
+    <div style="flex:1; min-width: 120px;"><label>Process Status</label><select id="filterStatus"></select></div>
+</div>
 
     <div style="overflow-x: auto;">
         <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem;">
@@ -274,57 +275,71 @@
 }
 
     function renderStatistics() {
-        const fCat = document.getElementById('filterCat').value;
-        const fStyle = document.getElementById('filterStyle').value;
-        const fColor = document.getElementById('filterColor').value;
+    const fCat = document.getElementById('filterCat').value;
+    const fStyle = document.getElementById('filterStyle').value;
+    const fColor = document.getElementById('filterColor').value;
+    const fStatus = document.getElementById('filterStatus').value; // 抓取新篩選器
+
+    let map = {}; let total = 0; 
+    let styleSet = new Set();
+    let colorSet = new Set();
+
+    allOrders.forEach(r => {
+        const st = (r[9] || "").trim();
+
+        // 【功能 1】排除「確認中」、「已寄回」、「出貨完畢」以及空值
+        if (st === "確認中" || st === "" || st === "出貨完畢" || st === "已寄回") return;
+
+        // 【功能 2】生產階段篩選邏輯
+        if (fStatus === "待製作" || fStatus === "") { 
+        // 當選單是預設值或「待製作」時，只看新訂單和備料中
+        if (st !== "新訂單" && st !== "備料中") return;
+        } else if (fStatus === "ALL") {
+        // 選「ALL」時，不做任何過濾（但前面已經排除掉確認中和已出貨了）
+        } else if (st !== fStatus) {
+        // 選特定狀態（如：車縫中）時，只顯示該狀態
+        return;
+}
         
-        let map = {}; let total = 0; 
-        let styleSet = new Set();
-        let colorSet = new Set();
+        [[r[3],r[4],r[5]], [r[6],r[7],r[8]]].forEach(it => {
+            if(!it[0]) return;
+            styleSet.add(it[0]);
+            colorSet.add(it[1]);
 
-        allOrders.forEach(r => {
-            const st = (r[9] || "").trim();
-            if (st === "出貨完畢" || st === "已寄回") return;
+            const code = it[0].trim().charAt(0).toUpperCase();
+            let cat = (code==='A')?"TOP":(code==='B')?"BOTTOM":"ONEPIECE";
             
-            [[r[3],r[4],r[5]], [r[6],r[7],r[8]]].forEach(it => {
-                if(!it[0]) return;
-                styleSet.add(it[0]);
-                colorSet.add(it[1]);
+            const matchCat = (fCat==="" || cat===fCat);
+            const matchStyle = (fStyle==="" || it[0]===fStyle);
+            const matchColor = (fColor==="" || it[1]===fColor);
 
-                const code = it[0].trim().charAt(0).toUpperCase();
-                let cat = (code==='A')?"TOP":(code==='B')?"BOTTOM":"ONEPIECE";
-                
-                const matchCat = (fCat==="" || cat===fCat);
-                const matchStyle = (fStyle==="" || it[0]===fStyle);
-                const matchColor = (fColor==="" || it[1]===fColor);
-
-                if(matchCat && matchStyle && matchColor) {
-                    const key = `${it[0]}|${it[1]}|${it[2]}`;
-                    map[key] = (map[key]||0)+1; 
-                    total++;
-                }
-            });
+            if(matchCat && matchStyle && matchColor) {
+                const key = `${it[0]}|${it[1]}|${it[2]}`;
+                map[key] = (map[key]||0)+1; 
+                total++;
+            }
         });
+    });
 
-        if(!fStyle && !fCat && !fColor) {
-            updateChoiceList('filterStyle', Array.from(styleSet).sort(), "STYLE...");
-            updateChoiceList('filterColor', Array.from(colorSet).sort(), "COLOR...");
-        }
-
-        document.getElementById('totalPieces').innerText = total;
-        let html = '';
-        Object.keys(map).sort().forEach(k => {
-            const p = k.split('|');
-            html += `
-                <tr style="border-bottom: 1px solid #eee;">
-                    <td style="padding: 12px 8px; font-weight: bold;">${p[0]}</td>
-                    <td style="padding: 12px 8px; color: #666;">${p[1]}</td>
-                    <td style="padding: 12px 8px; color: #999;">${p[2]}</td>
-                    <td style="padding: 12px 8px; text-align: right; font-weight: bold; color: var(--brand-taupe); font-size: 1.1rem;">${map[k]}</td>
-                </tr>`;
-        });
-        document.getElementById('statsGrid').innerHTML = html || '<tr><td colspan="4" style="text-align:center; padding:20px; color:#ccc;">No data found.</td></tr>';
+    if(!fStyle && !fCat && !fColor) {
+        updateChoiceList('filterStyle', Array.from(styleSet).sort(), "STYLE...");
+        updateChoiceList('filterColor', Array.from(colorSet).sort(), "COLOR...");
     }
+
+    document.getElementById('totalPieces').innerText = total;
+    let html = '';
+    Object.keys(map).sort().forEach(k => {
+        const p = k.split('|');
+        html += `
+            <tr style="border-bottom: 1px solid #eee;">
+                <td style="padding: 12px 8px; font-weight: bold;">${p[0]}</td>
+                <td style="padding: 12px 8px; color: #666;">${p[1]}</td>
+                <td style="padding: 12px 8px; color: #999;">${p[2]}</td>
+                <td style="padding: 12px 8px; text-align: right; font-weight: bold; color: var(--brand-taupe); font-size: 1.1rem;">${map[k]}</td>
+            </tr>`;
+    });
+    document.getElementById('statsGrid').innerHTML = html || '<tr><td colspan="4" style="text-align:center; padding:20px; color:#ccc;">No data found.</td></tr>';
+}
 
     function renderCalendar() {
         var calendarEl = document.getElementById('calendar');
@@ -384,6 +399,7 @@
         initChoice('filterCat', ["TOP","BOTTOM","ONEPIECE"], "CATEGORY...", renderStatistics);
         initChoice('filterStyle', [], "STYLE...", renderStatistics);
         initChoice('filterColor', [], "COLOR...", renderStatistics);
+        initChoice('filterStatus', ["新訂單", "備料中", "車縫中", "ALL"], "待製作 (新訂單+備料中)", renderStatistics);
         showTab('form');
     };
 
