@@ -150,7 +150,14 @@
     let allOrders = null;
     let masterData = [];
     let choiceInstances = {};
-    const statusColors = { "新訂單": "#373a3c", "備料中": "#8e8e8e", "車縫中": "#003b5c", "已寄回": "#95866f", "出貨完畢": "#d0d0ce" };
+    const statusColors = { 
+    "確認中": "#e0e0e0", 
+    "新訂單": "#373a3c", 
+    "備料中": "#8e8e8e", 
+    "車縫中": "#003b5c", 
+    "已寄回": "#95866f", 
+    "出貨完畢": "#d0d0ce" 
+};
 
     async function showTab(t) {
         document.querySelectorAll('.page-container').forEach(e => e.classList.remove('active'));
@@ -206,54 +213,65 @@
     }
 
     function renderOrders() {
-        const today = new Date().setHours(0,0,0,0);
-        const limit = parseInt(document.getElementById('pageSize').value) || 10;
-        let html = '';
-        
-        const displayList = allOrders.slice().reverse();
-        const finalList = displayList.slice(0, limit);
+    const today = new Date().setHours(0,0,0,0);
+    const limit = parseInt(document.getElementById('pageSize').value) || 10;
+    let html = '';
+    
+    const displayList = allOrders.slice().reverse();
+    const finalList = displayList.slice(0, limit);
 
-        finalList.forEach((r, index) => {
-            const expDate = r[2] ? r[2].split('T')[0] : '';
-            const diff = expDate ? Math.ceil((new Date(expDate) - today) / 86400000) : 999;
-            let lv = (diff <= 7) ? 'lv-urgent' : (diff <= 14) ? 'lv-tight' : (diff <= 28) ? 'lv-normal' : 'lv-relax';
-            const st = (r[9] || "新訂單").trim();
-            const bgColor = statusColors[st] || "#373a3c";
+    // 內建一個處理調貨顯示的工具
+    const formatItemLine = (style, color, size) => {
+        if (!style) return '';
+        // 偵測款式字串是否包含 "調"
+        const isTransfer = style.indexOf('調') !== -1;
+        const s = isTransfer ? 'style="text-decoration: line-through; color: #bbb; opacity: 0.6;"' : '';
+        return `<div ${s}>● ${style} / ${color} / ${size}</div>`;
+    };
 
-            const orderIdx = displayList.length - index;
+    finalList.forEach((r, index) => {
+        const expDate = r[2] ? r[2].split('T')[0] : '';
+        const diff = expDate ? Math.ceil((new Date(expDate) - today) / 86400000) : 999;
+        let lv = (diff <= 7) ? 'lv-urgent' : (diff <= 14) ? 'lv-tight' : (diff <= 28) ? 'lv-normal' : 'lv-relax';
+        const st = (r[9] || "確認中").trim();
+        const bgColor = statusColors[st] || "#373a3c";
 
-            html += `
-                <div class="order-card">
-                    <div>
-                        <div style="display:flex; align-items:center; gap:10px; margin-bottom:5px;">
-                            <span style="font-family:monospace; font-size:0.75rem; color:#ccc; font-weight:bold;">#${orderIdx}</span>
-                            <div class="countdown-label ${lv}">${diff} DAYS LEFT</div>
-                        </div>
-                        <div style="font-size:0.7rem; color:#bbb; margin-bottom:5px;">
-                            Order: ${r[1] ? r[1].split('T')[0] : '--'} | Exp: ${expDate}
-                        </div>
-                        <b style="font-size:1.1rem;">#${r[0]}</b>
-                        <div style="font-size:0.8rem; color:#666; margin-top:5px;">
-                            ● ${r[3]} / ${r[4]} / ${r[5]} 
-                            ${r[6] ? `<br>● ${r[6]} / ${r[7]} / ${r[8]}` : ''}
-                        </div>
+        const orderIdx = displayList.length - index;
+
+        html += `
+            <div class="order-card">
+                <div>
+                    <div style="display:flex; align-items:center; gap:10px; margin-bottom:5px;">
+                        <span style="font-family:monospace; font-size:0.75rem; color:#ccc; font-weight:bold;">#${orderIdx}</span>
+                        <div class="countdown-label ${lv}">${diff} DAYS LEFT</div>
                     </div>
-                    <div style="text-align:right;">
-                        <span class="status-tag" style="background:${bgColor}">${st}</span>
-                        <div style="margin-top:10px;">
-                            <select onchange="updateStatus('${r[0]}', this.value)" style="border:none; font-size:0.75rem; color:#999; background:none; cursor:pointer;">
-                                <option value="">CHANGE</option>
-                                <option value="備料中">備料中</option>
-                                <option value="車縫中">車縫中</option>
-                                <option value="已寄回">已寄回</option>
-                                <option value="出貨完畢">出貨完畢</option>
-                            </select>
-                        </div>
+                    <div style="font-size:0.7rem; color:#bbb; margin-bottom:5px;">
+                        Order: ${r[1] ? r[1].split('T')[0] : '--'} | Exp: ${expDate}
                     </div>
-                </div>`;
-        });
-        document.getElementById('orderList').innerHTML = html || "No Orders.";
-    }
+                    <b style="font-size:1.1rem;">#${r[0]}</b>
+                    <div style="font-size:0.8rem; color:#666; margin-top:5px;">
+                        ${formatItemLine(r[3], r[4], r[5])}
+                        ${r[6] ? formatItemLine(r[6], r[7], r[8]) : ''}
+                    </div>
+                </div>
+                <div style="text-align:right;">
+                    <span class="status-tag" style="background:${bgColor}">${st}</span>
+                    <div style="margin-top:10px;">
+                        <select onchange="updateStatus('${r[0]}', this.value)" style="border:none; font-size:0.75rem; color:#999; background:none; cursor:pointer;">
+    <option value="">CHANGE STATUS</option>
+    <option value="確認中">確認中</option>
+    <option value="新訂單">新訂單</option>
+    <option value="備料中">備料中</option>
+    <option value="車縫中">車縫中</option>
+    <option value="已寄回">已寄回</option>
+    <option value="出貨完畢">出貨完畢</option>
+</select>
+                    </div>
+                </div>
+            </div>`;
+    });
+    document.getElementById('orderList').innerHTML = html || "No Orders.";
+}
 
     function renderStatistics() {
         const fCat = document.getElementById('filterCat').value;
