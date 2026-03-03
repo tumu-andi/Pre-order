@@ -124,6 +124,10 @@
     <div style="flex:1; min-width: 120px;"><label>Style</label><select id="filterStyle"></select></div>
     <div style="flex:1; min-width: 120px;"><label>Color</label><select id="filterColor"></select></div>
     <div style="flex:1; min-width: 120px;"><label>Process Status</label><select id="filterStatus"></select></div>
+    <div style="flex:2; min-width: 250px;">
+    <label>Search Keyword (Order ID / Style / Color)</label>
+    <input type="text" id="statsSearch" placeholder="輸入關鍵字..." oninput="renderStatistics()" style="border-bottom: 2px solid var(--brand-taupe) !important;">
+    </div>
 </div>
 
     <div style="overflow-x: auto;">
@@ -288,28 +292,28 @@
     const fCat = document.getElementById('filterCat').value;
     const fStyle = document.getElementById('filterStyle').value;
     const fColor = document.getElementById('filterColor').value;
-    const fStatus = document.getElementById('filterStatus').value; // 抓取新篩選器
+    const fStatus = document.getElementById('filterStatus').value;
+    // 取得搜尋關鍵字，如果搜尋框還沒載入則預設為空字串
+    const searchKey = document.getElementById('statsSearch') ? document.getElementById('statsSearch').value.toLowerCase() : "";
 
     let map = {}; let total = 0; 
     let styleSet = new Set();
     let colorSet = new Set();
 
     allOrders.forEach(r => {
+        const orderId = r[0] ? r[0].toString().toLowerCase() : "";
         const st = (r[9] || "").trim();
 
-        // 1. 排除「確認中」、「已寄回」、「出貨完畢」以及空值
-        if (st === "確認中" || st === "" || st === "出貨完畢" || st === "已寄回") return;
-
-        // 2. 生產階段篩選邏輯
+        // 1. 基本狀態排除
+        if (st === "" || st === "出貨完畢" || st === "已寄回") return;
+        
+        // 2. 生產階段篩選
         if (fStatus === "待製作" || fStatus === "") { 
             if (st !== "新訂單" && st !== "備料中") return;
-        } else if (fStatus === "ALL") {
-            // 不過濾，包含新訂單、備料中、車縫中
-        } else if (st !== fStatus) {
+        } else if (fStatus !== "ALL" && st !== fStatus) {
             return;
         }
 
-        // 3. 建立品項矩陣，並對應貨況欄位 (O欄為r[14], P欄為r[15])
         const items = [
             { data: [r[3], r[4], r[5]], isTransfer: (r[14] && r[14].toString().trim() !== "") },
             { data: [r[6], r[7], r[8]], isTransfer: (r[15] && r[15].toString().trim() !== "") }
@@ -317,10 +321,12 @@
         
         items.forEach(itObj => {
             const it = itObj.data;
-            if(!it[0]) return; // 如果沒款式就跳過
-
-            // --- 核心過濾：只要 O/P 欄位有填字 (isTransfer)，就不計入師傅的生產數量 ---
+            if(!it[0]) return; 
             if (itObj.isTransfer) return;
+
+            // --- 新增：關鍵字搜尋邏輯 ---
+            const itemContent = (orderId + it[0] + it[1]).toLowerCase();
+            if (searchKey && !itemContent.includes(searchKey)) return;
 
             styleSet.add(it[0]);
             colorSet.add(it[1]);
@@ -340,12 +346,16 @@
         });
     });
 
+    // 更新下拉選單的選項內容
     if(!fStyle && !fCat && !fColor) {
         updateChoiceList('filterStyle', Array.from(styleSet).sort(), "STYLE...");
         updateChoiceList('filterColor', Array.from(colorSet).sort(), "COLOR...");
     }
 
+    // 更新總件數顯示
     document.getElementById('totalPieces').innerText = total;
+
+    // --- 畫出表格的部分（一定要有這段表格才會出現） ---
     let html = '';
     Object.keys(map).sort().forEach(k => {
         const p = k.split('|');
