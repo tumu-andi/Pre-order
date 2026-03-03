@@ -297,26 +297,31 @@
     }
 
     async function updateStatus(id, st, selectEl) {
-        if(!st) return;
+        if(!st || !id) return; // 如果沒有 ID 直接跳出，避免出錯
         
-        // 1. 樂觀 UI 更新：立即修改記憶體並重新渲染畫面
-        const orderIndex = allOrders.findIndex(r => 
-            r && r[0] && r[0].toString().trim() === id.toString().trim()
-        );
+        // --- 1. 樂觀 UI 更新 ---
+        // 強化比對邏輯：排除空列，並確保 ID 存在才比對
+        const orderIndex = allOrders.findIndex(r => {
+            return r && r[0] && r[0].toString().trim() === id.toString().trim();
+        });
 
         if (orderIndex !== -1) {
             allOrders[orderIndex][9] = st; 
             renderOrders(); 
+        } else {
+            // 如果還是找不到，代表資料庫 A 欄可能真的沒東西
+            console.error("找不到該訂單編號，請檢查試算表 A 欄是否為空或被合併");
+            alert("找不到訂單 #" + id + "，請檢查試算表是否有合併儲存格。");
+            return; 
         }
 
-        // 2. 介面鎖定回饋
+        // --- 2. 介面鎖定 ---
         if(selectEl) {
             selectEl.disabled = true;
             selectEl.style.opacity = "0.5";
         }
 
         try {
-            // 3. 背景發送請求
             await fetch(scriptUrl, { 
                 method: "POST", 
                 mode: "no-cors", 
@@ -330,8 +335,11 @@
             }
             
         } catch (err) {
-            alert("同步失敗，請檢查網路後重整頁面");
-            if(selectEl) selectEl.disabled = false;
+            alert("同步失敗，請檢查網路");
+            if(selectEl) {
+                selectEl.disabled = false;
+                selectEl.style.opacity = "1";
+            }
         }
     }
 
