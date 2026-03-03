@@ -267,7 +267,8 @@
             let lv = (diff <= 7) ? 'lv-urgent' : (diff <= 14) ? 'lv-tight' : (diff <= 28) ? 'lv-normal' : 'lv-relax';
             const st = (r[9] || "確認中").trim();
             const bgColor = statusColors[st] || "#373a3c";
-            const orderIdx = displayList.length - index;
+           // 這樣會抓取這筆資料在原始 allOrders 陣列中的真實位置 (加 1 是為了從 1 開始)
+            const orderIdx = allOrders.indexOf(r) + 1;
 
             const isItem1Transfer = (r[14] && r[14].toString().trim() !== "");
             const isItem2Transfer = (r[15] && r[15].toString().trim() !== "");
