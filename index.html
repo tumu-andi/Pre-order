@@ -409,7 +409,10 @@
         
         // --- 1. 樂觀 UI 更新 (Optimistic UI) ---
         // 找到該筆訂單在 allOrders 中的位置並直接修改它
-        const orderIndex = allOrders.findIndex(r => r[0].toString() === id.toString());
+        // 改成更加強健的寫法（加上 trim() 移除空格）：
+        const orderIndex = allOrders.findIndex(r => 
+        r && r[0] && r[0].toString().trim() === id.toString().trim()
+        );
         if (orderIndex !== -1) {
             allOrders[orderIndex][9] = st; // 直接修改記憶體資料
             renderOrders(); // 立即重新畫圖，妳會看到標籤秒變色！
