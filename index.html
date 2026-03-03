@@ -41,13 +41,12 @@
 
         .order-card { padding: 25px 0; border-bottom: 1px solid #f7f7f7; display: flex; flex-direction: column; gap: 15px; }
         @media (min-width: 600px) { .order-card { flex-direction: row; justify-content: space-between; align-items: center; } }
-        /* 修改後的倒數標籤顏色：文字改為白色以增加辨識度 */
-         .countdown-label { font-size: 0.65rem; font-weight: bold; padding: 4px 12px; border-radius: 20px; display: inline-block; margin-bottom: 5px; color: white; }
+        .countdown-label { font-size: 0.65rem; font-weight: bold; padding: 4px 12px; border-radius: 20px; display: inline-block; margin-bottom: 5px; color: white; }
 
-        .lv-urgent { background: #b22222; } /* 磚紅 */
-        .lv-tight { background: #c08e2e; }  /* 琥珀金 */
-        .lv-normal { background: #6b7a8f; } /* 霧藍灰 */
-        .lv-relax { background: #7a8b6e; }  /* 橄欖綠 */
+        .lv-urgent { background: #b22222; } 
+        .lv-tight { background: #c08e2e; }  
+        .lv-normal { background: #6b7a8f; } 
+        .lv-relax { background: #7a8b6e; }  
         .status-tag { padding: 5px 12px; border-radius: 4px; font-size: 0.7rem; color: white; font-weight: bold; }
 
         .btn-submit { background: var(--brand-dark); color: white; border: none; padding: 20px; width: 100%; margin-top: 40px; cursor: pointer; letter-spacing: 4px; font-size: 0.85rem; border-radius: 6px; font-weight: bold; }
@@ -55,7 +54,6 @@
         #custom-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.7); backdrop-filter: blur(10px); z-index: 2000; justify-content: center; align-items: center; }
         .modal-content { background: white; padding: 40px; border-radius: 20px; text-align: center; max-width: 400px; width: 85%; }
 
-        /* 篩選按鈕選中時的黑底白字樣式 */
         .filter-btn { transition: 0.3s; background: white; border: 1px solid #ddd; }
         .active-filter { background: var(--brand-dark) !important; color: white !important; border-color: var(--brand-dark) !important; }
         .filter-btn:hover { border-color: var(--brand-taupe) !important; }
@@ -68,13 +66,13 @@
 <div class="brand-header"><img src="https://lh3.googleusercontent.com/d/12yR1r7b4SlVYa9T3quajqKZmqeO7MLPb" alt="TIMU" class="brand-logo"></div>
 
 <div class="nav">
-    <button id="btnForm" class="active-btn" onclick="showTab('form')">NEW ORDER</button>
+    <button id="btnForm" onclick="showTab('form')">NEW ORDER</button>
     <button id="btnAdmin" onclick="showTab('admin')">STATUS</button>
     <button id="btnCalendar" onclick="showTab('calendar')">CALENDAR</button>
     <button id="btnStats" onclick="showTab('stats')">STATISTICS</button>
 </div>
 
-<div id="formTab" class="page-container active">
+<div id="formTab" class="page-container">
     <div class="title-group"><h2>NEW ORDER</h2><div class="sub-title">建立新訂製單</div></div>
     <div class="form-group"><label>Order ID</label><input type="text" id="orderId" placeholder="SHOPLINE訂編"></div>
     <div class="form-group"><label>Order Date</label><input type="date" id="orderDate" onchange="updateExpectedDate(this.value)"></div>
@@ -135,14 +133,14 @@
     </div>
 
     <div style="display:flex; gap:10px; margin-bottom:20px; flex-wrap: wrap;">
-    <div style="flex:1; min-width: 120px;"><label>Category</label><select id="filterCat"></select></div>
-    <div style="flex:1; min-width: 120px;"><label>Color</label><select id="filterColor"></select></div>
-    <div style="flex:1; min-width: 120px;"><label>Process Status</label><select id="filterStatus"></select></div>
-    <div style="flex:2; min-width: 250px;">
-    <label>Search Keyword (Order ID / Style / Color)</label>
-    <input type="text" id="statsSearch" placeholder="輸入關鍵字..." oninput="renderStatistics()" style="border-bottom: 2px solid var(--brand-taupe) !important;">
+        <div style="flex:1; min-width: 120px;"><label>Category</label><select id="filterCat"></select></div>
+        <div style="flex:1; min-width: 120px;"><label>Color</label><select id="filterColor"></select></div>
+        <div style="flex:1; min-width: 120px;"><label>Process Status</label><select id="filterStatus"></select></div>
+        <div style="flex:2; min-width: 250px;">
+            <label>Search Keyword</label>
+            <input type="text" id="statsSearch" placeholder="輸入關鍵字..." oninput="renderStatistics()" style="border-bottom: 2px solid var(--brand-taupe) !important;">
+        </div>
     </div>
-</div>
 
     <div style="overflow-x: auto;">
         <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem;">
@@ -164,20 +162,16 @@
 </div>
 
 <script>
-    let currentStatusFilter = 'ALL'; // 紀錄目前的篩選狀態
+    let currentStatusFilter = 'ALL';
     const scriptUrl = "https://script.google.com/macros/s/AKfycbyi0WHv5eEFxL5XVKiPsr_iU6Ipoa0OxJJQvTjmjzicQTrNRK16fTUqD2_qeskcoXVcZg/exec"; 
     
     let allOrders = null;
     let masterData = [];
     let choiceInstances = {};
     const statusColors = { 
-    "確認中": "#e0e0e0", 
-    "新訂單": "#373a3c", 
-    "備料中": "#8e8e8e", 
-    "車縫中": "#003b5c", 
-    "已寄回": "#95866f", 
-    "出貨完畢": "#d0d0ce" 
-};
+        "確認中": "#e0e0e0", "新訂單": "#373a3c", "備料中": "#8e8e8e", 
+        "車縫中": "#003b5c", "已寄回": "#95866f", "出貨完畢": "#d0d0ce" 
+    };
 
     async function showTab(t) {
         localStorage.setItem('activeTab', t);
@@ -187,7 +181,6 @@
         document.getElementById('btn' + t.charAt(0).toUpperCase() + t.slice(1)).classList.add('active-btn');
         
         if (!allOrders || t !== 'form') await loadData();
-        
         if (t === 'admin') renderOrders();
         if (t === 'stats') renderStatistics();
         if (t === 'calendar') setTimeout(renderCalendar, 100);
@@ -225,7 +218,7 @@
         };
 
         await fetch(scriptUrl, { method: "POST", mode: "no-cors", body: JSON.stringify(payload) });
-        openModal(`<h3>DONE</h3>訂單已建立<br>現貨備註已寫入 K 欄`);
+        openModal(`<h3>DONE</h3>訂單已建立`);
         
         document.getElementById('orderId').value = '';
         document.getElementById('hasStock').checked = false;
@@ -233,7 +226,6 @@
         btn.innerText = "CREATE ORDER"; btn.disabled = false;
     }
 
-    // 這是新增的按鈕點擊觸發函數
     function setStatusFilter(status, btn) {
         currentStatusFilter = status;
         document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active-filter'));
@@ -245,32 +237,27 @@
         const today = new Date().setHours(0,0,0,0);
         const limit = parseInt(document.getElementById('pageSize').value) || 10;
         let html = '';
-        
         if (!allOrders) return;
+        
         let displayList = allOrders.slice().reverse();
-
-        // 【核心篩選邏輯】
         if (currentStatusFilter !== 'ALL') {
             displayList = displayList.filter(r => (r[9] || "確認中").trim() === currentStatusFilter);
         }
 
         const finalList = displayList.slice(0, limit);
-
         const renderLine = (style, color, size, isTransfer) => {
             if (!style) return '';
             const s = isTransfer ? 'style="text-decoration: line-through; color: #bbb; opacity: 0.6;"' : '';
             return `<div ${s}>● ${style} / ${color} / ${size} ${isTransfer ? '<small>(調貨)</small>' : ''}</div>`;
         };
 
-        finalList.forEach((r, index) => {
+        finalList.forEach((r) => {
             const expDate = r[2] ? r[2].split('T')[0] : '';
             const diff = expDate ? Math.ceil((new Date(expDate) - today) / 86400000) : 999;
             let lv = (diff <= 7) ? 'lv-urgent' : (diff <= 14) ? 'lv-tight' : (diff <= 28) ? 'lv-normal' : 'lv-relax';
             const st = (r[9] || "確認中").trim();
             const bgColor = statusColors[st] || "#373a3c";
-           // 這樣會抓取這筆資料在原始 allOrders 陣列中的真實位置 (加 1 是為了從 1 開始)
             const orderIdx = allOrders.indexOf(r) + 1;
-
             const isItem1Transfer = (r[14] && r[14].toString().trim() !== "");
             const isItem2Transfer = (r[15] && r[15].toString().trim() !== "");
 
@@ -293,7 +280,7 @@
                     <div style="text-align:right;">
                         <span class="status-tag" style="background:${bgColor}">${st}</span>
                         <div style="margin-top:10px;">
-                            <select onchange="updateStatus('${r[0]}', this.value)" style="border:none; font-size:0.75rem; color:#999; background:none; cursor:pointer;">
+                            <select onchange="updateStatus('${r[0]}', this.value, this)" style="border:none; font-size:0.75rem; color:#999; background:none; cursor:pointer;">
                                 <option value="">CHANGE STATUS</option>
                                 <option value="確認中">確認中</option>
                                 <option value="新訂單">新訂單</option>
@@ -309,137 +296,114 @@
         document.getElementById('orderList').innerHTML = html || "No Orders matching this status.";
     }
 
-    function renderStatistics() {
-    const fCat = document.getElementById('filterCat').value;
-    const fColor = document.getElementById('filterColor').value;
-    const fStatus = document.getElementById('filterStatus').value;
-    const searchKey = document.getElementById('statsSearch') ? document.getElementById('statsSearch').value.toLowerCase() : "";
-
-    let map = {}; let total = 0; 
-    let colorSet = new Set();
-
-    allOrders.forEach(r => {
-        const orderId = r[0] ? r[0].toString().toLowerCase() : "";
-        const st = (r[9] || "").trim();
-
-        // 1. 基本狀態排除
-        if (st === "" || st === "出貨完畢" || st === "已寄回") return;
-        
-        // 2. 生產階段篩選
-        if (fStatus === "待製作" || fStatus === "") { 
-            if (st !== "新訂單" && st !== "備料中") return;
-        } else if (fStatus !== "ALL" && st !== fStatus) {
-            return;
-        }
-
-        const items = [
-            { data: [r[3], r[4], r[5]], isTransfer: (r[14] && r[14].toString().trim() !== "") },
-            { data: [r[6], r[7], r[8]], isTransfer: (r[15] && r[15].toString().trim() !== "") }
-        ];
-        
-        items.forEach(itObj => {
-            const it = itObj.data;
-            if(!it[0]) return; 
-            if (itObj.isTransfer) return;
-
-            // --- 新增：關鍵字搜尋邏輯 ---
-            const itemContent = (orderId + it[0] + it[1]).toLowerCase();
-            if (searchKey && !itemContent.includes(searchKey)) return;
-
-            colorSet.add(it[1]);
-
-            const code = it[0].trim().charAt(0).toUpperCase();
-            let cat = (code==='A')?"TOP":(code==='B')?"BOTTOM":"ONEPIECE";
-            
-            const matchCat = (fCat==="" || cat===fCat);
-            const matchColor = (fColor==="" || it[1]===fColor);
-
-            if(matchCat && matchColor) {
-                const key = `${it[0]}|${it[1]}|${it[2]}`;
-                map[key] = (map[key]||0)+1; 
-                total++;
-            }
-        });
-    });
-
-    // 只有在沒選顏色，且搜尋框也是空的時候才更新清單
-    if(!fColor && !searchKey) {
-    updateChoiceList('filterColor', Array.from(colorSet).sort(), "COLOR...");
-}
-        
-    // 更新總件數顯示
-    document.getElementById('totalPieces').innerText = total;
-
-    // --- 畫出表格的部分（一定要有這段表格才會出現） ---
-    let html = '';
-    Object.keys(map).sort().forEach(k => {
-        const p = k.split('|');
-        html += `
-            <tr style="border-bottom: 1px solid #eee;">
-                <td style="padding: 12px 8px; font-weight: bold;">${p[0]}</td>
-                <td style="padding: 12px 8px; color: #666;">${p[1]}</td>
-                <td style="padding: 12px 8px; color: #999;">${p[2]}</td>
-                <td style="padding: 12px 8px; text-align: right; font-weight: bold; color: var(--brand-taupe); font-size: 1.1rem;">${map[k]}</td>
-            </tr>`;
-    });
-    document.getElementById('statsGrid').innerHTML = html || '<tr><td colspan="4" style="text-align:center; padding:20px; color:#ccc;">No data found.</td></tr>';
-}
-
-    function renderCalendar() {
-        var calendarEl = document.getElementById('calendar');
-        var calendar = new FullCalendar.Calendar(calendarEl, {
-            initialView: 'dayGridMonth',
-            height: 'auto',
-            events: allOrders.map(r => ({
-                title: `#${r[0]}`,
-                start: r[2] ? r[2].split('T')[0] : '', 
-                backgroundColor: statusColors[r[9]?.trim()] || "#373a3c",
-                extendedProps: { details: r }
-            })),
-            eventClick: (info) => {
-                const r = info.event.extendedProps.details;
-                openModal(`<b>ORDER #${r[0]}</b><br><div style="text-align:left; font-size:0.8rem; margin-top:15px;">Item: ${r[3]}<br>Deadline: ${r[2].split('T')[0]}</div>`);
-            }
-        });
-        calendar.render();
-    }
-
-    async function updateStatus(id, st) {
+    async function updateStatus(id, st, selectEl) {
         if(!st) return;
         
-        // --- 1. 樂觀 UI 更新 (Optimistic UI) ---
-        // 找到該筆訂單在 allOrders 中的位置並直接修改它
-        // 改成更加強健的寫法（加上 trim() 移除空格）：
+        // 1. 樂觀 UI 更新：立即修改記憶體並重新渲染畫面
         const orderIndex = allOrders.findIndex(r => 
-        r && r[0] && r[0].toString().trim() === id.toString().trim()
+            r && r[0] && r[0].toString().trim() === id.toString().trim()
         );
+
         if (orderIndex !== -1) {
-            allOrders[orderIndex][9] = st; // 直接修改記憶體資料
-            renderOrders(); // 立即重新畫圖，妳會看到標籤秒變色！
+            allOrders[orderIndex][9] = st; 
+            renderOrders(); 
         }
 
-        // --- 2. 背景處理資料庫 ---
-        const selectEl = event.target;
-        selectEl.disabled = true; // 鎖定選單防止連續點擊
+        // 2. 介面鎖定回饋
+        if(selectEl) {
+            selectEl.disabled = true;
+            selectEl.style.opacity = "0.5";
+        }
 
         try {
-            // 發送請求 (不加 await 在這裡，讓它在背景跑，除非妳需要確認它真的成功)
+            // 3. 背景發送請求
             await fetch(scriptUrl, { 
                 method: "POST", 
                 mode: "no-cors", 
                 body: JSON.stringify({ action: 'updateStatus', id: id, status: st }) 
             });
 
-            console.log(`Order ${id} sync success.`);
-            selectEl.disabled = false;
-            
-            // 選擇性：每隔幾次操作才大規模 loadData，或者就維持現狀
-            // 這裡不需要再重新 loadData() 了，因為我們剛才已經手動改過 allOrders
+            console.log(`Order ${id} synced.`);
+            if(selectEl) {
+                selectEl.disabled = false;
+                selectEl.style.opacity = "1";
+            }
             
         } catch (err) {
-            alert("同步失敗，請重整網頁");
-            selectEl.disabled = false;
+            alert("同步失敗，請檢查網路後重整頁面");
+            if(selectEl) selectEl.disabled = false;
         }
+    }
+
+    function renderStatistics() {
+        const fCat = document.getElementById('filterCat').value;
+        const fColor = document.getElementById('filterColor').value;
+        const fStatus = document.getElementById('filterStatus').value;
+        const searchKey = document.getElementById('statsSearch').value.toLowerCase();
+
+        let map = {}; let total = 0; let colorSet = new Set();
+
+        allOrders.forEach(r => {
+            const st = (r[9] || "").trim();
+            if (st === "" || st === "出貨完畢" || st === "已寄回") return;
+            
+            if (fStatus === "待製作" || fStatus === "") { 
+                if (st !== "新訂單" && st !== "備料中") return;
+            } else if (fStatus !== "ALL" && st !== fStatus) return;
+
+            const items = [
+                { data: [r[3], r[4], r[5]], trans: (r[14] && r[14].toString().trim() !== "") },
+                { data: [r[6], r[7], r[8]], trans: (r[15] && r[15].toString().trim() !== "") }
+            ];
+            
+            items.forEach(itObj => {
+                const it = itObj.data;
+                if(!it[0] || itObj.trans) return;
+
+                const itemContent = (r[0] + it[0] + it[1]).toLowerCase();
+                if (searchKey && !itemContent.includes(searchKey)) return;
+
+                colorSet.add(it[1]);
+                const code = it[0].trim().charAt(0).toUpperCase();
+                let cat = (code==='A')?"TOP":(code==='B')?"BOTTOM":"ONEPIECE";
+                
+                if((fCat==="" || cat===fCat) && (fColor==="" || it[1]===fColor)) {
+                    const key = `${it[0]}|${it[1]}|${it[2]}`;
+                    map[key] = (map[key]||0)+1; total++;
+                }
+            });
+        });
+
+        if(!fColor && !searchKey) updateChoiceList('filterColor', Array.from(colorSet).sort(), "COLOR...");
+        document.getElementById('totalPieces').innerText = total;
+
+        let html = '';
+        Object.keys(map).sort().forEach(k => {
+            const p = k.split('|');
+            html += `<tr style="border-bottom: 1px solid #eee;">
+                <td style="padding: 12px 8px; font-weight: bold;">${p[0]}</td>
+                <td style="padding: 12px 8px; color: #666;">${p[1]}</td>
+                <td style="padding: 12px 8px; color: #999;">${p[2]}</td>
+                <td style="padding: 12px 8px; text-align: right; font-weight: bold; color: var(--brand-taupe);">${map[k]}</td>
+            </tr>`;
+        });
+        document.getElementById('statsGrid').innerHTML = html || '<tr><td colspan="4" style="text-align:center; padding:20px;">No data.</td></tr>';
+    }
+
+    function renderCalendar() {
+        var calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
+            initialView: 'dayGridMonth', height: 'auto',
+            events: allOrders.map(r => ({
+                title: `#${r[0]}`, start: r[2] ? r[2].split('T')[0] : '', 
+                backgroundColor: statusColors[r[9]?.trim()] || "#373a3c",
+                extendedProps: { details: r }
+            })),
+            eventClick: (info) => {
+                const r = info.event.extendedProps.details;
+                openModal(`<b>ORDER #${r[0]}</b><br>${r[3]}<br>Exp: ${r[2].split('T')[0]}`);
+            }
+        });
+        calendar.render();
     }
 
     function initChoice(id, list, placeholder, changeFn) {
@@ -460,10 +424,12 @@
     window.onload = async () => {
         document.getElementById('orderDate').value = new Date().toISOString().split('T')[0];
         updateExpectedDate(document.getElementById('orderDate').value);
+        
         const res = await fetch(`${scriptUrl}?action=getStyles`);
         masterData = (await res.json()).slice(1);
         const styles = [...new Set(masterData.map(i => i[0]))].filter(String);
         const colors = [...new Set(masterData.map(i => i[1]))].filter(String);
+        
         initChoice('style1', styles, "STYLE...");
         initChoice('color1', colors, "COLOR...");
         initChoice('style2', styles, "STYLE...");
@@ -472,14 +438,15 @@
         initChoice('size2', ["XS","S","M","L","XL"], "SIZE...");
         initChoice('filterCat', ["TOP","BOTTOM","ONEPIECE"], "CATEGORY...", renderStatistics);
         initChoice('filterColor', [], "COLOR...", renderStatistics);
-        initChoice('filterStatus', ["新訂單", "備料中", "車縫中", "ALL"], "待製作 (新訂單+備料中)", renderStatistics);
+        initChoice('filterStatus', ["新訂單", "備料中", "車縫中", "ALL"], "待製作 (新+備)", renderStatistics);
+        
         const lastTab = localStorage.getItem('activeTab') || 'form'; 
         showTab(lastTab); 
     };
 
     function updateExpectedDate(v) {
         let d = new Date(v); d.setDate(d.getDate() + 42);
-        document.getElementById('expectedHint').innerText = `⮕ Expected Delivery: ${d.toISOString().split('T')[0]} (6 weeks)`;
+        document.getElementById('expectedHint').innerText = `⮕ Expected: ${d.toISOString().split('T')[0]} (6 weeks)`;
     }
     function openModal(content) { document.getElementById('modal-body').innerHTML = content; document.getElementById('custom-modal').style.display = 'flex'; }
     function closeModal() { document.getElementById('custom-modal').style.display = 'none'; }
