@@ -180,6 +180,7 @@
 };
 
     async function showTab(t) {
+        localStorage.setItem('activeTab', t);
         document.querySelectorAll('.page-container').forEach(e => e.classList.remove('active'));
         document.querySelectorAll('.nav button').forEach(e => e.classList.remove('active-btn'));
         document.getElementById(t + 'Tab').classList.add('active');
@@ -405,11 +406,38 @@
 
     async function updateStatus(id, st) {
         if(!st) return;
-        await fetch(scriptUrl, { method: "POST", mode: "no-cors", body: JSON.stringify({ action: 'updateStatus', id: id, status: st }) });
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        allOrders = null; 
-        if (allOrders === null) await loadData();
-renderOrders();
+        
+        // 1. 立即給予視覺回饋 (把選單暫時鎖定)
+        const selectEl = event.target;
+        const originalColor = selectEl.style.color;
+        selectEl.disabled = true;
+        selectEl.style.color = "#ccc";
+
+        try {
+            // 2. 發送請求
+            await fetch(scriptUrl, { 
+                method: "POST", 
+                mode: "no-cors", 
+                body: JSON.stringify({ action: 'updateStatus', id: id, status: st }) 
+            });
+
+            // 3. 提示成功 (簡單的彈窗或文字)
+            // 這裡我們用一個簡單的 alert，或者妳可以只讓它自動重新渲染
+            console.log(`Order ${id} updated to ${st}`);
+            
+            // 4. 重新抓取資料並刷新列表
+            allOrders = null; 
+            await loadData();
+            renderOrders();
+
+            // 5. 恢復選單
+            selectEl.disabled = false;
+            selectEl.style.color = originalColor;
+            
+        } catch (err) {
+            alert("更新失敗，請檢查網路連線");
+            selectEl.disabled = false;
+        }
     }
 
     function initChoice(id, list, placeholder, changeFn) {
@@ -443,7 +471,8 @@ renderOrders();
         initChoice('filterCat', ["TOP","BOTTOM","ONEPIECE"], "CATEGORY...", renderStatistics);
         initChoice('filterColor', [], "COLOR...", renderStatistics);
         initChoice('filterStatus', ["新訂單", "備料中", "車縫中", "ALL"], "待製作 (新訂單+備料中)", renderStatistics);
-        showTab('form');
+        const lastTab = localStorage.getItem('activeTab') || 'form'; 
+        showTab(lastTab); 
     };
 
     function updateExpectedDate(v) {
