@@ -121,7 +121,6 @@
 
     <div style="display:flex; gap:10px; margin-bottom:20px; flex-wrap: wrap;">
     <div style="flex:1; min-width: 120px;"><label>Category</label><select id="filterCat"></select></div>
-    <div style="flex:1; min-width: 120px;"><label>Style</label><select id="filterStyle"></select></div>
     <div style="flex:1; min-width: 120px;"><label>Color</label><select id="filterColor"></select></div>
     <div style="flex:1; min-width: 120px;"><label>Process Status</label><select id="filterStatus"></select></div>
     <div style="flex:2; min-width: 250px;">
@@ -290,14 +289,11 @@
 
     function renderStatistics() {
     const fCat = document.getElementById('filterCat').value;
-    const fStyle = document.getElementById('filterStyle').value;
     const fColor = document.getElementById('filterColor').value;
     const fStatus = document.getElementById('filterStatus').value;
-    // 取得搜尋關鍵字，如果搜尋框還沒載入則預設為空字串
     const searchKey = document.getElementById('statsSearch') ? document.getElementById('statsSearch').value.toLowerCase() : "";
 
     let map = {}; let total = 0; 
-    let styleSet = new Set();
     let colorSet = new Set();
 
     allOrders.forEach(r => {
@@ -328,17 +324,15 @@
             const itemContent = (orderId + it[0] + it[1]).toLowerCase();
             if (searchKey && !itemContent.includes(searchKey)) return;
 
-            styleSet.add(it[0]);
             colorSet.add(it[1]);
 
             const code = it[0].trim().charAt(0).toUpperCase();
             let cat = (code==='A')?"TOP":(code==='B')?"BOTTOM":"ONEPIECE";
             
             const matchCat = (fCat==="" || cat===fCat);
-            const matchStyle = (fStyle==="" || it[0]===fStyle);
             const matchColor = (fColor==="" || it[1]===fColor);
 
-            if(matchCat && matchStyle && matchColor) {
+            if(matchCat && matchColor) {
                 const key = `${it[0]}|${it[1]}|${it[2]}`;
                 map[key] = (map[key]||0)+1; 
                 total++;
@@ -346,12 +340,11 @@
         });
     });
 
-    // 更新下拉選單的選項內容
-    if(!fStyle && !fCat && !fColor) {
-        updateChoiceList('filterStyle', Array.from(styleSet).sort(), "STYLE...");
-        updateChoiceList('filterColor', Array.from(colorSet).sort(), "COLOR...");
-    }
-
+    // 只有在沒選顏色，且搜尋框也是空的時候才更新清單
+    if(!fColor && !searchKey) {
+    updateChoiceList('filterColor', Array.from(colorSet).sort(), "COLOR...");
+}
+        
     // 更新總件數顯示
     document.getElementById('totalPieces').innerText = total;
 
@@ -426,7 +419,6 @@
         initChoice('size1', ["XS","S","M","L","XL"], "SIZE...");
         initChoice('size2', ["XS","S","M","L","XL"], "SIZE...");
         initChoice('filterCat', ["TOP","BOTTOM","ONEPIECE"], "CATEGORY...", renderStatistics);
-        initChoice('filterStyle', [], "STYLE...", renderStatistics);
         initChoice('filterColor', [], "COLOR...", renderStatistics);
         initChoice('filterStatus', ["新訂單", "備料中", "車縫中", "ALL"], "待製作 (新訂單+備料中)", renderStatistics);
         showTab('form');
