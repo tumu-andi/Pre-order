@@ -407,35 +407,34 @@
     async function updateStatus(id, st) {
         if(!st) return;
         
-        // 1. 立即給予視覺回饋 (把選單暫時鎖定)
+        // --- 1. 樂觀 UI 更新 (Optimistic UI) ---
+        // 找到該筆訂單在 allOrders 中的位置並直接修改它
+        const orderIndex = allOrders.findIndex(r => r[0].toString() === id.toString());
+        if (orderIndex !== -1) {
+            allOrders[orderIndex][9] = st; // 直接修改記憶體資料
+            renderOrders(); // 立即重新畫圖，妳會看到標籤秒變色！
+        }
+
+        // --- 2. 背景處理資料庫 ---
         const selectEl = event.target;
-        const originalColor = selectEl.style.color;
-        selectEl.disabled = true;
-        selectEl.style.color = "#ccc";
+        selectEl.disabled = true; // 鎖定選單防止連續點擊
 
         try {
-            // 2. 發送請求
+            // 發送請求 (不加 await 在這裡，讓它在背景跑，除非妳需要確認它真的成功)
             await fetch(scriptUrl, { 
                 method: "POST", 
                 mode: "no-cors", 
                 body: JSON.stringify({ action: 'updateStatus', id: id, status: st }) 
             });
 
-            // 3. 提示成功 (簡單的彈窗或文字)
-            // 這裡我們用一個簡單的 alert，或者妳可以只讓它自動重新渲染
-            console.log(`Order ${id} updated to ${st}`);
-            
-            // 4. 重新抓取資料並刷新列表
-            allOrders = null; 
-            await loadData();
-            renderOrders();
-
-            // 5. 恢復選單
+            console.log(`Order ${id} sync success.`);
             selectEl.disabled = false;
-            selectEl.style.color = originalColor;
+            
+            // 選擇性：每隔幾次操作才大規模 loadData，或者就維持現狀
+            // 這裡不需要再重新 loadData() 了，因為我們剛才已經手動改過 allOrders
             
         } catch (err) {
-            alert("更新失敗，請檢查網路連線");
+            alert("同步失敗，請重整網頁");
             selectEl.disabled = false;
         }
     }
