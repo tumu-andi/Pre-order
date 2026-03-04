@@ -75,6 +75,7 @@
 <div id="formTab" class="page-container">
     <div class="title-group"><h2>NEW ORDER</h2><div class="sub-title">建立新訂製單</div></div>
     <div class="form-group"><label>Order ID</label><input type="text" id="orderId" placeholder="SHOPLINE訂編"></div>
+   <div class="form-group"><label>Customer Name</label><input type="text" id="customerName" placeholder="訂單姓名"></div>
     <div class="form-group"><label>Order Date</label><input type="date" id="orderDate" onchange="updateExpectedDate(this.value)"></div>
     <div id="expectedHint" style="font-size:0.75rem; color:var(--brand-taupe); margin:-10px 0 20px 0; font-weight:bold;"></div>
     
@@ -194,6 +195,8 @@
     async function submitOrder() {
         const btn = document.getElementById('submitBtn');
         const oDateVal = document.getElementById('orderDate').value;
+        const cName = document.getElementById('customerName').value; // 1. 抓取姓名
+
         if(!oDateVal) { alert("請填寫日期"); return; }
         
         btn.innerText = "SENDING..."; btn.disabled = true;
@@ -205,6 +208,7 @@
             action: 'addOrder',
             data: {
                 id: document.getElementById('orderId').value,
+                customerName: cName, // 2. 放入包裹
                 orderDate: oDateVal,
                 deadline: deadline,
                 s1: document.getElementById('style1').value,
@@ -217,12 +221,18 @@
             }
         };
 
-        await fetch(scriptUrl, { method: "POST", mode: "no-cors", body: JSON.stringify(payload) });
-        openModal(`<h3>DONE</h3>訂單已建立`);
-        
-        document.getElementById('orderId').value = '';
-        document.getElementById('hasStock').checked = false;
-        allOrders = null; 
+        try {
+            await fetch(scriptUrl, { method: "POST", mode: "no-cors", body: JSON.stringify(payload) });
+            openModal(`<h3>DONE</h3>訂單已建立`);
+            
+            // 3. 清空輸入
+            document.getElementById('orderId').value = '';
+            document.getElementById('customerName').value = ''; 
+            document.getElementById('hasStock').checked = false;
+            allOrders = null; 
+        } catch(e) {
+            alert("提交失敗，請檢查網路");
+        }
         btn.innerText = "CREATE ORDER"; btn.disabled = false;
     }
 
@@ -260,6 +270,7 @@
             const orderIdx = allOrders.indexOf(r) + 1;
             const isItem1Transfer = (r[14] && r[14].toString().trim() !== "");
             const isItem2Transfer = (r[15] && r[15].toString().trim() !== "");
+            const customerName = r[11] || ""; // L 欄是第 12 欄 (索引 11)
 
             html += `
                 <div class="order-card">
@@ -271,7 +282,10 @@
                         <div style="font-size:0.7rem; color:#bbb; margin-bottom:5px;">
                             Order: ${r[1] ? r[1].split('T')[0] : '--'} | Exp: ${expDate}
                         </div>
-                        <b style="font-size:1.1rem;">#${r[0]}</b>
+                        <div style="display:flex; align-items:baseline; gap:8px;">
+                            <b style="font-size:1.1rem;">#${r[0]}</b>
+                            <span style="font-size:0.85rem; color:var(--brand-taupe); font-weight:bold;">${customerName}</span>
+                        </div>
                         <div style="font-size:0.8rem; color:#666; margin-top:5px;">
                             ${renderLine(r[3], r[4], r[5], isItem1Transfer)}
                             ${r[6] ? renderLine(r[6], r[7], r[8], isItem2Transfer) : ''}
@@ -297,49 +311,22 @@
     }
 
     async function updateStatus(id, st, selectEl) {
-        if(!st || !id) return; // 如果沒有 ID 直接跳出，避免出錯
-        
-        // --- 1. 樂觀 UI 更新 ---
-        // 強化比對邏輯：排除空列，並確保 ID 存在才比對
-        const orderIndex = allOrders.findIndex(r => {
-            return r && r[0] && r[0].toString().trim() === id.toString().trim();
-        });
-
+        if(!st || !id) return;
+        const orderIndex = allOrders.findIndex(r => r && r[0] && r[0].toString().trim() === id.toString().trim());
         if (orderIndex !== -1) {
             allOrders[orderIndex][9] = st; 
             renderOrders(); 
-        } else {
-            // 如果還是找不到，代表資料庫 A 欄可能真的沒東西
-            console.error("找不到該訂單編號，請檢查試算表 A 欄是否為空或被合併");
-            alert("找不到訂單 #" + id + "，請檢查試算表是否有合併儲存格。");
-            return; 
         }
-
-        // --- 2. 介面鎖定 ---
-        if(selectEl) {
-            selectEl.disabled = true;
-            selectEl.style.opacity = "0.5";
-        }
-
+        if(selectEl) { selectEl.disabled = true; selectEl.style.opacity = "0.5"; }
         try {
             await fetch(scriptUrl, { 
-                method: "POST", 
-                mode: "no-cors", 
+                method: "POST", mode: "no-cors", 
                 body: JSON.stringify({ action: 'updateStatus', id: id, status: st }) 
             });
-
-            console.log(`Order ${id} synced.`);
-            if(selectEl) {
-                selectEl.disabled = false;
-                selectEl.style.opacity = "1";
-            }
-            
+            if(selectEl) { selectEl.disabled = false; selectEl.style.opacity = "1"; }
         } catch (err) {
-            alert("同步失敗，請檢查網路");
-            if(selectEl) {
-                selectEl.disabled = false;
-                selectEl.style.opacity = "1";
-            }
+            alert("同步失敗");
+            if(selectEl) { selectEl.disabled = false; selectEl.style.opacity = "1"; }
         }
     }
 
@@ -348,43 +335,34 @@
         const fColor = document.getElementById('filterColor').value;
         const fStatus = document.getElementById('filterStatus').value;
         const searchKey = document.getElementById('statsSearch').value.toLowerCase();
-
         let map = {}; let total = 0; let colorSet = new Set();
-
+        if(!allOrders) return;
         allOrders.forEach(r => {
             const st = (r[9] || "").trim();
             if (st === "" || st === "出貨完畢" || st === "已寄回") return;
-            
             if (fStatus === "待製作" || fStatus === "") { 
                 if (st !== "新訂單" && st !== "備料中") return;
             } else if (fStatus !== "ALL" && st !== fStatus) return;
-
             const items = [
                 { data: [r[3], r[4], r[5]], trans: (r[14] && r[14].toString().trim() !== "") },
                 { data: [r[6], r[7], r[8]], trans: (r[15] && r[15].toString().trim() !== "") }
             ];
-            
             items.forEach(itObj => {
                 const it = itObj.data;
                 if(!it[0] || itObj.trans) return;
-
-                const itemContent = (r[0] + it[0] + it[1]).toLowerCase();
+                const itemContent = (r[0] + (r[11]||"") + it[0] + it[1]).toLowerCase();
                 if (searchKey && !itemContent.includes(searchKey)) return;
-
                 colorSet.add(it[1]);
                 const code = it[0].trim().charAt(0).toUpperCase();
                 let cat = (code==='A')?"TOP":(code==='B')?"BOTTOM":"ONEPIECE";
-                
                 if((fCat==="" || cat===fCat) && (fColor==="" || it[1]===fColor)) {
                     const key = `${it[0]}|${it[1]}|${it[2]}`;
                     map[key] = (map[key]||0)+1; total++;
                 }
             });
         });
-
         if(!fColor && !searchKey) updateChoiceList('filterColor', Array.from(colorSet).sort(), "COLOR...");
         document.getElementById('totalPieces').innerText = total;
-
         let html = '';
         Object.keys(map).sort().forEach(k => {
             const p = k.split('|');
@@ -402,13 +380,13 @@
         var calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
             initialView: 'dayGridMonth', height: 'auto',
             events: allOrders.map(r => ({
-                title: `#${r[0]}`, start: r[2] ? r[2].split('T')[0] : '', 
+                title: `${r[11]||""} #${r[0]}`, start: r[2] ? r[2].split('T')[0] : '', 
                 backgroundColor: statusColors[r[9]?.trim()] || "#373a3c",
                 extendedProps: { details: r }
             })),
             eventClick: (info) => {
                 const r = info.event.extendedProps.details;
-                openModal(`<b>ORDER #${r[0]}</b><br>${r[3]}<br>Exp: ${r[2].split('T')[0]}`);
+                openModal(`<b>ORDER #${r[0]} - ${r[11]||""}</b><br>${r[3]}<br>Exp: ${r[2].split('T')[0]}`);
             }
         });
         calendar.render();
