@@ -331,50 +331,78 @@
     }
 
     function renderStatistics() {
-        const fCat = document.getElementById('filterCat').value;
-        const fColor = document.getElementById('filterColor').value;
-        const fStatus = document.getElementById('filterStatus').value;
-        const searchKey = document.getElementById('statsSearch').value.toLowerCase();
-        let map = {}; let total = 0; let colorSet = new Set();
-        if(!allOrders) return;
-        allOrders.forEach(r => {
-            const st = (r[9] || "").trim();
-            if (st === "" || st === "出貨完畢" || st === "已寄回") return;
-            if (fStatus === "待製作" || fStatus === "") { 
-                if (st !== "新訂單" && st !== "備料中") return;
-            } else if (fStatus !== "ALL" && st !== fStatus) return;
-            const items = [
-                { data: [r[3], r[4], r[5]], trans: (r[14] && r[14].toString().trim() !== "") },
-                { data: [r[6], r[7], r[8]], trans: (r[15] && r[15].toString().trim() !== "") }
-            ];
-            items.forEach(itObj => {
-                const it = itObj.data;
-                if(!it[0] || itObj.trans) return;
-                const itemContent = (r[0] + (r[11]||"") + it[0] + it[1]).toLowerCase();
-                if (searchKey && !itemContent.includes(searchKey)) return;
-                colorSet.add(it[1]);
-                const code = it[0].trim().charAt(0).toUpperCase();
-                let cat = (code==='A')?"TOP":(code==='B')?"BOTTOM":"ONEPIECE";
-                if((fCat==="" || cat===fCat) && (fColor==="" || it[1]===fColor)) {
-                    const key = `${it[0]}|${it[1]}|${it[2]}`;
-                    map[key] = (map[key]||0)+1; total++;
+    const fCat = document.getElementById('filterCat').value;
+    const fColor = document.getElementById('filterColor').value;
+    const fStatus = document.getElementById('filterStatus').value;
+    const searchKey = document.getElementById('statsSearch').value.toLowerCase();
+
+    let map = {}; 
+    let total = 0; 
+    let colorSet = new Set();
+
+    if(!allOrders) return;
+
+    allOrders.forEach(r => {
+        const st = (r[9] || "").trim();
+        
+        // 排除已完成的狀態
+        if (st === "" || st === "出貨完畢" || st === "已寄回") return;
+        
+        // 處理篩選邏輯
+        if (fStatus === "待製作" || fStatus === "") { 
+            // 預設模式：只看新訂單和備料中
+            if (st !== "新訂單" && st !== "備料中") return;
+        } else if (fStatus !== "ALL" && st !== fStatus) {
+            // 特定狀態篩選
+            return;
+        }
+
+        const items = [
+            { data: [r[3], r[4], r[5]], trans: (r[14] && r[14].toString().trim() !== "") },
+            { data: [r[6], r[7], r[8]], trans: (r[15] && r[15].toString().trim() !== "") }
+        ];
+        
+        items.forEach(itObj => {
+            const it = itObj.data;
+            if(!it[0] || itObj.trans) return;
+
+            // 搜尋過濾：包含單號、姓名、款式、顏色
+            const itemContent = (r[0] + (r[11]||"") + it[0] + it[1]).toLowerCase();
+            if (searchKey && !itemContent.includes(searchKey)) return;
+
+            colorSet.add(it[1]);
+            const code = it[0].trim().charAt(0).toUpperCase();
+            let cat = (code==='A')?"TOP":(code==='B')?"BOTTOM":"ONEPIECE";
+            
+            if((fCat==="" || cat===fCat) && (fColor==="" || it[1]===fColor)) {
+                const key = `${it[0]}|${it[1]}|${it[2]}`;
+                map[key] = (map[key]||0)+1; 
+                
+                // 【關鍵修改】：只有狀態「不是」確認中，才累加總件數
+                if (st !== "確認中") {
+                    total++;
                 }
-            });
+            }
         });
-        if(!fColor && !searchKey) updateChoiceList('filterColor', Array.from(colorSet).sort(), "COLOR...");
-        document.getElementById('totalPieces').innerText = total;
-        let html = '';
-        Object.keys(map).sort().forEach(k => {
-            const p = k.split('|');
-            html += `<tr style="border-bottom: 1px solid #eee;">
-                <td style="padding: 12px 8px; font-weight: bold;">${p[0]}</td>
-                <td style="padding: 12px 8px; color: #666;">${p[1]}</td>
-                <td style="padding: 12px 8px; color: #999;">${p[2]}</td>
-                <td style="padding: 12px 8px; text-align: right; font-weight: bold; color: var(--brand-taupe);">${map[k]}</td>
-            </tr>`;
-        });
-        document.getElementById('statsGrid').innerHTML = html || '<tr><td colspan="4" style="text-align:center; padding:20px;">No data.</td></tr>';
-    }
+    });
+
+    if(!fColor && !searchKey) updateChoiceList('filterColor', Array.from(colorSet).sort(), "COLOR...");
+    
+    // 顯示不含「確認中」的總件數
+    document.getElementById('totalPieces').innerText = total;
+
+    let html = '';
+    Object.keys(map).sort().forEach(k => {
+        const p = k.split('|');
+        html += `<tr style="border-bottom: 1px solid #eee;">
+            <td style="padding: 12px 8px; font-weight: bold;">${p[0]}</td>
+            <td style="padding: 12px 8px; color: #666;">${p[1]}</td>
+            <td style="padding: 12px 8px; color: #999;">${p[2]}</td>
+            <td style="padding: 12px 8px; text-align: right; font-weight: bold; color: var(--brand-taupe);">${map[k]}</td>
+        </tr>`;
+    });
+    document.getElementById('statsGrid').innerHTML = html || '<tr><td colspan="4" style="text-align:center; padding:20px;">No data.</td></tr>';
+}
 
     function renderCalendar() {
         var calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
@@ -424,7 +452,7 @@
         initChoice('size2', ["XS","S","M","L","XL"], "SIZE...");
         initChoice('filterCat', ["TOP","BOTTOM","ONEPIECE"], "CATEGORY...", renderStatistics);
         initChoice('filterColor', [], "COLOR...", renderStatistics);
-        initChoice('filterStatus', ["新訂單", "備料中", "車縫中", "ALL"], "待製作 (新+備)", renderStatistics);
+        initChoice('filterStatus', ["確認中", "新訂單", "備料中", "車縫中", "ALL"], "待製作 (新+備)", renderStatistics);
         
         const lastTab = localStorage.getItem('activeTab') || 'form'; 
         showTab(lastTab); 
