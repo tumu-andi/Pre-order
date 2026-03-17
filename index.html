@@ -175,17 +175,24 @@
     };
 
     async function showTab(t) {
-        localStorage.setItem('activeTab', t);
-        document.querySelectorAll('.page-container').forEach(e => e.classList.remove('active'));
-        document.querySelectorAll('.nav button').forEach(e => e.classList.remove('active-btn'));
-        document.getElementById(t + 'Tab').classList.add('active');
-        document.getElementById('btn' + t.charAt(0).toUpperCase() + t.slice(1)).classList.add('active-btn');
-        
-        if (!allOrders || t !== 'form') await loadData();
-        if (t === 'admin') renderOrders();
-        if (t === 'stats') renderStatistics();
-        if (t === 'calendar') setTimeout(renderCalendar, 100);
-    }
+    localStorage.setItem('activeTab', t);
+    
+    // 1. 先把所有分頁藏起來，把按鈕變灰（這一動，疊在一起的畫面就會立刻變整齊）
+    document.querySelectorAll('.page-container').forEach(e => e.classList.remove('active'));
+    document.querySelectorAll('.nav button').forEach(e => e.classList.remove('active-btn'));
+    
+    // 2. 只顯示點選的那一頁
+    document.getElementById(t + 'Tab').classList.add('active');
+    const btnId = 'btn' + t.charAt(0).toUpperCase() + t.slice(1);
+    if(document.getElementById(btnId)) document.getElementById(btnId).classList.add('active-btn');
+    
+    // 3. 異步載入資料，不影響介面顯示
+    if (!allOrders) await loadData(); 
+    
+    if (t === 'admin') renderOrders();
+    if (t === 'stats') renderStatistics();
+    if (t === 'calendar') setTimeout(renderCalendar, 100);
+}
 
     async function loadData() {
         const res = await fetch(`${scriptUrl}?action=getOrders`);
