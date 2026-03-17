@@ -34,10 +34,7 @@
         .order-card { padding: 25px 0; border-bottom: 1px solid #f7f7f7; display: flex; flex-direction: column; gap: 15px; }
         @media (min-width: 600px) { .order-card { flex-direction: row; justify-content: space-between; align-items: center; } }
         .countdown-label { font-size: 0.65rem; font-weight: bold; padding: 4px 12px; border-radius: 20px; display: inline-block; margin-bottom: 5px; color: white; }
-        .lv-urgent { background: #b22222; } 
-        .lv-tight { background: #c08e2e; }  
-        .lv-normal { background: #6b7a8f; } 
-        .lv-relax { background: #7a8b6e; }  
+        .lv-urgent { background: #b22222; } .lv-tight { background: #c08e2e; } .lv-normal { background: #6b7a8f; } .lv-relax { background: #7a8b6e; }
         .status-tag { padding: 5px 12px; border-radius: 4px; font-size: 0.7rem; color: white; font-weight: bold; }
         .btn-submit { background: var(--brand-dark); color: white; border: none; padding: 20px; width: 100%; margin-top: 40px; cursor: pointer; letter-spacing: 4px; font-size: 0.85rem; border-radius: 6px; font-weight: bold; }
         #custom-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.7); backdrop-filter: blur(10px); z-index: 2000; justify-content: center; align-items: center; }
@@ -92,11 +89,7 @@
         <button class="filter-btn" onclick="setStatusFilter('出貨完畢', this)" style="padding: 6px 15px; border-radius: 20px; border: 1px solid #ddd; background: white; font-size: 0.7rem; cursor: pointer;">出貨完畢</button>
     </div>
     <div style="text-align: right; margin-bottom: 15px; font-size: 0.75rem; color: #999;">
-        SHOW: <select id="pageSize" onchange="renderOrders()" style="border: none; background: none; font-weight: bold;">
-            <option value="10">10 ITEMS</option>
-            <option value="20">20 ITEMS</option>
-            <option value="999">ALL</option>
-        </select>
+        SHOW: <select id="pageSize" onchange="renderOrders()" style="border: none; background: none; color: #373a3c; font-weight: bold; cursor: pointer; outline: none;"><option value="10">10 ITEMS</option><option value="20">20 ITEMS</option><option value="999">ALL</option></select>
     </div>
     <div id="orderList">載入中...</div>
 </div>
@@ -110,10 +103,24 @@
         <div style="flex:1; min-width: 120px;"><label>Category</label><select id="filterCat"></select></div>
         <div style="flex:1; min-width: 120px;"><label>Color</label><select id="filterColor"></select></div>
         <div style="flex:1; min-width: 120px;"><label>Process Status</label><select id="filterStatus"></select></div>
-        <div style="flex:2; min-width: 250px;"><label>Search Keyword</label><input type="text" id="statsSearch" placeholder="輸入關鍵字..." oninput="renderStatistics()"></div>
+        <div style="flex:2; min-width: 250px;"><label>Search Keyword</label><input type="text" id="statsSearch" placeholder="款式或姓名..." oninput="renderStatistics()" style="border-bottom: 2px solid var(--brand-taupe) !important;"></div>
     </div>
-    <div style="overflow-x: auto;"><table style="width: 100%; border-collapse: collapse; font-size: 0.9rem;"><thead><tr style="border-bottom: 2px solid var(--brand-taupe); text-align: left;"><th style="padding: 12px 8px;">STYLE</th><th style="padding: 12px 8px;">COLOR</th><th style="padding: 12px 8px;">SIZE</th><th style="padding: 12px 8px; text-align: right;">QTY</th></tr></thead><tbody id="statsGrid"></tbody></table></div>
+    <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem;">
+            <thead>
+                <tr style="border-bottom: 2px solid var(--brand-taupe); text-align: left;">
+                    <th style="padding: 12px 8px; color: var(--text-light); font-weight: 600; font-size: 0.65rem;">STYLE</th>
+                    <th style="padding: 12px 8px; color: var(--text-light); font-weight: 600; font-size: 0.65rem;">COLOR</th>
+                    <th style="padding: 12px 8px; color: var(--text-light); font-weight: 600; font-size: 0.65rem;">SIZE</th>
+                    <th style="padding: 12px 8px; color: var(--brand-taupe); font-weight: 600; font-size: 0.65rem; text-align: right;">QTY</th>
+                </tr>
+            </thead>
+            <tbody id="statsGrid"></tbody>
+        </table>
+    </div>
 </div>
+
+<div style="text-align: center; padding: 40px 0; color: #ccc; font-size: 0.65rem; letter-spacing: 2px; font-weight: 300;">© 2026 TIMU STUDIO. ALL RIGHTS RESERVED.</div>
 
 <script>
     let currentStatusFilter = 'ALL';
@@ -123,7 +130,7 @@
     let choiceInstances = {};
     const statusColors = { "確認中": "#e0e0e0", "新訂單": "#373a3c", "備料中": "#8e8e8e", "車縫中": "#003b5c", "已寄回": "#95866f", "出貨完畢": "#d0d0ce" };
 
-    function showTab(t) {
+    async function showTab(t) {
         localStorage.setItem('activeTab', t);
         document.querySelectorAll('.page-container').forEach(e => e.classList.remove('active'));
         document.querySelectorAll('.nav button').forEach(e => e.classList.remove('active-btn'));
@@ -131,14 +138,7 @@
         const targetBtn = document.getElementById('btn' + t.charAt(0).toUpperCase() + t.slice(1));
         if (targetPage) targetPage.classList.add('active');
         if (targetBtn) targetBtn.classList.add('active-btn');
-        if (!allOrders) {
-            loadData().then(() => { refreshTabContent(t); });
-        } else {
-            refreshTabContent(t);
-        }
-    }
-
-    function refreshTabContent(t) {
+        if (!allOrders || t !== 'form') await loadData();
         if (t === 'admin') renderOrders();
         if (t === 'stats') renderStatistics();
         if (t === 'calendar') setTimeout(renderCalendar, 100);
@@ -147,9 +147,8 @@
     async function loadData() {
         try {
             const res = await fetch(`${scriptUrl}?action=getOrders`);
-            const json = await res.json();
-            allOrders = json.slice(1);
-        } catch (e) { console.error("載入失敗", e); }
+            allOrders = (await res.json()).slice(1);
+        } catch (e) { console.error("載入失敗"); }
     }
 
     async function submitOrder() {
@@ -199,6 +198,13 @@
         if (currentStatusFilter !== 'ALL') {
             displayList = displayList.filter(r => (r[9] || "確認中").trim() === currentStatusFilter);
         }
+
+        const renderLine = (style, color, size, isTransfer) => {
+            if (!style) return '';
+            const s = isTransfer ? 'style="text-decoration: line-through; color: #bbb; opacity: 0.6;"' : '';
+            return `<div ${s}>● ${style} / ${color} / ${size} ${isTransfer ? '<small>(調貨)</small>' : ''}</div>`;
+        };
+
         let html = '';
         displayList.slice(0, limit).forEach((r) => {
             const expDate = r[2] ? r[2].split('T')[0] : '';
@@ -207,45 +213,76 @@
             const st = (r[9] || "確認中").trim();
             html += `<div class="order-card">
                 <div>
-                    <div class="countdown-label ${lv}">${diff} DAYS LEFT</div>
+                    <div style="display:flex; align-items:center; gap:10px; margin-bottom:5px;">
+                        <span style="font-family:monospace; font-size:0.75rem; color:#ccc; font-weight:bold;">#${allOrders.indexOf(r)+1}</span>
+                        <div class="countdown-label ${lv}">${diff} DAYS LEFT</div>
+                    </div>
                     <div style="font-size:0.7rem; color:#bbb;">Order: ${r[1]?.split('T')[0]} | Exp: ${expDate}</div>
-                    <div style="font-size:1.1rem;"><b>#${r[0]}</b> <span style="color:var(--brand-taupe); font-weight:bold;">${r[11]||''}</span></div>
-                    <div style="font-size:0.8rem; color:#666;">● ${r[3]} / ${r[4]} / ${r[5]}</div>
+                    <div style="display:flex; align-items:baseline; gap:8px;">
+                        <b style="font-size:1.1rem;">#${r[0]}</b>
+                        <span style="font-size:0.85rem; color:var(--brand-taupe); font-weight:bold;">${r[11]||""}</span>
+                    </div>
+                    <div style="font-size:0.8rem; color:#666; margin-top:5px;">
+                        ${renderLine(r[3], r[4], r[5], (r[14] && r[14].toString().trim() !== ""))}
+                        ${r[6] ? renderLine(r[6], r[7], r[8], (r[15] && r[15].toString().trim() !== "")) : ''}
+                    </div>
                 </div>
-                <div style="text-align:right;"><span class="status-tag" style="background:${statusColors[st]||'#333'}">${st}</span></div>
+                <div style="text-align:right;">
+                    <span class="status-tag" style="background:${statusColors[st]||'#333'}">${st}</span>
+                    <div style="margin-top:10px;"><select onchange="updateStatus('${r[0]}', this.value, this)" style="border:none; font-size:0.75rem; color:#999; background:none; cursor:pointer;"><option value="">CHANGE STATUS</option><option value="確認中">確認中</option><option value="新訂單">新訂單</option><option value="備料中">備料中</option><option value="車縫中">車縫中</option><option value="已寄回">已寄回</option><option value="出貨完畢">出貨完畢</option></select></div>
+                </div>
             </div>`;
         });
-        document.getElementById('orderList').innerHTML = html || "No data.";
+        document.getElementById('orderList').innerHTML = html || "No Orders matching.";
+    }
+
+    async function updateStatus(id, st, selectEl) {
+        if(!st || !id) return;
+        const idx = allOrders.findIndex(r => r && r[0].toString() === id.toString());
+        if (idx !== -1) { allOrders[idx][9] = st; renderOrders(); }
+        try { await fetch(scriptUrl, { method: "POST", mode: "no-cors", body: JSON.stringify({ action: 'updateStatus', id: id, status: st }) }); } catch (err) {}
     }
 
     function renderStatistics() {
         if(!allOrders) return;
         const fCat = document.getElementById('filterCat').value;
+        const fStatus = document.getElementById('filterStatus').value;
         const searchKey = document.getElementById('statsSearch').value.toLowerCase();
         let map = {}, total = 0;
+
         allOrders.forEach(r => {
             const st = (r[9] || "").trim();
+            // 排除確認中、已寄回、出貨完畢
             if (["", "出貨完畢", "已寄回", "確認中"].includes(st)) return;
-            [[r[3],r[4],r[5]], [r[6],r[7],r[8]]].forEach(it => {
-                if(!it[0]) return;
+            if (fStatus === "待製作" && (st !== "新訂單" && st !== "備料中")) return;
+            if (fStatus !== "ALL" && fStatus !== "待製作" && st !== fStatus) return;
+
+            [[r[3],r[4],r[5],r[14]], [r[6],r[7],r[8],r[15]]].forEach(it => {
+                if(!it[0] || (it[3] && it[3].toString().trim() !== "")) return; // 排除調貨
+                if (searchKey && !(r[0]+(r[11]||"")+it[0]).toLowerCase().includes(searchKey)) return;
+                
+                const code = it[0].trim().charAt(0).toUpperCase();
+                let cat = (code==='A')?"TOP":(code==='B')?"BOTTOM":"ONEPIECE";
+                if(fCat && cat !== fCat) return;
+
                 const key = `${it[0]}|${it[1]}|${it[2]}`;
                 map[key] = (map[key]||0)+1; total++;
             });
         });
         document.getElementById('totalPieces').innerText = total;
         let html = '';
-        Object.keys(map).forEach(k => {
+        Object.keys(map).sort().forEach(k => {
             const p = k.split('|');
-            html += `<tr><td>${p[0]}</td><td>${p[1]}</td><td>${p[2]}</td><td align="right">${map[k]}</td></tr>`;
+            html += `<tr style="border-bottom: 1px solid #eee;"><td style="padding:12px 8px; font-weight:bold;">${p[0]}</td><td style="padding:12px 8px; color:#666;">${p[1]}</td><td style="padding:12px 8px; color:#999;">${p[2]}</td><td style="padding:12px 8px; text-align:right; font-weight:bold; color:var(--brand-taupe);">${map[k]}</td></tr>`;
         });
-        document.getElementById('statsGrid').innerHTML = html;
+        document.getElementById('statsGrid').innerHTML = html || '<tr><td colspan="4" align="center">No data.</td></tr>';
     }
 
     function renderCalendar() {
         if(!allOrders) return;
         new FullCalendar.Calendar(document.getElementById('calendar'), {
             initialView: 'dayGridMonth', height: 'auto',
-            events: allOrders.map(r => ({ title: `#${r[0]} ${r[11]||""}`, start: r[2]?.split('T')[0], backgroundColor: statusColors[r[9]?.trim()] || "#333" }))
+            events: allOrders.map(r => ({ title: `${r[11]||""} #${r[0]}`, start: r[2]?.split('T')[0], backgroundColor: statusColors[r[9]?.trim()] || "#333" }))
         }).render();
     }
 
@@ -261,21 +298,20 @@
     window.onload = async () => {
         document.getElementById('orderDate').value = new Date().toISOString().split('T')[0];
         updateExpectedDate(document.getElementById('orderDate').value);
+        const res = await fetch(`${scriptUrl}?action=getStyles`);
+        masterData = (await res.json()).slice(1);
+        const styles = [...new Set(masterData.map(i => i[0]))].filter(String);
+        const colors = [...new Set(masterData.map(i => i[1]))].filter(String);
+        initChoice('style1', styles, "STYLE...");
+        initChoice('color1', colors, "COLOR...");
+        initChoice('style2', styles, "STYLE...");
+        initChoice('color2', colors, "COLOR...");
+        initChoice('size1', ["XS","S","M","L","XL"], "SIZE...");
+        initChoice('size2', ["XS","S","M","L","XL"], "SIZE...");
+        initChoice('filterCat', ["TOP","BOTTOM","ONEPIECE"], "CATEGORY...", renderStatistics);
+        initChoice('filterColor', colors, "COLOR...", renderStatistics);
+        initChoice('filterStatus', ["新訂單", "備料中", "車縫中", "ALL"], "待製作", renderStatistics);
         showTab(localStorage.getItem('activeTab') || 'form');
-        try {
-            const res = await fetch(`${scriptUrl}?action=getStyles`);
-            masterData = (await res.json()).slice(1);
-            const styles = [...new Set(masterData.map(i => i[0]))].filter(String);
-            const colors = [...new Set(masterData.map(i => i[1]))].filter(String);
-            initChoice('style1', styles, "STYLE...");
-            initChoice('color1', colors, "COLOR...");
-            initChoice('style2', styles, "STYLE...");
-            initChoice('color2', colors, "COLOR...");
-            initChoice('size1', ["XS","S","M","L","XL"], "SIZE...");
-            initChoice('size2', ["XS","S","M","L","XL"], "SIZE...");
-            initChoice('filterCat', ["TOP","BOTTOM","ONEPIECE"], "CATEGORY...", renderStatistics);
-            initChoice('filterStatus', ["新訂單", "備料中", "車縫中", "ALL"], "待製作", renderStatistics);
-        } catch(e) {}
     };
 
     function updateExpectedDate(v) {
