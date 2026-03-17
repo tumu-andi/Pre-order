@@ -284,15 +284,34 @@
         var calendar = new FullCalendar.Calendar(calendarEl, {
             initialView: 'dayGridMonth',
             height: 'auto',
-            // 補回點擊事件
-            eventClick: function(info) {
-                openModal(info.event.title + "<br>Deadline: " + info.event.startStr);
-            },
+            displayEventTime: false,
             events: allOrders.map(r => ({ 
                 title: `${r[11]||""} #${r[0]}`, 
                 start: r[2]?.split('T')[0], 
-                backgroundColor: statusColors[r[9]?.trim()] || "#333" 
-            }))
+                backgroundColor: statusColors[r[9]?.trim()] || "#333",
+                // 將詳細資訊塞入 extendedProps
+                extendedProps: {
+                    orderId: r[0],
+                    name: r[11]||"無姓名",
+                    item1: r[3] ? `${r[3]} / ${r[4]} / ${r[5]} ${ (r[14] && r[14].toString().trim() !== "") ? '(調貨)' : '' }` : '',
+                    item2: r[6] ? `${r[6]} / ${r[7]} / ${r[8]} ${ (r[15] && r[15].toString().trim() !== "") ? '(調貨)' : '' }` : '',
+                    status: (r[9] || "確認中").trim()
+                }
+            })),
+            eventClick: function(info) {
+                const props = info.event.extendedProps;
+                let detailHtml = `<div style="text-align:left; line-height:1.8;">
+                    <h3 style="margin-top:0; color:var(--brand-taupe);">#${props.orderId} ${props.name}</h3>
+                    <hr style="border:0; border-top:1px solid #eee; margin:15px 0;">
+                    <div style="font-size:0.9rem;">
+                        <p><b>狀態：</b>${props.status}</p>
+                        <p><b>品項 1：</b><br>${props.item1 || '無'}</p>
+                        ${props.item2 ? `<p><b>品項 2：</b><br>${props.item2}</p>` : ''}
+                        <p><b>預計交期：</b>${info.event.startStr}</p>
+                    </div>
+                </div>`;
+                openModal(detailHtml);
+            }
         });
         calendar.render();
     }
