@@ -280,10 +280,21 @@
 
     function renderCalendar() {
         if(!allOrders) return;
-        new FullCalendar.Calendar(document.getElementById('calendar'), {
-            initialView: 'dayGridMonth', height: 'auto',
-            events: allOrders.map(r => ({ title: `${r[11]||""} #${r[0]}`, start: r[2]?.split('T')[0], backgroundColor: statusColors[r[9]?.trim()] || "#333" }))
-        }).render();
+        var calendarEl = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            height: 'auto',
+            // 補回點擊事件
+            eventClick: function(info) {
+                openModal(info.event.title + "<br>Deadline: " + info.event.startStr);
+            },
+            events: allOrders.map(r => ({ 
+                title: `${r[11]||""} #${r[0]}`, 
+                start: r[2]?.split('T')[0], 
+                backgroundColor: statusColors[r[9]?.trim()] || "#333" 
+            }))
+        });
+        calendar.render();
     }
 
     function initChoice(id, list, placeholder, changeFn) {
